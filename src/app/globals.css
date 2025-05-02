@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
-}
+} */
 
 @theme inline {
   --color-background: var(--background);
@@ -12,7 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -23,4 +23,34 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+
+
+/* Add these styles to your globals.css file */
+
+/* Override the browser's default transparent background for links */
+a[class*="bg-"] {
+  background-color: initial !important; /* This allows Tailwind's background classes to work */
 }
+
+.small{
+  font-size: 10px !important;
+}
+
+button {
+  margin: inherit  !important;
+}
+
+/* Ensure specific background colors work on links */
+a.bg-blue-700 { background-color: #1d4ed8 !important; }
+a.bg-pink-600 { background-color: #db2777 !important; }
+a.bg-blue-500 { background-color: #3b82f6 !important; }
+a.bg-blue-400 { background-color: #60a5fa !important; }
+a.bg-pink-500 { background-color: #ec4899 !important; }
+a.bg-red-500 { background-color: #ef4444 !important; }
+a.bg-white { background-color: #ffffff !important; }
+
+/* And hover states */
+a.hover\:bg-blue-800:hover { background-color: #1e40af !important; }
+a.hover\:bg-pink-700:hover { background-color: #be185d !important; }
+a.hover\:bg-gray-100:hover { background-color: #f3f4f6 !important; }
