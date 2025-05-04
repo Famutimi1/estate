@@ -12,40 +12,55 @@ export async function getProperties(filters?: {
   bedrooms?: number;
   bathrooms?: number;
   sortBy?: string;
+  page?: number;
+  limit?: number;
 }) {
+  // Create base query
   let query = supabase
     .from('properties')
     .select('*');
+  
+  // Create a separate count query
+  let countQuery = supabase
+    .from('properties')
+    .select('id', { count: 'exact', head: true });
 
   // Apply filters if provided
   if (filters) {
     if (filters.propertyType) {
       query = query.eq('property_type', filters.propertyType);
+      countQuery = countQuery.eq('property_type', filters.propertyType);
     }
     
     if (filters.propertyStatus) {
-      const status = filters.propertyStatus === 'for-sale' ? 'FOR SALE' : 'FOR RENT';
-      query = query.eq('status', status);
+      const status = filters.propertyStatus === 'for-sale' ? 'For Sale' : 'For Rent';
+      query = query.eq('property_status', status);
+      countQuery = countQuery.eq('property_status', status);
     }
     
     if (filters.minPrice) {
       query = query.gte('price', filters.minPrice);
+      countQuery = countQuery.gte('price', filters.minPrice);
     }
     
     if (filters.maxPrice) {
       query = query.lte('price', filters.maxPrice);
+      countQuery = countQuery.lte('price', filters.maxPrice);
     }
     
     if (filters.location) {
       query = query.eq('location', filters.location);
+      countQuery = countQuery.eq('location', filters.location);
     }
     
     if (filters.bedrooms) {
       query = query.gte('bedrooms', filters.bedrooms);
+      countQuery = countQuery.gte('bedrooms', filters.bedrooms);
     }
     
     if (filters.bathrooms) {
       query = query.gte('bathrooms', filters.bathrooms);
+      countQuery = countQuery.gte('bathrooms', filters.bathrooms);
     }
     
     // Apply sorting
@@ -67,16 +82,34 @@ export async function getProperties(filters?: {
       // Default sorting by newest
       query = query.order('created_at', { ascending: false });
     }
+
+    // Apply pagination
+    const page = filters.page || 1;
+    const limit = filters.limit || 100;
+    const start = (page - 1) * limit;
+    query = query.range(start, start + limit - 1);
   }
 
-  const { data, error } = await query;
+  // Execute both queries in parallel
+  const [dataResult, countResult] = await Promise.all([
+    query,
+    countQuery
+  ]);
   
-  if (error) {
-    console.error('Error fetching properties:', error);
-    return [];
+  if (dataResult.error) {
+    console.error('Error fetching properties:', dataResult.error);
+    return { properties: [], total: 0 };
   }
   
-  return data || [];
+  if (countResult.error) {
+    console.error('Error counting properties:', countResult.error);
+    return { properties: dataResult.data || [], total: 0 };
+  }
+  
+  return { 
+    properties: dataResult.data || [], 
+    total: countResult.count || 0 
+  };
 }
 
 export async function getPropertyById(id: string) {
@@ -95,17 +128,36 @@ export async function getPropertyById(id: string) {
 }
 
 export async function createProperty(property: Database['public']['Tables']['properties']['Insert']) {
-  const { data, error } = await supabase
-    .from('properties')
-    .insert(property)
-    .select();
-  
-  if (error) {
-    console.error('Error creating property:', error);
+  try {
+    // Ensure required fields are present
+    if (!property.title || !property.price || !property.property_status || 
+        !property.status || !property.address || !property.description || 
+        !property.property_type || !property.location || !property.image_url ||
+        !property.city || !property.state || !property.zip_code) {
+      console.error('Missing required property fields');
+      return null;
+    }
+
+    // Ensure property status is correctly formatted
+    if (property.property_status !== 'For Sale' && property.property_status !== 'For Rent') {
+      property.property_status = property.property_status === 'for-sale' ? 'For Sale' : 'For Rent';
+    }
+
+    const { data, error } = await supabase
+      .from('properties')
+      .insert(property)
+      .select();
+    
+    if (error) {
+      console.error('Error creating property:', error);
+      return null;
+    }
+    
+    return data[0];
+  } catch (err) {
+    console.error('Exception in createProperty:', err);
     return null;
   }
-  
-  return data[0];
 }
 
 export async function updateProperty(

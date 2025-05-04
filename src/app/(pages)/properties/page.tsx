@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-// import { getProperties, Property } from '@/lib/services/properties';
+import { getProperties, Property } from '@/lib/services/properties';
+import { Pagination } from '@/components/Pagination';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faHeart, faShareAlt, faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+// import { addToFavorites, removeFromFavorites, isPropertyFavorited } from '@/lib/services/favorites';
+// import { getCurrentUser } from '@/lib/services/auth';
 
 const PropertiesPage = () => {
   const [propertyType, setPropertyType] = useState<string>('');
@@ -10,13 +15,57 @@ const PropertiesPage = () => {
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [location, setLocation] = useState<string>('');
-  const [rooms, setRooms] = useState<string>('');
+  const [bedrooms, setBedrooms] = useState<string>('');
   const [bathrooms, setBathrooms] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const [viewType, setViewType] = useState<string>('grid');
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [totalProperties, setTotalProperties] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const propertiesPerPage = 6;
 
-  // Mock properties data
-  const properties = [
+  // Fetch properties on initial load and when filters change
+  useEffect(() => {
+    fetchProperties();
+  }, [currentPage, sortBy]);
+
+  const fetchProperties = async (searchFilters?: boolean) => {
+    try {
+      setIsLoading(true);
+      
+      // If this is a new search, reset to first page
+      if (searchFilters) {
+        setCurrentPage(1);
+      }
+      
+      // Prepare filter parameters
+      const filters = {
+        propertyType: propertyType || undefined,
+        propertyStatus: propertyStatus || undefined,
+        minPrice: minPrice ? parseInt(minPrice) : undefined,
+        maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
+        location: location || undefined,
+        bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
+        bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
+        sortBy: sortBy,
+        page: currentPage,
+        limit: propertiesPerPage
+      };
+      
+      // Fetch properties with filters
+      const result = await getProperties(filters);
+      setProperties(result.properties);
+      setTotalProperties(result.total);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Array of mock properties for fallback if needed
+  const mockProperties = [
     {
       id: "modern-villa",
       title: "Modern Luxury Villa",
@@ -93,8 +142,11 @@ const PropertiesPage = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would filter properties based on search criteria
-    console.log("Searching with criteria:", { propertyType, propertyStatus, minPrice, maxPrice, location, rooms, bathrooms });
+    fetchProperties(true);
+  };
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -206,10 +258,28 @@ const PropertiesPage = () => {
                 Bedrooms
               </label>
               <select
-                id="rooms"
+                id="bedrooms"
                 className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={rooms}
-                onChange={(e) => setRooms(e.target.value)}
+                value={bedrooms}
+                onChange={(e) => setBedrooms(e.target.value)}
+              >
+                <option value="">Any</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+                <option value="5">5+</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bathrooms">
+                Bathrooms
+              </label>
+              <select
+                id="bathrooms"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={bathrooms}
+                onChange={(e) => setBathrooms(e.target.value)}
               >
                 <option value="">Any</option>
                 <option value="1">1+</option>
@@ -235,7 +305,7 @@ const PropertiesPage = () => {
       <div className="container mx-auto px-6 mb-12">
         <div className="flex justify-between items-center mb-6">
           <div className="text-gray-600">
-            Showing <span className="font-bold">{properties.length}</span> properties
+            Showing <span className="font-bold">{isLoading ? '...' : properties.length}</span> of <span className="font-bold">{totalProperties}</span> properties
           </div>
           <div className="flex items-center space-x-4">
             <div>
@@ -268,43 +338,52 @@ const PropertiesPage = () => {
           </div>
         </div>
 
-        {viewType === 'grid' ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>
+          </div>
+        ) : properties.length === 0 ? (
+          <div className="text-center py-20">
+            <h3 className="text-xl font-semibold text-gray-700">No properties found</h3>
+            <p className="text-gray-500 mt-2">Try adjusting your search filters</p>
+          </div>
+        ) : viewType === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {properties.map((property) => (
               <div key={property.id} className="bg-white rounded-sm shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/properties/${property.id}`}>
                   <div className="relative">
                     <img
-                      src={property.image}
+                      src={property.image_url}
                       alt={property.title}
                       className="w-full h-64 object-cover"
                     />
                     <div className="absolute top-4 left-4 bg-blue-700 text-white px-3 py-1 text-sm font-semibold">
-                      {property.status}
+                      {property.property_status}
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
-                      <div className="text-xl font-bold text-blue-700">{property.price}</div>
+                      <div className="text-xl font-bold text-blue-700">#{property.price.toLocaleString()}</div>
                     </div>
                     <p className="text-gray-600 mb-4">
-                      <i className="fas fa-map-marker-alt mr-2 text-blue-700"></i>
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-blue-700" />
                       {property.address}
                     </p>
                     <p className="text-gray-700 mb-4 line-clamp-2">{property.description}</p>
                     <div className="flex justify-between text-gray-600 border-t border-gray-200 pt-4">
                       <div className="flex items-center">
-                        <i className="fas fa-bed mr-2 text-blue-700"></i>
+                        <FontAwesomeIcon icon={faBed} className="mr-2 text-blue-700" />
                         <span>{property.bedrooms} Beds</span>
                       </div>
                       <div className="flex items-center">
-                        <i className="fas fa-bath mr-2 text-blue-700"></i>
+                        <FontAwesomeIcon icon={faBath} className="mr-2 text-blue-700" />
                         <span>{property.bathrooms} Baths</span>
                       </div>
                       <div className="flex items-center">
-                        <i className="fas fa-ruler-combined mr-2 text-blue-700"></i>
-                        <span>{property.area}</span>
+                        <FontAwesomeIcon icon={faRulerCombined} className="mr-2 text-blue-700" />
+                        <span>{property.area} {property.area_unit}</span>
                       </div>
                     </div>
                   </div>
@@ -320,21 +399,21 @@ const PropertiesPage = () => {
                   <div className="flex flex-col md:flex-row">
                     <div className="relative md:w-1/3">
                       <img
-                        src={property.image}
+                        src={property.image_url}
                         alt={property.title}
                         className="w-full h-64 md:h-full object-cover"
                       />
                       <div className="absolute top-4 left-4 bg-blue-700 text-white px-3 py-1 text-sm font-semibold">
-                        {property.status}
+                        {property.property_status}
                       </div>
                     </div>
                     <div className="p-6 md:w-2/3">
                       <div className="flex justify-between items-start mb-4">
                         <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
-                        <div className="text-xl font-bold text-blue-700">{property.price}</div>
+                        <div className="text-xl font-bold text-blue-700">#{property.price.toLocaleString()}</div>
                       </div>
                       <p className="text-gray-600 mb-4">
-                        <i className="fas fa-map-marker-alt mr-2 text-blue-700"></i>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-blue-700" />
                         {property.address}
                       </p>
                       <p className="text-gray-700 mb-4">{property.description}</p>
@@ -349,7 +428,7 @@ const PropertiesPage = () => {
                         </div>
                         <div className="flex items-center">
                           <i className="fas fa-ruler-combined mr-2 text-blue-700"></i>
-                          <span>{property.area}</span>
+                          <span>{property.area} {property.area_unit}</span>
                         </div>
                       </div>
                     </div>
@@ -361,19 +440,60 @@ const PropertiesPage = () => {
         )}
 
         {/* Pagination */}
-        <div className="flex justify-center mt-12">
-          <nav className="flex items-center">
-            <a href="#" className="px-4 py-2 mx-1 border border-gray-300 rounded-sm text-gray-600 hover:bg-gray-100">
-              <i className="fas fa-chevron-left"></i>
-            </a>
-            <a href="#" className="px-4 py-2 mx-1 border border-blue-700 bg-blue-700 rounded-sm text-white">1</a>
-            <a href="#" className="px-4 py-2 mx-1 border border-gray-300 rounded-sm text-gray-600 hover:bg-gray-100">2</a>
-            <a href="#" className="px-4 py-2 mx-1 border border-gray-300 rounded-sm text-gray-600 hover:bg-gray-100">3</a>
-            <a href="#" className="px-4 py-2 mx-1 border border-gray-300 rounded-sm text-gray-600 hover:bg-gray-100">
-              <i className="fas fa-chevron-right"></i>
-            </a>
-          </nav>
-        </div>
+        {totalProperties > propertiesPerPage && (
+          <div className="flex justify-center mt-12">
+            <nav className="flex items-center">
+              <button 
+                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 mx-1 border rounded-sm ${currentPage === 1 ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              
+              {Array.from({ length: Math.ceil(totalProperties / propertiesPerPage) }, (_, i) => i + 1)
+                .filter(page => {
+                  // Show current page, first and last pages, and pages around current page
+                  const maxPages = 5;
+                  const totalPages = Math.ceil(totalProperties / propertiesPerPage);
+                  if (totalPages <= maxPages) return true;
+                  
+                  const isCurrentPage = page === currentPage;
+                  const isFirstPage = page === 1;
+                  const isLastPage = page === totalPages;
+                  const isNearCurrentPage = Math.abs(page - currentPage) <= 1;
+                  
+                  return isCurrentPage || isFirstPage || isLastPage || isNearCurrentPage;
+                })
+                .map((page, index, array) => {
+                  // Add ellipsis where pages are skipped
+                  const showEllipsisBefore = index > 0 && array[index - 1] !== page - 1;
+                  
+                  return (
+                    <React.Fragment key={page}>
+                      {showEllipsisBefore && (
+                        <span className="px-4 py-2 mx-1">...</span>
+                      )}
+                      <button
+                        onClick={() => handlePageChange(page)}
+                        className={`px-4 py-2 mx-1 border rounded-sm ${currentPage === page ? 'border-blue-700 bg-blue-700 text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+                      >
+                        {page}
+                      </button>
+                    </React.Fragment>
+                  );
+                })}
+              
+              <button 
+                onClick={() => currentPage < Math.ceil(totalProperties / propertiesPerPage) && handlePageChange(currentPage + 1)}
+                disabled={currentPage >= Math.ceil(totalProperties / propertiesPerPage)}
+                className={`px-4 py-2 mx-1 border rounded-sm ${currentPage >= Math.ceil(totalProperties / propertiesPerPage) ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </nav>
+          </div>
+        )}
       </div>
 
     </div>

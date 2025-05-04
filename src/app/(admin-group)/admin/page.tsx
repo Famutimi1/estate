@@ -7,14 +7,14 @@ import React, { useState, useRef } from 'react';
 const Admin: React.FC = () => {
   // Sidebar state
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: '',
-    status: '',
-    type: '',
+    property_status: '',
+    property_type: '',
     address: '',
     city: '',
     state: '',
@@ -36,16 +36,16 @@ const Admin: React.FC = () => {
       furnished: false
     }
   });
-  
+
   // Image upload state
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [featuredImageIndex, setFeaturedImageIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Notification state
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  
+
   // Handle form changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -54,7 +54,7 @@ const Admin: React.FC = () => {
       [name]: value
     });
   };
-  
+
   // Handle checkbox changes
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -66,51 +66,51 @@ const Admin: React.FC = () => {
       }
     });
   };
-  
+
   // Handle image upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
       const imageUrls = filesArray.map(file => URL.createObjectURL(file));
       setUploadedImages([...uploadedImages, ...imageUrls]);
-      
+
       // Set first image as featured if none selected
       if (featuredImageIndex === null && uploadedImages.length === 0) {
         setFeaturedImageIndex(0);
       }
     }
   };
-  
+
   // Handle drag and drop
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
-  
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (e.dataTransfer.files) {
       const filesArray = Array.from(e.dataTransfer.files);
       const imageUrls = filesArray.map(file => URL.createObjectURL(file));
       setUploadedImages([...uploadedImages, ...imageUrls]);
-      
+
       // Set first image as featured if none selected
       if (featuredImageIndex === null && uploadedImages.length === 0) {
         setFeaturedImageIndex(0);
       }
     }
   };
-  
+
   // Set featured image
   const setAsFeatured = (index: number) => {
     setFeaturedImageIndex(index);
   };
-  
+
   // Remove image
   const removeImage = (index: number) => {
     const newImages = [...uploadedImages];
     newImages.splice(index, 1);
     setUploadedImages(newImages);
-    
+
     // Adjust featured image index if needed
     if (featuredImageIndex === index) {
       setFeaturedImageIndex(newImages.length > 0 ? 0 : null);
@@ -118,14 +118,14 @@ const Admin: React.FC = () => {
       setFeaturedImageIndex(featuredImageIndex - 1);
     }
   };
-  
+
   // Submit form
   const handleSubmit = async (isDraft: boolean) => {
     try {
       // Validate required fields
-      if (!formData.title || !formData.price || !formData.status || !formData.type || 
-          !formData.description || !formData.address || !formData.city || 
-          !formData.state || !formData.zipCode) {
+      if (!formData.title || !formData.price || !formData.property_status || !formData.property_type ||
+        !formData.description || !formData.address || !formData.city ||
+        !formData.state || !formData.zipCode) {
         alert('Please fill in all required fields');
         return;
       }
@@ -136,19 +136,45 @@ const Admin: React.FC = () => {
         return;
       }
 
+
+      const STATUS = {
+        DRAFT: 'draft',
+        PUBLISH: 'publish',
+      } as const;
+
+      const PROPERTY_STATUS = {
+        RENT: 'For Rent',
+        SALE: 'For Sale',
+      } as const;
+
+      const PROPERTY_TYPE = {
+         HOUSE: 'house',
+        APARTMENT: 'apartment',
+        VILLA: 'villa',
+        COMMERCIAL: 'commercial',
+        LAND: 'land',
+      } as const;
+      
+
+      // type Status = typeof STATUS[keyof typeof STATUS];
+
       // Convert form data to match the database schema
       const propertyData = {
         title: formData.title,
         price: parseFloat(formData.price),
-        status: isDraft ? 'draft' : 'publish',
-        property_status: formData.status === 'rent' ? 'For Rent' : 'For Sale',
+        status: isDraft ? STATUS.DRAFT : STATUS.PUBLISH,
+        property_status: formData.property_status === 'rent' ? PROPERTY_STATUS.RENT : PROPERTY_STATUS.SALE,
         address: formData.address,
         description: formData.description,
         bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : 0,
         bathrooms: formData.bathrooms ? parseFloat(formData.bathrooms) : 0,
         area: formData.area ? parseFloat(formData.area) : 0,
         area_unit: 'sq ft',
-        property_type: formData.type as any,
+        property_type: formData.property_type=== 'apartment'? PROPERTY_TYPE.APARTMENT :
+        formData.property_type === 'house'? PROPERTY_TYPE.HOUSE :
+        formData.property_type === 'villa'? PROPERTY_TYPE.VILLA :
+        formData.property_type === 'commercial'? PROPERTY_TYPE.COMMERCIAL :
+        formData.property_type === 'land'? PROPERTY_TYPE.LAND : PROPERTY_TYPE.HOUSE,
         location: `${formData.city}, ${formData.state}`,
         image_url: featuredImageIndex !== null ? uploadedImages[featuredImageIndex] : uploadedImages[0],
         images: uploadedImages,
@@ -161,24 +187,27 @@ const Admin: React.FC = () => {
         // If you have user authentication, you can add user_id here
         // user_id: currentUser?.id
       };
+      
 
       // Import the createProperty function
+      
       const { createProperty } = await import('@/lib/services/properties');
       
       // Send data to the backend
       const result = await createProperty(propertyData);
-      
+      console.log(propertyData);
+
       if (result) {
         // Show success message
         alert(isDraft ? 'Property saved as draft!' : 'Property published successfully!');
-        
+
         // Reset form after successful submission
         setFormData({
           title: '',
           description: '',
           price: '',
-          status: '',
-          type: '',
+          property_status: '',
+          property_type: '',
           address: '',
           city: '',
           state: '',
@@ -220,14 +249,14 @@ const Admin: React.FC = () => {
             <span className={`font-bold text-blue-700 text-xl ${sidebarCollapsed ? 'hidden' : ''}`}>my<span className="text-pink-600">HOME</span></span>
             {sidebarCollapsed && <span className="text-pink-600 text-xl font-bold">m</span>}
           </div>
-          <button 
+          <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             className="text-gray-500 hover:text-pink-600 cursor-pointer !rounded-button whitespace-nowrap"
           >
             <i className={`fas ${sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
           </button>
         </div>
-        
+
         <nav className="mt-6">
           <ul>
             <li>
@@ -263,7 +292,7 @@ const Admin: React.FC = () => {
           </ul>
         </nav>
       </div>
-      
+
       {/* Main Content */}
       <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'}`}>
         {/* Top Navigation */}
@@ -271,25 +300,25 @@ const Admin: React.FC = () => {
           <div className="container mx-auto px-4 py-3">
             <div className="flex justify-between items-center">
               <div className="relative">
-                <input 
-                  type="text" 
-                  placeholder="Search..." 
+                <input
+                  type="text"
+                  placeholder="Search..."
                   className="bg-blue-700 text-white placeholder-blue-300 border-none rounded-sm py-2 pl-10 pr-4 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <i className="fas fa-search absolute left-3 top-3 text-blue-300"></i>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 {/* Notifications */}
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setShowNotifications(!showNotifications)}
                     className="text-white hover:text-blue-200 cursor-pointer !rounded-button whitespace-nowrap"
                   >
                     <i className="fas fa-bell text-xl"></i>
                     <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                   </button>
-                  
+
                   {showNotifications && (
                     <div className="absolute right-0 mt-2 w-80 bg-white rounded-sm shadow-lg z-10">
                       <div className="p-3 border-b border-gray-200">
@@ -336,22 +365,22 @@ const Admin: React.FC = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* User Profile */}
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className="flex items-center space-x-2 cursor-pointer !rounded-button whitespace-nowrap"
                   >
-                    <img 
-                      src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish" 
-                      alt="User" 
+                    <img
+                      src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish"
+                      alt="User"
                       className="w-8 h-8 rounded-full object-cover"
                     />
                     <span>John Doe</span>
                     <i className="fas fa-chevron-down text-xs"></i>
                   </button>
-                  
+
                   {showUserMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-lg z-10">
                       <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
@@ -374,11 +403,11 @@ const Admin: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Content */}
         <div className="container mx-auto px-6 py-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Add New Property</h1>
-          
+
           <form>
             {/* Basic Information */}
             <div className="bg-white rounded-sm shadow-md p-6 mb-6">
@@ -423,9 +452,9 @@ const Admin: React.FC = () => {
                   </label>
                   <div className="relative">
                     <select
-                      id="status"
-                      name="status"
-                      value={formData.status}
+                      id="property_status"
+                      name="property_status"
+                      value={formData.property_status}
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                       required
@@ -445,9 +474,9 @@ const Admin: React.FC = () => {
                   </label>
                   <div className="relative">
                     <select
-                      id="type"
-                      name="type"
-                      value={formData.type}
+                      id="property_type"
+                      name="property_type"
+                      value={formData.property_type}
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                       required
@@ -481,7 +510,7 @@ const Admin: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Location Details */}
             <div className="bg-white rounded-sm shadow-md p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Location Details</h2>
@@ -556,7 +585,7 @@ const Admin: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Property Features */}
             <div className="bg-white rounded-sm shadow-md p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Property Features</h2>
@@ -623,7 +652,7 @@ const Admin: React.FC = () => {
                   />
                 </div>
               </div>
-              
+
               <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">Amenities</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="flex items-center">
@@ -738,35 +767,35 @@ const Admin: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Image Upload */}
             <div className="bg-white rounded-sm shadow-md p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Property Images</h2>
-              <div 
+              <div
                 className="border-2 border-dashed border-gray-300 rounded-sm p-8 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => fileInputRef.current?.click()}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  onChange={handleImageUpload} 
-                  multiple 
-                  accept="image/*" 
-                  className="hidden" 
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  multiple
+                  accept="image/*"
+                  className="hidden"
                 />
                 <i className="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Drag & Drop or Click to Upload</h3>
                 <p className="text-gray-500 mb-4">Upload high quality images (max 10 files)</p>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="bg-blue-800 text-white px-6 py-2 font-semibold hover:bg-blue-900 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
                 >
                   Browse Files
                 </button>
               </div>
-              
+
               {uploadedImages.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold text-gray-800 mb-3">Uploaded Images</h3>
@@ -774,29 +803,28 @@ const Admin: React.FC = () => {
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {uploadedImages.map((image, index) => (
                       <div key={index} className={`relative rounded-sm overflow-hidden border-2 ${featuredImageIndex === index ? 'border-pink-600' : 'border-transparent'}`}>
-                        <img 
-                          src={image} 
-                          alt={`Property image ${index + 1}`} 
+                        <img
+                          src={image}
+                          alt={`Property image ${index + 1}`}
                           className="w-full h-32 object-cover"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                           <div className="flex justify-end">
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               onClick={() => removeImage(index)}
                               className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-500 hover:bg-red-100 cursor-pointer !rounded-button whitespace-nowrap"
                             >
                               <i className="fas fa-times"></i>
                             </button>
                           </div>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             onClick={() => setAsFeatured(index)}
-                            className={`w-full py-1 text-xs font-semibold ${
-                              featuredImageIndex === index 
-                                ? 'bg-pink-600 text-white' 
+                            className={`w-full py-1 text-xs font-semibold ${featuredImageIndex === index
+                                ? 'bg-pink-600 text-white'
                                 : 'bg-white text-gray-800 hover:bg-gray-100'
-                            } cursor-pointer !rounded-button whitespace-nowrap`}
+                              } cursor-pointer !rounded-button whitespace-nowrap`}
                           >
                             {featuredImageIndex === index ? 'Featured' : 'Set as Featured'}
                           </button>
@@ -807,18 +835,18 @@ const Admin: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex justify-end gap-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => handleSubmit(true)}
                 className="border adjust border-blue-800 text-blue-800 px-6 py-3 font-semibold hover:bg-blue-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
               >
                 Save Draft
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => handleSubmit(false)}
                 className="bg-pink-600 adjust text-white px-6 py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
               >

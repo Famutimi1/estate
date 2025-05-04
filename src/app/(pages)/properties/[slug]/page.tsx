@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getPropertyById, Property } from '@/lib/services/properties';
 import { 
     faArrowLeft, 
     faChevronRight, 
@@ -30,12 +31,70 @@ import {
     faStar
 } from '@fortawesome/free-solid-svg-icons';
 
-interface PropertyDetailProps {
-    onBack: () => void;
-}
-const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
+const PropertyDetail = () => {
+    const params = useParams();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState<'overview' | 'details' | 'features' | 'video' | 'map'>('overview');
     const [showContactForm, setShowContactForm] = useState(false);
+    const [property, setProperty] = useState<Property | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    
+    useEffect(() => {
+        const fetchProperty = async () => {
+            if (!params.slug) return;
+            
+            try {
+                setLoading(true);
+                const propertyData = await getPropertyById(params.slug as string);
+                
+                if (!propertyData) {
+                    setError('Property not found');
+                    return;
+                }
+                
+                setProperty(propertyData);
+                setError(null);
+            } catch (err) {
+                console.error('Error fetching property:', err);
+                setError('Failed to load property details');
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchProperty();
+    }, [params.slug]);
+    
+    const onBack = () => {
+        router.push('/');
+    };
+    
+    if (loading) {
+        return (
+            <div className="container max-w-screen px-6 py-8">
+                <div className="flex justify-center items-center h-96">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                </div>
+            </div>
+        );
+    }
+    
+    if (error || !property) {
+        return (
+            <div className="container max-w-screen px-6 py-8">
+                <div className="flex flex-col justify-center items-center h-96">
+                    <h2 className="text-2xl font-bold text-red-500 mb-4">{error || 'Property not found'}</h2>
+                    <button 
+                        onClick={onBack}
+                        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="container bg-[#f9fafc] max-w-screen px-6 py-8">
             {/* Breadcrumb */}
@@ -50,58 +109,61 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
             {/* Property Header */}
             <div className="flex flex-wrap justify-between items-start mb-8">
                 <div>
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">Modern Villa with Lagos Lagoon View</h1>
+                    <h1 className="text-4xl font-bold text-gray-800 mb-2">{property.title}</h1>
                     <p className="text-gray-600 flex items-center">
                         <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-green-500" />
-                        15 Banana Island Road, Ikoyi, Lagos
+                        {property.address}
                     </p>
                 </div>
                 <div className="text-right">
-                    <div className="text-3xl font-bold text-green-500 mb-2">$2,850,000</div>
-                    <div className="text-gray-600">$725 / sq ft</div>
+                    <div className="text-3xl font-bold text-green-500 mb-2">#{property.price.toLocaleString()}</div>
+                    <div className="text-gray-600">#{Math.round(property.price / property.area).toLocaleString()} / {property.area_unit}</div>
                 </div>
             </div>
             {/* Property Images */}
             <div className="grid grid-cols-4 gap-4 mb-8">
                 <div className="col-span-2 row-span-2">
                     <img
-                        src="https://readdy.ai/api/search-image?query=Luxurious%20modern%20villa%20interior%20with%20open%20floor%20plan%2C%20floor%20to%20ceiling%20windows%2C%20ocean%20view%2C%20high%20end%20finishes%2C%20marble%20floors%2C%20designer%20furniture%2C%20natural%20light%20flooding%20in%2C%20architectural%20masterpiece&width=800&height=600&seq=8&orientation=landscape"
-                        alt="Main Property View"
+                        src={property.image_url}
+                        alt={property.title}
+                        className="w-full h-full object-cover rounded-sm"
+                    />
+                </div>
+                {/* Additional property images would be displayed here if available */}
+                {/* For now, we'll use the main image in all slots */}
+                <div>
+                    <img
+                        src={property.image_url}
+                        alt={`${property.title} - View 1`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <img
-                        src="https://readdy.ai/api/search-image?query=Modern%20luxury%20kitchen%20with%20marble%20countertops%2C%20high%20end%20appliances%2C%20white%20cabinets%2C%20pendant%20lighting%2C%20breakfast%20bar%2C%20professional%20interior%20photography&width=400&height=300&seq=9&orientation=landscape"
-                        alt="Kitchen"
+                        src={property.image_url}
+                        alt={`${property.title} - View 2`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <img
-                        src="https://readdy.ai/api/search-image?query=Master%20bedroom%20with%20ocean%20view%2C%20king%20size%20bed%2C%20luxury%20linens%2C%20modern%20decor%2C%20floor%20to%20ceiling%20windows%2C%20evening%20lighting%2C%20high%20end%20real%20estate%20photography&width=400&height=300&seq=10&orientation=landscape"
-                        alt="Bedroom"
+                        src={property.image_url}
+                        alt={`${property.title} - View 3`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <img
-                        src="https://readdy.ai/api/search-image?query=Luxury%20bathroom%20with%20freestanding%20tub%2C%20marble%20tiles%2C%20double%20vanity%2C%20glass%20shower%2C%20modern%20fixtures%2C%20spa%20like%20atmosphere%2C%20professional%20interior%20photography&width=400&height=300&seq=11&orientation=landscape"
-                        alt="Bathroom"
-                        className="w-full h-full object-cover rounded-sm"
-                    />
-                </div>
-                <div>
-                    <img
-                        src="https://readdy.ai/api/search-image?query=Infinity%20pool%20with%20ocean%20view%2C%20modern%20outdoor%20furniture%2C%20landscaped%20terrace%2C%20luxury%20lifestyle%2C%20sunset%20lighting%2C%20high%20end%20real%20estate%20photography&width=400&height=300&seq=12&orientation=landscape"
-                        alt="Pool"
+                        src={property.image_url}
+                        alt={`${property.title} - View 4`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
             </div>
             {/* Property Navigation */}
             <div className="flex border-b border-gray-200 mb-8">
-                {['overview', 'details', 'features', 'video', 'map'].map((tab) => (
+                {/* ['overview', 'details', 'features', 'video', 'map'] */}
+                {['overview','map'].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as any)}
@@ -122,39 +184,35 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4">Property Overview</h2>
                             <p className="text-gray-600 mb-6">
-                                This stunning modern villa offers breathtaking ocean views and luxurious living spaces.
-                                The property features an open floor plan with high-end finishes throughout, including
-                                marble floors, designer kitchen, and floor-to-ceiling windows that flood the space with
-                                natural light. Perfectly positioned to capture panoramic ocean views from multiple rooms,
-                                this residence represents the pinnacle of luxury coastal living.
+                                {property.description}
                             </p>
                             <div className="grid grid-cols-2 gap-6 mb-8">
                                 <div className="flex items-center">
                                     <FontAwesomeIcon icon={faBed} className="text-2xl text-green-500 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Bedrooms</div>
-                                        <div className="text-xl font-semibold">5</div>
+                                        <div className="text-xl font-semibold">{property.bedrooms}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
                                     <FontAwesomeIcon icon={faBath} className="text-2xl text-green-500 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Bathrooms</div>
-                                        <div className="text-xl font-semibold">4.5</div>
+                                        <div className="text-xl font-semibold">{property.bathrooms}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
                                     <FontAwesomeIcon icon={faRulerCombined} className="text-2xl text-green-500 mr-4" />
                                     <div>
-                                        <div className="text-gray-600">Square Feet</div>
-                                        <div className="text-xl font-semibold">3,850</div>
+                                        <div className="text-gray-600">Area</div>
+                                        <div className="text-xl font-semibold">{property.area.toLocaleString()} {property.area_unit}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
                                     <FontAwesomeIcon icon={faCar} className="text-2xl text-green-500 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Garage</div>
-                                        <div className="text-xl font-semibold">2 Cars</div>
+                                        <div className="text-xl font-semibold">{property.garage || 0} Cars</div>
                                     </div>
                                 </div>
                             </div>
@@ -212,9 +270,26 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
                                     luxury real estate in this exclusive waterfront community of Banana Island.
                                 </p>
                             </div>
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Property Documents</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <a href="#" className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer">
+                                    <FontAwesomeIcon icon={faFilePdf} className="text-red-500 text-2xl mr-3" />
+                                    <div>
+                                        <div className="font-medium">Property Brochure</div>
+                                        <div className="text-sm text-gray-500">PDF (2.5 MB)</div>
+                                    </div>
+                                </a>
+                                <a href="#" className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer">
+                                    <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
+                                    <div>
+                                        <div className="font-medium">Floor Plans</div>
+                                        <div className="text-sm text-gray-500">PDF (1.8 MB)</div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     )}
-                    {activeTab === 'details' && (
+                    {/* {activeTab === 'details' && (
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-6">Property Details</h2>
                             <div className="grid grid-cols-2 gap-8 mb-8">
@@ -456,7 +531,7 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
                                 Launch VR Tour
                             </button>
                         </div>
-                    )}
+                    )} */}
                     {activeTab === 'map' && (
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-6">Property Location</h2>
@@ -633,7 +708,7 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
                             Request Viewing
                         </button>
                     </div>
-                    <div className="bg-white p-6 rounded-sm shadow-md">
+                    {/* <div className="bg-white p-6 rounded-sm shadow-md">
                         <h3 className="font-bold text-gray-800 mb-4">Mortgage Calculator</h3>
                         <div className="mb-4">
                             <label className="block text-gray-600 text-sm mb-2">Purchase Price</label>
@@ -680,7 +755,7 @@ const PropertyDetail: React.FC<PropertyDetailProps> = ({ onBack }) => {
                         <button className="w-full border border-green-500 text-green-500 py-3 font-semibold hover:bg-green-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer">
                             Get Pre-Approved
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="mt-12 bg-white p-6 rounded-sm shadow-md">
