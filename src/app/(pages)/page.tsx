@@ -62,14 +62,14 @@ const Home: React.FC = () => {
           className="w-full h-full object-cover object-top"
         />
         <div className="absolute inset-0 flex items-center z-10">
-          <div className="bg-black bg-opacity-70 opacity-75 -mt-70 p-2 max-w-2xl ml-10 rounded-lg text-white backdrop-blur-sm">
+          <div className="-mt-115 bg-black bg-opacity-70 opacity-75 md:-mt-70 p-2 max-w-2xl md:ml-10 md:rounded-lg text-white backdrop-blur-sm">
             <div className="text-blue-300 font-medium mb-4">
               DISCOVER YOUR DREAM HOME
             </div>
-            <h2 className="text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Find Your Perfect Place to Live
             </h2>
-            <p className="text-xl mb-3 opacity-90">
+            <p className=" hidden md:flex text-xl mb-3 opacity-90">
               Experience luxury living in prime locations. Our curated
               selection of properties offers the perfect blend of comfort and
               sophistication.
@@ -91,14 +91,14 @@ const Home: React.FC = () => {
               </div>
             </div> */}
         {/* Slider Navigation */}
-        <div className="absolute bottom-1/2 right-4 transform translate-y-1/2">
+        {/* <div className="absolute bottom-1/2 right-4 transform translate-y-1/2">
           <button className="w-12 h-12 rounded-full bg-blue-700 flex items-center justify-center text-white cursor-pointer !rounded-button whitespace-nowrap">
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
-        </div>
+        </div> */}
       </div>
       {/* Search Filter */}
-      <div className="container mx-auto px-6 -mt-60 mb-20 relative z-10 opacity-90">
+      <div className="container mx-auto px-6 -mt-60  md:mb-20 relative z-10 opacity-90">
         <form onSubmit={(e) => handleSearch(e)}>
           <div className="bg-white shadow-lg rounded-sm flex flex-wrap">
             <div className="w-full md:w-1/5 p-4 border-r border-gray-200">
@@ -224,7 +224,7 @@ const Home: React.FC = () => {
         </form>
       </div>
       {/* Property Listings */}
-      <div className="container mx-auto px-6 py-16" id="property-listings">
+      <div className="container mx-auto px-6 py-10 md:py-16" id="property-listings">
         <PropertyListing
           filters={{
             propertyType: propertyType || undefined,

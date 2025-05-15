@@ -177,9 +177,9 @@ const PropertyDetail = () => {
                 ))}
             </div>
             {/* Main Content */}
-            <div className="grid grid-cols-3 gap-8">
+            <div className="flex flex-col md:flex-row  gap-4">
                 {/* Left Content */}
-                <div className="col-span-2">
+                <div className="md:[width:60%]">
                     {activeTab === 'overview' && (
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4">Property Overview</h2>

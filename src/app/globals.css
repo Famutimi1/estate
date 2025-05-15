@@ -37,9 +37,9 @@ a[class*="bg-"] {
   font-size: 10px !important;
 }
 
-button {
+/* button {
   margin: inherit  !important;
-}
+} */
 
 /* Ensure specific background colors work on links */
 a.bg-blue-700 { background-color: #1d4ed8 !important; }

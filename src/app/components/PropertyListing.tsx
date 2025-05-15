@@ -176,12 +176,12 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
 
   return (
     <>
-      <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">Featured Properties</h2>
-          <div className="flex items-center">
-            <span className="text-gray-600 mr-2">Sort by:</span>
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-8">
+          <h2 className="text-xl ml-0 md:text-3xl font-bold text-gray-800">Featured Properties</h2>
+          <div className="flex items-center mt-5 md:mt-0">
+            <span className=" text-gray-600 mr-2">Sort by:</span>
             <div className="relative">
-              <select className="appearance-none bg-white border border-gray-300 rounded-sm px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+              <select className="appearance-none bg-white border border-gray-300 rounded-sm px-4 py-2 pr-8 focus:outline-none   text-sm"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}>
                 <option value="newest">Newest</option>
@@ -240,7 +240,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
                 <div className={`text-xl font-bold ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`}>
-                  ${property.price.toLocaleString()}{property.property_status === 'For Rent' ? '/mo' : ''}
+                  #{property.price.toLocaleString()}{property.property_status === 'For Rent' ? '/mo' : ''}
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
@@ -249,15 +249,15 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
               </p>
               <div className="flex justify-between text-gray-600 border-t border-gray-200 pt-4">
                 <div className="flex items-center">
-                  <FontAwesomeIcon icon={faBed} className={`mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
+                  <FontAwesomeIcon icon={faBed} className={`mr-1 md:mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
                   <span>{property.bedrooms} Beds</span>
                 </div>
                 <div className="flex items-center">
-                  <FontAwesomeIcon icon={faBath} className={`mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
+                  <FontAwesomeIcon icon={faBath} className={`mr-1 md:mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
                   <span>{property.bathrooms} Baths</span>
                 </div>
                 <div className="flex items-center">
-                  <FontAwesomeIcon icon={faRulerCombined} className={`mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
+                  <FontAwesomeIcon icon={faRulerCombined} className={`mr-1 md:mr-2 ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`} />
                   <span>{property.area} {property.area_unit}</span>
                 </div>
               </div>
