@@ -3,10 +3,10 @@
 import Image from "next/image";
 
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhoneAlt, faMapMarkerAlt, faEnvelope, faCommentAlt, faChevronRight, faChevronDown, faHeart, faShareAlt, faBed, faBath, faRulerCombined, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronDown, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import PropertyListing from '../components/PropertyListing';
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-[600px] overflow-hidden">
-        <img
+        <Image
           src="https://readdy.ai/api/search-image?query=Luxurious%2520modern%2520suburban%2520house%2520exterior%2520at%2520sunset%2520with%2520warm%2520golden%2520light%252C%2520beautiful%2520architecture%2520with%2520gray%2520siding%2520and%2520stone%2520accents%252C%2520perfectly%2520manicured%2520lawn%252C%2520high-end%2520residential%2520neighborhood%252C%2520professional%2520real%2520estate%2520photography&width=1440&height=600&seq=1&orientation=landscape"
           alt="Luxury Home"
           className="w-full h-full object-cover object-top"

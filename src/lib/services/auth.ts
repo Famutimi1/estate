@@ -124,7 +124,7 @@ export async function updateUserProfile({
     avatar_url?: string;
 }) {
     try {
-        const updates: any = {};
+        const updates: Partial<Pick<User, 'name' | 'avatar_url'>> = {};
         if (name) updates.name = name;
         if (avatar_url) updates.avatar_url = avatar_url;
 

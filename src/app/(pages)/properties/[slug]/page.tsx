@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-// import Image from 'next/image';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 // import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,7 +29,7 @@ import {
 const PropertyDetail = () => {
     const params = useParams();
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<'overview' | 'details' | 'features' | 'video' | 'map'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'map'>('overview');
     const [showContactForm, setShowContactForm] = useState(false);
     const [property, setProperty] = useState<Property | null>(null);
     const [loading, setLoading] = useState(true);
@@ -118,7 +118,7 @@ const PropertyDetail = () => {
             {/* Property Images */}
             <div className="grid grid-cols-4 gap-4 mb-8">
                 <div className="col-span-2 row-span-2">
-                    <img
+                    <Image
                         src={property.image_url}
                         alt={property.title}
                         className="w-full h-full object-cover rounded-sm"
@@ -127,28 +127,28 @@ const PropertyDetail = () => {
                 {/* Additional property images would be displayed here if available */}
                 {/* For now, we'll use the main image in all slots */}
                 <div>
-                    <img
+                    <Image
                         src={property.image_url}
                         alt={`${property.title} - View 1`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
-                    <img
+                    <Image
                         src={property.image_url}
                         alt={`${property.title} - View 2`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
-                    <img
+                    <Image
                         src={property.image_url}
                         alt={`${property.title} - View 3`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
-                    <img
+                    <Image
                         src={property.image_url}
                         alt={`${property.title} - View 4`}
                         className="w-full h-full object-cover rounded-sm"
@@ -161,7 +161,7 @@ const PropertyDetail = () => {
                 {['overview','map'].map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab as any)}
+                        onClick={() => setActiveTab(tab as 'overview' | 'map')}
                         className={`px-6 py-3 font-semibold capitalize whitespace-nowrap !rounded-button cursor-pointer ${activeTab === tab
                                 ? 'text-green-500 border-b-2 border-green-500'
                                 : 'text-gray-600 hover:text-green-500'
@@ -600,7 +600,7 @@ const PropertyDetail = () => {
                 <div>
                     <div className="bg-white p-6 rounded-sm shadow-md mb-6">
                         <div className="flex items-center mb-6">
-                            <img
+                            <Image
                                 src="https://readdy.ai/api/search-image?query=Professional%20real%20estate%20agent%20headshot%2C%20confident%20smile%2C%20business%20attire%2C%20studio%20lighting%2C%20clean%20background%2C%20high%20quality%20portrait%20photography%2C%20realtor%20profile%20picture&width=100&height=100&seq=13&orientation=squarish"
                                 alt="Agent"
                                 className="w-16 h-16 rounded-full object-cover mr-4"
@@ -759,7 +759,7 @@ const PropertyDetail = () => {
                     {[1, 2, 3].map((item) => (
                         <div key={item} className="border border-gray-200 rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer">
                             <div className="relative">
-                                <img
+                                <Image
                                     src={`https://readdy.ai/api/search-image?query=Luxury%20waterfront%20property%20with%20modern%20architecture%2C%20floor%20to%20ceiling%20windows%2C%20infinity%20pool%2C%20ocean%20view%2C%20sunset%20lighting%2C%20high-end%20real%20estate%20photography%2C%20exclusive%20beachfront%20residence&width=400&height=250&seq=${item + 20}&orientation=landscape`}
                                     alt={`Similar Property ${item}`}
                                     className="w-full h-48 object-cover"

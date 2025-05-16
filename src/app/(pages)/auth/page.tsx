@@ -38,8 +38,11 @@ const AuthPage = () => {
       } else {
         setError(error as string || 'Failed to sign in');
       }
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred');
+    } catch (err) {
+      if (err instanceof Error) {
+         setError(err.message || 'An unexpected error occurred');
+      }
+     
     } finally {
       setLoading(false);
     }
@@ -80,8 +83,10 @@ const AuthPage = () => {
       } else {
         setError((error as { message?: string })?.message || 'Failed to register');
       }
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'An unexpected error occurred');
+     }
     } finally {
       setLoading(false);
     }

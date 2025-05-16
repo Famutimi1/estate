@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 // import Link from 'next/link';
+import Image from 'next/image';
+import { User } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt, faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight,faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { getProperties } from '@/lib/services/properties';
@@ -33,7 +35,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
   const [authChecked, setAuthChecked] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +54,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
     fetchUser();
 
     // Set up auth state listener
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         const { user } = await getCurrentUser();
         setCurrentUser(user);
@@ -67,10 +69,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
     };
   }, []);
 
-   // Fetch properties on initial load, when search is triggered, or when page/sort changes
-  useEffect(() => {
-    fetchProperties();
-  }, [currentPage, sortBy, searchTrigger]);
+   
   
   // Don't fetch on filters change, only when searchTrigger changes
 
@@ -97,12 +96,17 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchProperties();
-  };
+  // Fetch properties on initial load, when search is triggered, or when page/sort changes
+  useEffect(() => {
+      fetchProperties();
+    }, [currentPage, sortBy, searchTrigger,fetchProperties]);
+    
+  // const handleSearch = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   fetchProperties();
+  // };
  
 
 
@@ -202,7 +206,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
           <div
             key={property.id}
             className="bg-white rounded-sm shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer block"
-            onClick={(e) => {
+            onClick={() => {
               if (onPropertyClick) {
                 onPropertyClick(property);
               } else {
@@ -211,7 +215,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
             }}
           >
             <div className="relative">
-              <img
+              <Image
                 src={property.image_url}
                 alt={property.title}
                 className="w-full h-64 object-cover object-top"

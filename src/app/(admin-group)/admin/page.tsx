@@ -3,6 +3,7 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 
 const Admin: React.FC = () => {
   // Sidebar state
@@ -372,7 +373,7 @@ const Admin: React.FC = () => {
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className="flex items-center space-x-2 cursor-pointer !rounded-button whitespace-nowrap"
                   >
-                    <img
+                    <Image
                       src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish"
                       alt="User"
                       className="w-8 h-8 rounded-full object-cover"
@@ -803,7 +804,7 @@ const Admin: React.FC = () => {
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {uploadedImages.map((image, index) => (
                       <div key={index} className={`relative rounded-sm overflow-hidden border-2 ${featuredImageIndex === index ? 'border-pink-600' : 'border-transparent'}`}>
-                        <img
+                        <Image
                           src={image}
                           alt={`Property image ${index + 1}`}
                           className="w-full h-32 object-cover"

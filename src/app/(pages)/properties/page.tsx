@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { getProperties, Property } from '@/lib/services/properties';
 // import { Pagination } from '@/components/Pagination';
@@ -26,20 +27,21 @@ const PropertiesPage = () => {
   const propertiesPerPage = 6;
 
   // Fetch properties on initial load and when filters change
-  useEffect(() => {
-    fetchProperties();
-  }, [currentPage, sortBy, isLoading,  ]);
-
-  const fetchProperties = async (searchFilters?: boolean) => {
+  const fetchProperties = useCallback(async (searchFilters?: boolean) => {
     try {
       setIsLoading(true);
-      
       // If this is a new search, reset to first page
+      // *before* calling fetchProperties.
+      // For now, let's keep it and ensure currentPage is a dependency.
+      let pageToFetch = currentPage;
       if (searchFilters) {
+        // Note: setCurrentPage is async. The `currentPage` value used below
+        // will be the one from the render `fetchProperties` was created in.
+        // This is a common pitfall.
         setCurrentPage(1);
+        pageToFetch = 1; // Use the intended page number for *this* fetch
       }
-      
-      // Prepare filter parameters
+
       const filters = {
         propertyType: propertyType || undefined,
         propertyStatus: propertyStatus || undefined,
@@ -49,96 +51,117 @@ const PropertiesPage = () => {
         bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
         bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
         sortBy: sortBy,
-        page: currentPage,
+        page: pageToFetch, // Use the determined pageToFetch
         limit: propertiesPerPage
       };
-      
-      // Fetch properties with filters
-      const result = await getProperties(filters);
+
+      // Assuming getProperties is an async function that returns { properties: [], total: 0 }
+      const result = await getProperties(filters); // If getProperties is not stable, add it to deps
       setProperties(result.properties);
       setTotalProperties(result.total);
     } catch (error) {
       console.error('Error fetching properties:', error);
+      // Potentially set an error state here
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+    // React state setters (setIsLoading, setCurrentPage, etc.) are stable and don't need to be here.
+    propertyType,
+    propertyStatus,
+    minPrice,
+    maxPrice,
+    location,
+    bedrooms,
+    bathrooms,
+    sortBy,
+    currentPage, // Important: fetchProperties reads this
+    propertiesPerPage,
+    // getProperties, // Add if getProperties is a prop or can change
+    // We don't need setProperties, setTotalProperties, setIsLoading, setCurrentPage in the array
+    // because they are guaranteed to be stable by React.
+  ]);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [currentPage, sortBy, fetchProperties  ]);
+
   
   // Array of mock properties for fallback if needed
-  const mockProperties = [
-    {
-      id: "modern-villa",
-      title: "Modern Luxury Villa",
-      price: "$649,000",
-      status: "FOR SALE",
-      address: "Banana Island Road, Ikoyi, Lagos",
-      description: "This stunning modern villa offers luxurious living with high-end finishes throughout.",
-      bedrooms: 4,
-      bathrooms: 3,
-      area: "2,450 sqft",
-      image: "https://readdy.ai/api/search-image?query=Modern%2520luxury%2520home%2520exterior%2520with%2520large%2520windows%252C%2520contemporary%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520twilight%2520shot%2520with%2520warm%2520interior%2520lights%252C%2520beautiful%2520landscaping%252C%2520high-end%2520residential%2520property&width=800&height=500&seq=2&orientation=landscape",
-    },
-    {
-      id: "contemporary-villa",
-      title: "Contemporary Villa",
-      price: "$685,000",
-      status: "FOR SALE",
-      address: "Lekki Phase 1, Lagos",
-      description: "A beautiful contemporary villa with modern amenities and stunning views.",
-      bedrooms: 4,
-      bathrooms: 3,
-      area: "2,650 sqft",
-      image: "https://readdy.ai/api/search-image?query=Modern%2520luxury%2520home%2520exterior%2520with%2520large%2520windows%252C%2520contemporary%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520twilight%2520shot%2520with%2520warm%2520interior%2520lights%252C%2520beautiful%2520landscaping%252C%2520high-end%2520residential%2520property&width=600&height=400&seq=12&orientation=landscape",
-    },
-    {
-      id: "waterfront-mansion",
-      title: "Waterfront Mansion",
-      price: "$1,150,000",
-      status: "FOR SALE",
-      address: "Banana Island, Ikoyi, Lagos",
-      description: "Luxurious waterfront mansion with private dock and panoramic ocean views.",
-      bedrooms: 5,
-      bathrooms: 4,
-      area: "3,800 sqft",
-      image: "https://readdy.ai/api/search-image?query=Luxury%2520waterfront%2520property%2520with%2520modern%2520architecture%252C%2520floor%2520to%2520ceiling%2520windows%252C%2520infinity%2520pool%252C%2520ocean%2520view%252C%2520sunset%2520lighting%252C%2520high-end%2520real%2520estate%2520photography%252C%2520exclusive%2520beachfront%2520residence&width=600&height=400&seq=13&orientation=landscape",
-    },
-    {
-      id: "luxury-penthouse",
-      title: "Luxury Penthouse",
-      price: "$3,500/mo",
-      status: "FOR RENT",
-      address: "Victoria Island, Lagos",
-      description: "Stunning penthouse apartment with panoramic city views and luxury finishes.",
-      bedrooms: 3,
-      bathrooms: 3,
-      area: "2,200 sqft",
-      image: "https://readdy.ai/api/search-image?query=Modern%2520apartment%2520building%2520exterior%252C%2520contemporary%2520urban%2520architecture%252C%2520glass%2520and%2520steel%2520facade%252C%2520luxury%2520condominium%252C%2520professional%2520real%2520estate%2520photography%252C%2520blue%2520sky%2520background%252C%2520upscale%2520city%2520living&width=600&height=400&seq=14&orientation=landscape",
-    },
-    {
-      id: "family-home",
-      title: "Spacious Family Home",
-      price: "$420,000",
-      status: "FOR SALE",
-      address: "Ikeja GRA, Lagos",
-      description: "Perfect family home with large garden, modern kitchen, and spacious living areas.",
-      bedrooms: 4,
-      bathrooms: 3,
-      area: "2,800 sqft",
-      image: "https://readdy.ai/api/search-image?query=Beautiful%2520suburban%2520family%2520home%2520with%2520garden%252C%2520modern%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520bright%2520daylight%252C%2520well-maintained%2520property&width=600&height=400&seq=15&orientation=landscape",
-    },
-    {
-      id: "garden-apartment",
-      title: "Garden Apartment",
-      price: "$1,800/mo",
-      status: "FOR RENT",
-      address: "Oniru Estate, Lagos",
-      description: "Charming garden apartment with private patio, modern finishes, and secure parking.",
-      bedrooms: 2,
-      bathrooms: 2,
-      area: "1,200 sqft",
-      image: "https://readdy.ai/api/search-image?query=Modern%2520apartment%2520with%2520garden%2520view%252C%2520contemporary%2520design%252C%2520bright%2520interior%252C%2520open%2520concept%2520living%252C%2520professional%2520real%2520estate%2520photography&width=600&height=400&seq=16&orientation=landscape",
-    },
-  ];
+  // const mockProperties = [
+  //   {
+  //     id: "modern-villa",
+  //     title: "Modern Luxury Villa",
+  //     price: "$649,000",
+  //     status: "FOR SALE",
+  //     address: "Banana Island Road, Ikoyi, Lagos",
+  //     description: "This stunning modern villa offers luxurious living with high-end finishes throughout.",
+  //     bedrooms: 4,
+  //     bathrooms: 3,
+  //     area: "2,450 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Modern%2520luxury%2520home%2520exterior%2520with%2520large%2520windows%252C%2520contemporary%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520twilight%2520shot%2520with%2520warm%2520interior%2520lights%252C%2520beautiful%2520landscaping%252C%2520high-end%2520residential%2520property&width=800&height=500&seq=2&orientation=landscape",
+  //   },
+  //   {
+  //     id: "contemporary-villa",
+  //     title: "Contemporary Villa",
+  //     price: "$685,000",
+  //     status: "FOR SALE",
+  //     address: "Lekki Phase 1, Lagos",
+  //     description: "A beautiful contemporary villa with modern amenities and stunning views.",
+  //     bedrooms: 4,
+  //     bathrooms: 3,
+  //     area: "2,650 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Modern%2520luxury%2520home%2520exterior%2520with%2520large%2520windows%252C%2520contemporary%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520twilight%2520shot%2520with%2520warm%2520interior%2520lights%252C%2520beautiful%2520landscaping%252C%2520high-end%2520residential%2520property&width=600&height=400&seq=12&orientation=landscape",
+  //   },
+  //   {
+  //     id: "waterfront-mansion",
+  //     title: "Waterfront Mansion",
+  //     price: "$1,150,000",
+  //     status: "FOR SALE",
+  //     address: "Banana Island, Ikoyi, Lagos",
+  //     description: "Luxurious waterfront mansion with private dock and panoramic ocean views.",
+  //     bedrooms: 5,
+  //     bathrooms: 4,
+  //     area: "3,800 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Luxury%2520waterfront%2520property%2520with%2520modern%2520architecture%252C%2520floor%2520to%2520ceiling%2520windows%252C%2520infinity%2520pool%252C%2520ocean%2520view%252C%2520sunset%2520lighting%252C%2520high-end%2520real%2520estate%2520photography%252C%2520exclusive%2520beachfront%2520residence&width=600&height=400&seq=13&orientation=landscape",
+  //   },
+  //   {
+  //     id: "luxury-penthouse",
+  //     title: "Luxury Penthouse",
+  //     price: "$3,500/mo",
+  //     status: "FOR RENT",
+  //     address: "Victoria Island, Lagos",
+  //     description: "Stunning penthouse apartment with panoramic city views and luxury finishes.",
+  //     bedrooms: 3,
+  //     bathrooms: 3,
+  //     area: "2,200 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Modern%2520apartment%2520building%2520exterior%252C%2520contemporary%2520urban%2520architecture%252C%2520glass%2520and%2520steel%2520facade%252C%2520luxury%2520condominium%252C%2520professional%2520real%2520estate%2520photography%252C%2520blue%2520sky%2520background%252C%2520upscale%2520city%2520living&width=600&height=400&seq=14&orientation=landscape",
+  //   },
+  //   {
+  //     id: "family-home",
+  //     title: "Spacious Family Home",
+  //     price: "$420,000",
+  //     status: "FOR SALE",
+  //     address: "Ikeja GRA, Lagos",
+  //     description: "Perfect family home with large garden, modern kitchen, and spacious living areas.",
+  //     bedrooms: 4,
+  //     bathrooms: 3,
+  //     area: "2,800 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Beautiful%2520suburban%2520family%2520home%2520with%2520garden%252C%2520modern%2520architecture%252C%2520professional%2520real%2520estate%2520photography%252C%2520bright%2520daylight%252C%2520well-maintained%2520property&width=600&height=400&seq=15&orientation=landscape",
+  //   },
+  //   {
+  //     id: "garden-apartment",
+  //     title: "Garden Apartment",
+  //     price: "$1,800/mo",
+  //     status: "FOR RENT",
+  //     address: "Oniru Estate, Lagos",
+  //     description: "Charming garden apartment with private patio, modern finishes, and secure parking.",
+  //     bedrooms: 2,
+  //     bathrooms: 2,
+  //     area: "1,200 sqft",
+  //     image: "https://readdy.ai/api/search-image?query=Modern%2520apartment%2520with%2520garden%2520view%252C%2520contemporary%2520design%252C%2520bright%2520interior%252C%2520open%2520concept%2520living%252C%2520professional%2520real%2520estate%2520photography&width=600&height=400&seq=16&orientation=landscape",
+  //   },
+  // ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -353,7 +376,7 @@ const PropertiesPage = () => {
               <div key={property.id} className="bg-white rounded-sm shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 <Link href={`/properties/${property.id}`}>
                   <div className="relative">
-                    <img
+                    <Image
                       src={property.image_url}
                       alt={property.title}
                       className="w-full h-64 object-cover"
@@ -398,7 +421,7 @@ const PropertiesPage = () => {
                 <Link href={`/properties/${property.id}`}>
                   <div className="flex flex-col md:flex-row">
                     <div className="relative md:w-1/3">
-                      <img
+                      <Image
                         src={property.image_url}
                         alt={property.title}
                         className="w-full h-64 md:h-full object-cover"

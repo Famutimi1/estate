@@ -137,7 +137,7 @@ export default function RootLayout({
               <div>
                 <h3 className="text-xl font-bold mb-4">About myHOME</h3>
                 <p className="text-white mb-4">
-                  myHOME is Nigeria's premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
+                  myHOME is Nigeria&apos;s premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
                 </p>
                 <div className="flex space-x-4">
                   <a href="#" className="text-white hover:text-white">
