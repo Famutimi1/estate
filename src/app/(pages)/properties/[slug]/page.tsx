@@ -212,7 +212,7 @@ const PropertyDetail = () => {
                                     <FontAwesomeIcon icon={faCar} className="text-2xl text-green-500 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Garage</div>
-                                        <div className="text-xl font-semibold">{property.garage || 0} Cars</div>
+                                        <div className="text-xl font-semibold">{0} Cars</div>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import "../globals.css";
 import FontAwesomeConfig from "./font-awesome-config";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
