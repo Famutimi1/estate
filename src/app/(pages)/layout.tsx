@@ -154,7 +154,8 @@ export default function RootLayout({
                   </a>
                 </div>
               </div>
-              <div>
+              <div className="flex  gap-20 md:gap-60" >
+                <div>
                 <h3 className="text-xl font-bold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
                   <li><a href="#" className="text-white hover:text-white">Home</a></li>
@@ -163,8 +164,8 @@ export default function RootLayout({
                   <li><a href="#" className="text-white hover:text-white">Blog</a></li>
                   <li><a href="#" className="text-white hover:text-white">Contact Us</a></li>
                 </ul>
-              </div>
-              <div>
+                </div>
+                <div>
                 <h3 className="text-xl font-bold mb-4">Cities</h3>
                 <ul className="space-y-2">
                   <li><a href="#" className="text-white hover:text-white">Lagos</a></li>
@@ -173,6 +174,7 @@ export default function RootLayout({
                   <li><a href="#" className="text-white hover:text-white">Ibadan</a></li>
                   <li><a href="#" className="text-white hover:text-white">Kano</a></li>
                 </ul>
+                </div>
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-4">Contact Us</h3>
