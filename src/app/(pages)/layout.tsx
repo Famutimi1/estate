@@ -133,8 +133,8 @@ export default function RootLayout({
         {children}
         <footer className="bg-blue-700 text-white py-12">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div>
+            <div className="flex flex-1 flex-col md:flex-row gap-8 justify-between  ">
+              <div className="flex-1">
                 <h3 className="text-xl font-bold mb-4">About myHOME</h3>
                 <p className="text-white mb-4">
                   myHOME is Nigeria&apos;s premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
@@ -154,7 +154,7 @@ export default function RootLayout({
                   </a>
                 </div>
               </div>
-              <div className="flex  gap-20 md:gap-60" >
+              <div className="flex flex-1 gap-20 md:gap-28 mr-0" >
                 <div>
                 <h3 className="text-xl font-bold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
@@ -176,7 +176,7 @@ export default function RootLayout({
                 </ul>
                 </div>
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-xl font-bold mb-4">Contact Us</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start">
