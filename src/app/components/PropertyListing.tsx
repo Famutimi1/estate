@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback} from 'react';
 // import Link from 'next/link';
 import Image from 'next/image';
 import { User } from '@supabase/supabase-js';
@@ -74,10 +74,12 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
   // Don't fetch on filters change, only when searchTrigger changes
 
   // Fetch properties
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback(async () => {
+    console.log('Fetching properties with:', { filters, sortBy, currentPage, propertiesPerPage });
     setLoading(true);
+    setError(null); // Clear previous errors
     try {
-      const { properties, total } = await getProperties({
+      const { properties, total } = await getProperties({ // Assuming getProperties is stable
         ...filters,
         sortBy: sortBy,
         page: currentPage,
@@ -85,23 +87,37 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
       });
       setProperties(properties);
       setTotalProperties(total);
-      // Call the onTotalUpdate callback with the total count
       if (onTotalUpdate) {
         onTotalUpdate(total);
       }
-      setError(null);
     } catch (err) {
       console.error('Error fetching properties:', err);
-      setError('Failed to load properties');
+      const message = err instanceof Error ? err.message : 'Failed to load properties';
+      setError(message);
+      setProperties([]); // Clear properties on error
+      setTotalProperties(0);
+      if (onTotalUpdate) {
+        onTotalUpdate(0); // Or handle error case in onTotalUpdate
+      }
     } finally {
       setLoading(false);
     }
-  }; 
+  }, [
+    // State setters (setLoading, setProperties, etc.) are stable and don't need to be dependencies.
+    filters,
+    sortBy,
+    currentPage,
+    propertiesPerPage,
+    onTotalUpdate,
+    // getProperties, // Add if it's a prop or a function defined in the component that can change
+  ]);
 
-  // Fetch properties on initial load, when search is triggered, or when page/sort changes
+  // Fetch properties when critical dependencies change
   useEffect(() => {
-      fetchProperties();
-    }, [currentPage, sortBy, searchTrigger,fetchProperties]);
+    fetchProperties();
+  }, [fetchProperties,searchTrigger]); // `fetchProperties` will change when its own deps (filters, sortBy, etc.) change.
+
+
     
   // const handleSearch = (e: React.FormEvent) => {
   //   e.preventDefault();
