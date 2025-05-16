@@ -377,7 +377,9 @@ const PropertiesPage = () => {
                 <Link href={`/properties/${property.id}`}>
                   <div className="relative">
                     <Image
-                      src={property.image_url}
+                      src={property.image_url.trimEnd()}
+                      width={600} 
+                      height={400} 
                       alt={property.title}
                       className="w-full h-64 object-cover"
                     />
