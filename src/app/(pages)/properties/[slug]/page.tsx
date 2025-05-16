@@ -119,8 +119,10 @@ const PropertyDetail = () => {
             <div className="grid grid-cols-4 gap-4 mb-8">
                 <div className="col-span-2 row-span-2">
                     <Image
-                        src={property.image_url}
+                        src={property.image_url.trimEnd()}
                         alt={property.title}
+                        width={800} 
+                        height={600}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
@@ -128,28 +130,36 @@ const PropertyDetail = () => {
                 {/* For now, we'll use the main image in all slots */}
                 <div>
                     <Image
-                        src={property.image_url}
+                        src={property.image_url.trimEnd()}
                         alt={`${property.title} - View 1`}
+                        width={400} 
+                        height={300}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <Image
-                        src={property.image_url}
+                        src={property.image_url.trimEnd()}
+                        width={400} 
+                        height={300}
                         alt={`${property.title} - View 2`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <Image
-                        src={property.image_url}
+                        src={property.image_url.trimEnd()}
+                        width={400} 
+                        height={300}
                         alt={`${property.title} - View 3`}
                         className="w-full h-full object-cover rounded-sm"
                     />
                 </div>
                 <div>
                     <Image
-                        src={property.image_url}
+                        src={property.image_url.trimEnd()}
+                        width={400} 
+                        height={300}
                         alt={`${property.title} - View 4`}
                         className="w-full h-full object-cover rounded-sm"
                     />
@@ -602,6 +612,7 @@ const PropertyDetail = () => {
                         <div className="flex items-center mb-6">
                             <Image
                                 src="https://readdy.ai/api/search-image?query=Professional%20real%20estate%20agent%20headshot%2C%20confident%20smile%2C%20business%20attire%2C%20studio%20lighting%2C%20clean%20background%2C%20high%20quality%20portrait%20photography%2C%20realtor%20profile%20picture&width=100&height=100&seq=13&orientation=squarish"
+                                width={100} height={100}
                                 alt="Agent"
                                 className="w-16 h-16 rounded-full object-cover mr-4"
                             />
@@ -760,7 +771,9 @@ const PropertyDetail = () => {
                         <div key={item} className="border border-gray-200 rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer">
                             <div className="relative">
                                 <Image
-                                    src={`https://readdy.ai/api/search-image?query=Luxury%20waterfront%20property%20with%20modern%20architecture%2C%20floor%20to%20ceiling%20windows%2C%20infinity%20pool%2C%20ocean%20view%2C%20sunset%20lighting%2C%20high-end%20real%20estate%20photography%2C%20exclusive%20beachfront%20residence&width=400&height=250&seq=${item + 20}&orientation=landscape`}
+                                    src={`https://readdy.ai/api/search-image?query=Luxury%20waterfront%20property%20with%20modern%20architecture%2C%20floor%20to%20ceiling%20windows%2C%20infinity%20pool%2C%20ocean%20view%2C%20sunset%20lighting%2C%20high-end%20real%20estate%20photography%2C%20exclusive%20beachfront%20residence&width=400&height=250&seq=${item+20}&orientation=landscape`}
+                                    width={400} 
+                                    height={250}
                                     alt={`Similar Property ${item}`}
                                     className="w-full h-48 object-cover"
                                 />

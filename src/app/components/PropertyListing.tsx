@@ -232,7 +232,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
           >
             <div className="relative">
               <Image
-                src={property.image_url}
+                src={property.image_url.trimEnd()}
+                width={1000}
+                height={64}
                 alt={property.title}
                 className="w-full h-64 object-cover object-top"
               />
