@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getProperties, Property } from '@/lib/services/properties';
 // import { Pagination } from '@/components/Pagination';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faHeart, faShareAlt, faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 // import { addToFavorites, removeFromFavorites, isPropertyFavorited } from '@/lib/services/favorites';
 // import { getCurrentUser } from '@/lib/services/auth';
 

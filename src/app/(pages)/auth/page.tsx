@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { registerUser, signIn } from '@/lib/services/auth';
 
 const AuthPage = () => {
@@ -36,7 +36,7 @@ const AuthPage = () => {
       if (success) {
         router.push('/');
       } else {
-        setError(error.message || 'Failed to sign in');
+        setError(error as string || 'Failed to sign in');
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -78,7 +78,7 @@ const AuthPage = () => {
           setError('Registration successful, but failed to log in automatically. Please log in manually.');
         }
       } else {
-        setError(error.message || 'Failed to register');
+        setError((error as { message?: string })?.message || 'Failed to register');
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');

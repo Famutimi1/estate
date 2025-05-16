@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt, faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight,faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { getProperties } from '@/lib/services/properties';
@@ -115,7 +115,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
 
       for (const property of properties) {
         const { isFavorited } = await isPropertyFavorited(currentUser.id, property.id);
-        favoritesStatus[property.id] = isFavorited;
+        favoritesStatus[property.id] = isFavorited || false;
       }
 
       setFavorites(favoritesStatus);

@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getPropertyById, Property } from '@/lib/services/properties';
 import { 
@@ -17,18 +17,13 @@ import {
     faCheck,
     faFilePdf,
     faFileAlt,
-    faHome,
-    faCheckCircle,
-    faTree,
-    faPlay,
-    faVrCardboard,
+    // faVrCardboard,
     faGraduationCap,
     faUtensils,
     faPlaneDeparture,
     faHeartbeat,
     faPhoneAlt,
     faEnvelope,
-    faStar
 } from '@fortawesome/free-solid-svg-icons';
 
 const PropertyDetail = () => {
