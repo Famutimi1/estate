@@ -1,7 +1,26 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+const ALLOW_OFFLINE_BUILD = process.env.ALLOW_OFFLINE_BUILD === 'true';
+
+const emptyPayload = {
+  totalUsers: 0,
+  totalProperties: 0,
+  totalFavorites: 0,
+  propertiesForSale: 0,
+  propertiesForRent: 0,
+  draftProperties: 0,
+  publishedProperties: 0,
+  recentUsers: [],
+  recentProperties: [],
+};
+
 export async function GET() {
+  if (ALLOW_OFFLINE_BUILD && process.env.NODE_ENV === 'production') {
+    console.warn('[admin/stats] Skipping DB query because ALLOW_OFFLINE_BUILD=true');
+    return NextResponse.json(emptyPayload);
+  }
+
   try {
     const [
       totalUsers,
@@ -58,6 +77,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Admin stats error:', error);
+    if (ALLOW_OFFLINE_BUILD) {
+      return NextResponse.json(emptyPayload);
+    }
     return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
   }
 }

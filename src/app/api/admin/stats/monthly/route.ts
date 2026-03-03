@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+const ALLOW_OFFLINE_BUILD = process.env.ALLOW_OFFLINE_BUILD === 'true';
+
+const emptyResponse = { monthlyData: [] as { month: string; users: number; properties: number }[] };
+
 export async function GET() {
+  if (ALLOW_OFFLINE_BUILD && process.env.NODE_ENV === 'production') {
+    console.warn('[admin/stats/monthly] Skipping DB query because ALLOW_OFFLINE_BUILD=true');
+    return NextResponse.json(emptyResponse);
+  }
+
   try {
     // Get last 12 months of data
     const now = new Date();
@@ -50,6 +59,9 @@ export async function GET() {
     return NextResponse.json({ monthlyData });
   } catch (error) {
     console.error('Error fetching monthly stats:', error);
+    if (ALLOW_OFFLINE_BUILD) {
+      return NextResponse.json(emptyResponse);
+    }
     return NextResponse.json({ error: 'Failed to fetch monthly stats' }, { status: 500 });
   }
 }
