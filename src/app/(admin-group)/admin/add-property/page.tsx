@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
@@ -456,4 +456,10 @@ const AddPropertyPage: React.FC = () => {
   );
 };
 
-export default AddPropertyPage;
+const AddPropertyPageWithSuspense = () => (
+  <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>}>
+    <AddPropertyPage />
+  </Suspense>
+);
+
+export default AddPropertyPageWithSuspense;
