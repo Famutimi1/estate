@@ -1,7 +1,26 @@
-import { supabase } from '../supabase';
-import { Database } from '../database.types';
+import { prisma } from '../prisma';
+import { User as PrismaUser, UserRole } from '@prisma/client';
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-export type User = Database['public']['Tables']['users']['Row'];
+export type User = Omit<PrismaUser, 'password'>;
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// Generate a JWT token for a user
+function generateToken(userId: string): string {
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+}
+
+// Verify a JWT token and return the userId
+export function verifyToken(token: string): string | null {
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        return decoded.userId;
+    } catch {
+        return null;
+    }
+}
 
 // Register a new user
 export async function registerUser({
@@ -15,40 +34,36 @@ export async function registerUser({
     password: string;
     role?: 'user' | 'admin' | 'agent';
 }) {
-    
     try {
-        // Register the user with Supabase Auth
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    name,
-                    role
-                }
-            }
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email },
         });
 
-        if (authError) throw authError;
-
-        console.log('Registering user:', authData.user );
-
-        // Create a record in the users table
-        if (authData.user) {
-            const { error: profileError } = await supabase
-                .from('users')
-                .insert({
-                    id: authData.user.id,
-                    email,
-                    name,
-                    role,
-                    avatar_url: null
-                });
-
-            if (profileError) throw profileError;
+        if (existingUser) {
+            return { success: false, error: { message: 'User with this email already exists' } };
         }
 
-        return { success: true, user: authData.user };
+        // Hash the password
+        const hashedPassword = await bcryptjs.hash(password, 10);
+
+        // Create the user
+        const user = await prisma.user.create({
+            data: {
+                email,
+                name,
+                password: hashedPassword,
+                role: role as UserRole,
+            },
+        });
+
+        const token = generateToken(user.id);
+
+        // Return user without password
+        const { password: _, ...userWithoutPassword } = user;
+        void _;
+
+        return { success: true, user: userWithoutPassword, token };
     } catch (error) {
         console.error('Error registering user:', error);
         return { success: false, error };
@@ -64,49 +79,54 @@ export async function signIn({
     password: string;
 }) {
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
+        const user = await prisma.user.findUnique({
+            where: { email },
         });
 
-        if (error) throw error;
+        if (!user) {
+            return { success: false, error: { message: 'Invalid email or password' } };
+        }
 
-        return { success: true, user: data.user, session: data.session };
+        // Compare password
+        const isValid = await bcryptjs.compare(password, user.password);
+        if (!isValid) {
+            return { success: false, error: { message: 'Invalid email or password' } };
+        }
+
+        const token = generateToken(user.id);
+
+        // Return user without password
+        const { password: _, ...userWithoutPassword } = user;
+        void _;
+
+        return { success: true, user: userWithoutPassword, token };
     } catch (error) {
         console.error('Error signing in:', error);
         return { success: false, error };
     }
 }
 
-// Sign out a user
+// Sign out a user (client-side will clear the token)
 export async function signOut() {
-    try {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
-        return { success: true };
-    } catch (error) {
-        console.error('Error signing out:', error);
-        return { success: false, error };
-    }
+    return { success: true };
 }
 
-// Get the current user
-export async function getCurrentUser() {
+// Get the current user by ID (called from API routes after token verification)
+export async function getCurrentUser(userId?: string) {
     try {
-        const { data: { user } } = await supabase.auth.getUser();
+        if (!userId) return { user: null };
+
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
 
         if (!user) return { user: null };
 
-        // Get the user profile from the users table
-        const { data: profile, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', user.id)
-            .single();
+        // Return user without password
+        const { password: _, ...userWithoutPassword } = user;
+        void _;
 
-        if (error) throw error;
-
-        return { user: profile };
+        return { user: userWithoutPassword };
     } catch (error) {
         console.error('Error getting current user:', error);
         return { user: null, error };
@@ -124,20 +144,20 @@ export async function updateUserProfile({
     avatar_url?: string;
 }) {
     try {
-        const updates: Partial<Pick<User, 'name' | 'avatar_url'>> = {};
-        if (name) updates.name = name;
-        if (avatar_url) updates.avatar_url = avatar_url;
+        const data: { name?: string; avatarUrl?: string } = {};
+        if (name) data.name = name;
+        if (avatar_url) data.avatarUrl = avatar_url;
 
-        const { data, error } = await supabase
-            .from('users')
-            .update(updates)
-            .eq('id', id)
-            .select()
-            .single();
+        const user = await prisma.user.update({
+            where: { id },
+            data,
+        });
 
-        if (error) throw error;
+        // Return user without password
+        const { password: _, ...userWithoutPassword } = user;
+        void _;
 
-        return { success: true, user: data };
+        return { success: true, user: userWithoutPassword };
     } catch (error) {
         console.error('Error updating user profile:', error);
         return { success: false, error };

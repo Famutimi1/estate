@@ -1,7 +1,18 @@
-import { supabase } from '../supabase';
-import { Database } from '../database.types';
+import { prisma } from '../prisma';
+import { Prisma, Property as PrismaProperty, PropertyStatus, PropertyType } from '@prisma/client';
 
-export type Property = Database['public']['Tables']['properties']['Row'];
+export type Property = Omit<PrismaProperty, 'price' | 'area'> & {
+  price: number;
+  area: number;
+};
+
+function serializeProperty(p: PrismaProperty): Property {
+  return {
+    ...p,
+    price: Number(p.price),
+    area: Number(p.area),
+  } as Property;
+}
 
 export async function getProperties(filters?: {
   propertyType?: string;
@@ -15,145 +26,169 @@ export async function getProperties(filters?: {
   page?: number;
   limit?: number;
 }) {
-  // Create base query
-  let query = supabase
-    .from('properties')
-    .select('*');
-  
-  // Create a separate count query
-  let countQuery = supabase
-    .from('properties')
-    .select('id', { count: 'exact', head: true });
+  try {
+    const where: Prisma.PropertyWhereInput = {};
 
-  // Apply filters if provided
-  if (filters) {
-    if (filters.propertyType) {
-      query = query.eq('property_type', filters.propertyType);
-      countQuery = countQuery.eq('property_type', filters.propertyType);
+    if (filters) {
+      if (filters.propertyType) {
+        where.propertyType = filters.propertyType as PropertyType;
+      }
+
+      if (filters.propertyStatus) {
+        const ps = filters.propertyStatus.toLowerCase();
+        where.propertyStatus = (ps === 'for-sale' || ps === 'sale') ? PropertyStatus.ForSale : PropertyStatus.ForRent;
+      }
+
+      if (filters.minPrice) {
+        where.price = { ...(where.price as Prisma.DecimalFilter || {}), gte: filters.minPrice };
+      }
+
+      if (filters.maxPrice) {
+        where.price = { ...(where.price as Prisma.DecimalFilter || {}), lte: filters.maxPrice };
+      }
+
+      if (filters.location) {
+        where.OR = [
+          { location: { contains: filters.location, mode: 'insensitive' } },
+          { address: { contains: filters.location, mode: 'insensitive' } },
+          { city: { contains: filters.location, mode: 'insensitive' } },
+          { state: { contains: filters.location, mode: 'insensitive' } },
+        ];
+      }
+
+      if (filters.bedrooms) {
+        where.bedrooms = { gte: filters.bedrooms };
+      }
+
+      if (filters.bathrooms) {
+        where.bathrooms = { gte: filters.bathrooms };
+      }
     }
-    
-    if (filters.propertyStatus) {
-      const status = filters.propertyStatus === 'for-sale' ? 'For Sale' : 'For Rent';
-      query = query.eq('property_status', status);
-      countQuery = countQuery.eq('property_status', status);
-    }
-    
-    if (filters.minPrice) {
-      query = query.gte('price', filters.minPrice);
-      countQuery = countQuery.gte('price', filters.minPrice);
-    }
-    
-    if (filters.maxPrice) {
-      query = query.lte('price', filters.maxPrice);
-      countQuery = countQuery.lte('price', filters.maxPrice);
-    }
-    
-    if (filters.location) {
-      query = query.eq('location', filters.location);
-      countQuery = countQuery.eq('location', filters.location);
-    }
-    
-    if (filters.bedrooms) {
-      query = query.gte('bedrooms', filters.bedrooms);
-      countQuery = countQuery.gte('bedrooms', filters.bedrooms);
-    }
-    
-    if (filters.bathrooms) {
-      query = query.gte('bathrooms', filters.bathrooms);
-      countQuery = countQuery.gte('bathrooms', filters.bathrooms);
-    }
-    
-    // Apply sorting
-    if (filters.sortBy) {
+
+    // Determine sorting
+    let orderBy: Prisma.PropertyOrderByWithRelationInput = { createdAt: 'desc' };
+    if (filters?.sortBy) {
       switch (filters.sortBy) {
         case 'newest':
-          query = query.order('created_at', { ascending: false });
+          orderBy = { createdAt: 'desc' };
           break;
         case 'price-asc':
-          query = query.order('price', { ascending: true });
+          orderBy = { price: 'asc' };
           break;
         case 'price-desc':
-          query = query.order('price', { ascending: false });
+          orderBy = { price: 'desc' };
+          break;
+        case 'popular':
+          orderBy = { createdAt: 'desc' }; // TODO: replace with view/favorite count when available
           break;
         default:
-          query = query.order('created_at', { ascending: false });
+          orderBy = { createdAt: 'desc' };
       }
-    } else {
-      // Default sorting by newest
-      query = query.order('created_at', { ascending: false });
     }
 
-    // Apply pagination
-    const page = filters.page || 1;
-    const limit = filters.limit || 100;
-    const start = (page - 1) * limit;
-    query = query.range(start, start + limit - 1);
-  }
+    // Pagination
+    const page = filters?.page || 1;
+    const limit = filters?.limit || 100;
+    const skip = (page - 1) * limit;
 
-  // Execute both queries in parallel
-  const [dataResult, countResult] = await Promise.all([
-    query,
-    countQuery
-  ]);
-  
-  if (dataResult.error) {
-    console.error('Error fetching properties:', dataResult.error);
+    // Execute both queries in parallel
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+      }),
+      prisma.property.count({ where }),
+    ]);
+
+    return {
+      properties: properties.map(serializeProperty),
+      total,
+    };
+  } catch (error) {
+    console.error('Error fetching properties:', error);
     return { properties: [], total: 0 };
   }
-  
-  if (countResult.error) {
-    console.error('Error counting properties:', countResult.error);
-    return { properties: dataResult.data || [], total: 0 };
-  }
-  
-  return { 
-    properties: dataResult.data || [], 
-    total: countResult.count || 0 
-  };
 }
 
 export async function getPropertyById(id: string) {
-  const { data, error } = await supabase
-    .from('properties')
-    .select('*')
-    .eq('id', id)
-    .single();
-  
-  if (error) {
+  try {
+    const property = await prisma.property.findUnique({
+      where: { id },
+    });
+
+    if (!property) return null;
+    return serializeProperty(property);
+  } catch (error) {
     console.error('Error fetching property:', error);
     return null;
   }
-  
-  return data;
 }
 
-export async function createProperty(property: Database['public']['Tables']['properties']['Insert']) {
+export async function createProperty(data: {
+  title: string;
+  price: number;
+  status?: string;
+  property_status: string;
+  address: string;
+  description: string;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  area_unit: string;
+  property_type: string;
+  location: string;
+  image_url: string;
+  images?: string[];
+  featured_image_index?: number;
+  city: string;
+  state: string;
+  zip_code: string;
+  garage_spaces?: number;
+  amenities?: Record<string, boolean>;
+  user_id?: string;
+}) {
   try {
-    // Ensure required fields are present
-    if (!property.title || !property.price || !property.property_status || 
-        !property.status || !property.address || !property.description || 
-        !property.property_type || !property.location || !property.image_url ||
-        !property.city || !property.state || !property.zip_code) {
+    if (!data.title || !data.price || !data.property_status ||
+        !data.address || !data.description ||
+        !data.property_type || !data.location || !data.image_url ||
+        !data.city || !data.state || !data.zip_code) {
       console.error('Missing required property fields');
       return null;
     }
 
-    // Ensure property status is correctly formatted
-    if (property.property_status !== 'For Sale' && property.property_status !== 'For Rent') {
-      property.property_status = property.property_status === 'for-sale' ? 'For Sale' : 'For Rent';
-    }
+    const propertyStatus = data.property_status === 'for-sale' || data.property_status === 'For Sale'
+      ? PropertyStatus.ForSale
+      : PropertyStatus.ForRent;
 
-    const { data, error } = await supabase
-      .from('properties')
-      .insert(property)
-      .select();
-    
-    if (error) {
-      console.error('Error creating property:', error);
-      return null;
-    }
-    
-    return data[0];
+    const property = await prisma.property.create({
+      data: {
+        title: data.title,
+        price: data.price,
+        status: (data.status as 'draft' | 'publish') || 'draft',
+        propertyStatus,
+        address: data.address,
+        description: data.description,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        area: data.area,
+        areaUnit: data.area_unit,
+        propertyType: data.property_type as PropertyType,
+        location: data.location,
+        imageUrl: data.image_url,
+        images: data.images || [],
+        featuredImageIndex: data.featured_image_index ?? null,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zip_code,
+        garageSpaces: data.garage_spaces ?? null,
+        amenities: data.amenities ?? Prisma.JsonNull,
+        userId: data.user_id ?? null,
+      },
+    });
+
+    return serializeProperty(property);
   } catch (err) {
     console.error('Exception in createProperty:', err);
     return null;
@@ -162,32 +197,54 @@ export async function createProperty(property: Database['public']['Tables']['pro
 
 export async function updateProperty(
   id: string,
-  updates: Database['public']['Tables']['properties']['Update']
+  updates: Record<string, unknown>
 ) {
-  const { data, error } = await supabase
-    .from('properties')
-    .update(updates)
-    .eq('id', id)
-    .select();
-  
-  if (error) {
+  try {
+    // Map snake_case keys from frontend to camelCase Prisma fields
+    const data: Prisma.PropertyUpdateInput = {};
+    if (updates.title !== undefined) data.title = updates.title as string;
+    if (updates.price !== undefined) data.price = updates.price as number;
+    if (updates.status !== undefined) data.status = updates.status as 'draft' | 'publish';
+    if (updates.property_status !== undefined) {
+      const ps = updates.property_status as string;
+      data.propertyStatus = ps === 'for-sale' || ps === 'For Sale' ? PropertyStatus.ForSale : PropertyStatus.ForRent;
+    }
+    if (updates.address !== undefined) data.address = updates.address as string;
+    if (updates.description !== undefined) data.description = updates.description as string;
+    if (updates.bedrooms !== undefined) data.bedrooms = updates.bedrooms as number;
+    if (updates.bathrooms !== undefined) data.bathrooms = updates.bathrooms as number;
+    if (updates.area !== undefined) data.area = updates.area as number;
+    if (updates.area_unit !== undefined) data.areaUnit = updates.area_unit as string;
+    if (updates.property_type !== undefined) data.propertyType = updates.property_type as PropertyType;
+    if (updates.location !== undefined) data.location = updates.location as string;
+    if (updates.image_url !== undefined) data.imageUrl = updates.image_url as string;
+    if (updates.images !== undefined) data.images = updates.images as string[];
+    if (updates.featured_image_index !== undefined) data.featuredImageIndex = updates.featured_image_index as number;
+    if (updates.city !== undefined) data.city = updates.city as string;
+    if (updates.state !== undefined) data.state = updates.state as string;
+    if (updates.zip_code !== undefined) data.zipCode = updates.zip_code as string;
+    if (updates.garage_spaces !== undefined) data.garageSpaces = updates.garage_spaces as number;
+    if (updates.amenities !== undefined) data.amenities = updates.amenities as Prisma.InputJsonValue;
+    if (updates.user_id !== undefined) data.user = { connect: { id: updates.user_id as string } };
+
+    const property = await prisma.property.update({
+      where: { id },
+      data,
+    });
+
+    return serializeProperty(property);
+  } catch (error) {
     console.error('Error updating property:', error);
     return null;
   }
-  
-  return data[0];
 }
 
 export async function deleteProperty(id: string) {
-  const { error } = await supabase
-    .from('properties')
-    .delete()
-    .eq('id', id);
-  
-  if (error) {
+  try {
+    await prisma.property.delete({ where: { id } });
+    return true;
+  } catch (error) {
     console.error('Error deleting property:', error);
     return false;
   }
-  
-  return true;
 }

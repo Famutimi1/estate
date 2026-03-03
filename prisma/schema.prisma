@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  user
+  admin
+  agent
+}
+
+enum PropertyType {
+  house
+  apartment
+  villa
+  commercial
+  land
+}
+
+enum PropertyStatus {
+  ForSale  @map("For Sale")
+  ForRent  @map("For Rent")
+}
+
+enum Status {
+  draft
+  publish
+}
+
+model User {
+  id         String     @id @default(uuid()) @db.Uuid
+  createdAt  DateTime   @default(now()) @map("created_at")
+  email      String     @unique @db.VarChar(255)
+  name       String     @db.VarChar(255)
+  avatarUrl  String?    @map("avatar_url") @db.VarChar(255)
+  password   String     @db.VarChar(255)
+  role       UserRole   @default(user)
+
+  properties Property[]
+  favorites  Favorite[]
+
+  @@map("users")
+}
+
+model Property {
+  id                 String         @id @default(uuid()) @db.Uuid
+  createdAt          DateTime       @default(now()) @map("created_at")
+  title              String         @db.VarChar(255)
+  price              Decimal        @db.Decimal(12, 2)
+  status             Status         @default(draft)
+  propertyStatus     PropertyStatus @map("property_status")
+  address            String         @db.VarChar(255)
+  description        String         @db.Text
+  bedrooms           Int
+  bathrooms          Int
+  area               Decimal        @db.Decimal(10, 2)
+  areaUnit           String         @map("area_unit") @db.VarChar(20)
+  propertyType       PropertyType   @map("property_type")
+  location           String         @db.VarChar(100)
+  imageUrl           String         @map("image_url") @db.VarChar(255)
+  images             String[]
+  featuredImageIndex Int?           @map("featured_image_index")
+  city               String         @db.VarChar(100)
+  state              String         @db.VarChar(100)
+  zipCode            String         @map("zip_code") @db.VarChar(20)
+  garageSpaces       Int?           @map("garage_spaces")
+  amenities          Json?
+
+  userId String? @map("user_id") @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  favorites Favorite[]
+
+  @@index([userId], map: "idx_properties_user_id")
+  @@index([propertyType], map: "idx_properties_property_type")
+  @@index([propertyStatus], map: "idx_properties_status")
+  @@index([location], map: "idx_properties_location")
+  @@map("properties")
+}
+
+model Favorite {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId     String   @map("user_id") @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String   @map("property_id") @db.Uuid
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@index([userId], map: "idx_favorites_user_id")
+  @@index([propertyId], map: "idx_favorites_property_id")
+  @@map("favorites")
+}
+
+model AdminSettings {
+  id        String   @id @default(uuid()) @db.Uuid
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  siteName            String  @map("site_name") @db.VarChar(255)
+  siteDescription     String  @map("site_description") @db.Text
+  contactEmail        String  @map("contact_email") @db.VarChar(255)
+  contactPhone        String  @map("contact_phone") @db.VarChar(50)
+  address             String  @db.VarChar(255)
+  currency            String  @db.VarChar(10)
+  propertiesPerPage   Int     @map("properties_per_page")
+  enableRegistration  Boolean @default(true) @map("enable_registration")
+  enableFavorites     Boolean @default(true) @map("enable_favorites")
+  maintenanceMode     Boolean @default(false) @map("maintenance_mode")
+
+  facebookUrl  String? @map("facebook_url") @db.VarChar(255)
+  twitterUrl   String? @map("twitter_url") @db.VarChar(255)
+  instagramUrl String? @map("instagram_url") @db.VarChar(255)
+  linkedinUrl  String? @map("linkedin_url") @db.VarChar(255)
+  youtubeUrl   String? @map("youtube_url") @db.VarChar(255)
+
+  metaTitle         String  @map("meta_title") @db.VarChar(255)
+  metaDescription   String  @map("meta_description") @db.Text
+  googleAnalyticsId String? @map("google_analytics_id") @db.VarChar(50)
+
+  @@map("admin_settings")
+}
+
+model Schedule {
+  id             String   @id @default(uuid()) @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at")
+  preferredDate  String   @map("preferred_date") @db.VarChar(50)
+  preferredTime  String   @map("preferred_time") @db.VarChar(50)
+  name           String   @db.VarChar(255)
+  phone          String   @db.VarChar(50)
+  email          String   @db.VarChar(255)
+  viewerType     String   @map("viewer_type") @db.VarChar(50)
+  message        String?  @db.Text
+  propertyId     String?  @map("property_id") @db.Uuid
+  propertyTitle  String?  @map("property_title") @db.VarChar(255)
+  status         String   @default("pending") @db.VarChar(50)
+
+  @@index([propertyId], map: "idx_schedules_property_id")
+  @@index([email], map: "idx_schedules_email")
+  @@index([status], map: "idx_schedules_status")
+  @@map("schedules")
+}
+
+model Contact {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  name      String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  phone     String   @db.VarChar(50)
+  message   String   @db.Text
+  status    String   @default("unread") @db.VarChar(50)
+
+  @@index([email], map: "idx_contacts_email")
+  @@index([status], map: "idx_contacts_status")
+  @@map("contacts")
+}

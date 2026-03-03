@@ -1,17 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback} from 'react';
+import { memo, useState, useEffect, useCallback } from 'react';
 // import Link from 'next/link';
 import Image from 'next/image';
-import { User } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt, faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight,faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { getProperties } from '@/lib/services/properties';
-import { addToFavorites, removeFromFavorites, isPropertyFavorited } from '@/lib/services/favorites';
-import { getCurrentUser } from '@/lib/services/auth';
-import { Property } from '@/lib/services/properties';
-import { supabase } from '@/lib/supabase';
+import { fetchProperties, fetchAddToFavorites, fetchRemoveFromFavorites, fetchIsPropertyFavorited, Property } from '@/lib/api';
 import PropertySkeletonLoader from './PropertySkeletonLoader';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PropertyListingProps {
   filters?: {
@@ -35,51 +31,25 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const { user: currentUser, loading: authLoading } = useAuth();
+  const authChecked = !authLoading;
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
-  const [authChecked, setAuthChecked] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProperties, setTotalProperties] = useState(0);
   const propertiesPerPage = 100;
   const [sortBy, setSortBy] = useState<string>('newest');
-  // Fetch current user
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { user } = await getCurrentUser();
-      setCurrentUser(user);
-      setAuthChecked(true);
-    };
-
-    fetchUser();
-
-    // Set up auth state listener
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        const { user } = await getCurrentUser();
-        setCurrentUser(user);
-      } else if (event === 'SIGNED_OUT') {
-        setCurrentUser(null);
-      }
-      setAuthChecked(true);
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
 
    
   
   // Don't fetch on filters change, only when searchTrigger changes
 
   // Fetch properties
-  const fetchProperties = useCallback(async () => {
+  const loadProperties = useCallback(async () => {
     console.log('Fetching properties with:', { filters, sortBy, currentPage, propertiesPerPage });
     setLoading(true);
     setError(null); // Clear previous errors
     try {
-      const { properties, total } = await getProperties({ // Assuming getProperties is stable
+      const { properties, total } = await fetchProperties({
         ...filters,
         sortBy: sortBy,
         page: currentPage,
@@ -109,13 +79,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
     currentPage,
     propertiesPerPage,
     onTotalUpdate,
-    // getProperties, // Add if it's a prop or a function defined in the component that can change
+    // fetchProperties, // Add if it's a prop or a function defined in the component that can change
   ]);
 
   // Fetch properties when critical dependencies change
   useEffect(() => {
-    fetchProperties();
-  }, [fetchProperties,searchTrigger]); // `fetchProperties` will change when its own deps (filters, sortBy, etc.) change.
+    loadProperties();
+  }, [loadProperties,searchTrigger]); // `loadProperties` will change when its own deps (filters, sortBy, etc.) change.
 
 
     
@@ -134,7 +104,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
       const favoritesStatus: Record<string, boolean> = {};
 
       for (const property of properties) {
-        const { isFavorited } = await isPropertyFavorited(currentUser.id, property.id);
+        const { isFavorited } = await fetchIsPropertyFavorited(currentUser.id, property.id);
         favoritesStatus[property.id] = isFavorited || false;
       }
 
@@ -160,9 +130,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
       const isFavorited = favorites[propertyId];
 
       if (isFavorited) {
-        await removeFromFavorites(currentUser.id, propertyId);
+        await fetchRemoveFromFavorites(currentUser.id, propertyId);
       } else {
-        await addToFavorites(currentUser.id, propertyId);
+        await fetchAddToFavorites(currentUser.id, propertyId);
       }
 
       // Update local state
@@ -232,7 +202,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
           >
             <div className="relative">
               <Image
-                src={property.image_url.trimEnd()}
+                src={(property.image_url || property.imageUrl || '').trimEnd()}
                 width={1000}
                 height={64}
                 alt={property.title}
@@ -325,4 +295,4 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
   );
 };
 
-export default PropertyListing;
+export default memo(PropertyListing);

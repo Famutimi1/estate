@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProperties, Property } from '@/lib/services/properties';
+import { fetchProperties, Property } from '@/lib/api';
 // import { Pagination } from '@/components/Pagination';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faBed, faBath, faRulerCombined, faMapMarkerAlt, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -26,65 +26,59 @@ const PropertiesPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const propertiesPerPage = 6;
 
-  // Fetch properties on initial load and when filters change
-  const fetchProperties = useCallback(async (searchFilters?: boolean) => {
+  // Tracks submitted filters separately from input state so that
+  // typing into a filter field does NOT trigger an automatic fetch.
+  const [appliedFilters, setAppliedFilters] = useState<{
+    propertyType: string;
+    propertyStatus: string;
+    minPrice: string;
+    maxPrice: string;
+    location: string;
+    bedrooms: string;
+    bathrooms: string;
+  }>({
+    propertyType: '',
+    propertyStatus: '',
+    minPrice: '',
+    maxPrice: '',
+    location: '',
+    bedrooms: '',
+    bathrooms: '',
+  });
+
+  // Fetch properties based on *applied* filters, sortBy, and currentPage
+  const loadProperties = useCallback(async (page?: number) => {
     try {
       setIsLoading(true);
-      // If this is a new search, reset to first page
-      // *before* calling fetchProperties.
-      // For now, let's keep it and ensure currentPage is a dependency.
-      let pageToFetch = currentPage;
-      if (searchFilters) {
-        // Note: setCurrentPage is async. The `currentPage` value used below
-        // will be the one from the render `fetchProperties` was created in.
-        // This is a common pitfall.
-        setCurrentPage(1);
-        pageToFetch = 1; // Use the intended page number for *this* fetch
-      }
+      const pageToFetch = page ?? currentPage;
 
       const filters = {
-        propertyType: propertyType || undefined,
-        propertyStatus: propertyStatus || undefined,
-        minPrice: minPrice ? parseInt(minPrice) : undefined,
-        maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
-        location: location || undefined,
-        bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-        bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
+        propertyType: appliedFilters.propertyType || undefined,
+        propertyStatus: appliedFilters.propertyStatus || undefined,
+        minPrice: appliedFilters.minPrice ? parseInt(appliedFilters.minPrice) : undefined,
+        maxPrice: appliedFilters.maxPrice ? parseInt(appliedFilters.maxPrice) : undefined,
+        location: appliedFilters.location || undefined,
+        bedrooms: appliedFilters.bedrooms ? parseInt(appliedFilters.bedrooms) : undefined,
+        bathrooms: appliedFilters.bathrooms ? parseInt(appliedFilters.bathrooms) : undefined,
         sortBy: sortBy,
-        page: pageToFetch, // Use the determined pageToFetch
+        page: pageToFetch,
         limit: propertiesPerPage
       };
 
-      // Assuming getProperties is an async function that returns { properties: [], total: 0 }
-      const result = await getProperties(filters); // If getProperties is not stable, add it to deps
+      const result = await fetchProperties(filters);
       setProperties(result.properties);
       setTotalProperties(result.total);
     } catch (error) {
       console.error('Error fetching properties:', error);
-      // Potentially set an error state here
     } finally {
       setIsLoading(false);
     }
-  }, [
-    // React state setters (setIsLoading, setCurrentPage, etc.) are stable and don't need to be here.
-    propertyType,
-    propertyStatus,
-    minPrice,
-    maxPrice,
-    location,
-    bedrooms,
-    bathrooms,
-    sortBy,
-    currentPage, // Important: fetchProperties reads this
-    propertiesPerPage,
-    // getProperties, // Add if getProperties is a prop or can change
-    // We don't need setProperties, setTotalProperties, setIsLoading, setCurrentPage in the array
-    // because they are guaranteed to be stable by React.
-  ]);
+  }, [appliedFilters, sortBy, currentPage, propertiesPerPage]);
 
+  // Re-fetch when page, sortBy, or applied filters change
   useEffect(() => {
-    fetchProperties();
-  }, [currentPage, sortBy, fetchProperties  ]);
+    loadProperties();
+  }, [loadProperties]);
 
   
   // Array of mock properties for fallback if needed
@@ -165,7 +159,16 @@ const PropertiesPage = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchProperties(true);
+    setCurrentPage(1);
+    setAppliedFilters({
+      propertyType,
+      propertyStatus,
+      minPrice,
+      maxPrice,
+      location,
+      bedrooms,
+      bathrooms,
+    });
   };
   
   const handlePageChange = (page: number) => {
@@ -188,7 +191,20 @@ const PropertiesPage = () => {
       {/* Search Filters */}
       <div className="bg-white shadow-md -mt-8 mb-8 mx-6 lg:mx-auto max-w-6xl rounded-sm">
         <form onSubmit={handleSearch} className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="search-location">
+                Address
+              </label>
+              <input
+                id="search-location"
+                type="text"
+                placeholder="Enter location"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="property-type">
                 Property Type
@@ -256,24 +272,6 @@ const PropertiesPage = () => {
                 <option value="750000">$750,000</option>
                 <option value="1000000">$1,000,000</option>
                 <option value="2000000">$2,000,000+</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
-                Location
-              </label>
-              <select
-                id="location"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              >
-                <option value="">Any Location</option>
-                <option value="ikoyi">Ikoyi</option>
-                <option value="lekki">Lekki</option>
-                <option value="vi">Victoria Island</option>
-                <option value="ikeja">Ikeja</option>
-                <option value="ajah">Ajah</option>
               </select>
             </div>
             <div>
@@ -377,7 +375,7 @@ const PropertiesPage = () => {
                 <Link href={`/properties/${property.id}`}>
                   <div className="relative">
                     <Image
-                      src={property.image_url.trimEnd()}
+                      src={(property.image_url || property.imageUrl || '').trimEnd()}
                       width={600} 
                       height={400} 
                       alt={property.title}
@@ -424,8 +422,10 @@ const PropertiesPage = () => {
                   <div className="flex flex-col md:flex-row">
                     <div className="relative md:w-1/3">
                       <Image
-                        src={property.image_url}
+                        src={(property.image_url || property.imageUrl || '')}
                         alt={property.title}
+                        width={600}
+                        height={400}
                         className="w-full h-64 md:h-full object-cover"
                       />
                       <div className="absolute top-4 left-4 bg-blue-700 text-white px-3 py-1 text-sm font-semibold">

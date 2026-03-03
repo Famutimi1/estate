@@ -1,22 +1,17 @@
-import { supabase } from '../supabase';
-import { Database } from '../database.types';
+import { prisma } from '../prisma';
+import { Favorite as PrismaFavorite } from '@prisma/client';
 
-export type Favorite = Database['public']['Tables']['favorites']['Row'];
+export type Favorite = PrismaFavorite;
 
 // Get all favorites for a user
 export async function getUserFavorites(userId: string) {
   try {
-    const { data, error } = await supabase
-      .from('favorites')
-      .select(`
-        *,
-        properties(*)
-      `)
-      .eq('user_id', userId);
-    
-    if (error) throw error;
-    
-    return { success: true, favorites: data };
+    const favorites = await prisma.favorite.findMany({
+      where: { userId },
+      include: { property: true },
+    });
+
+    return { success: true, favorites };
   } catch (error) {
     console.error('Error fetching user favorites:', error);
     return { success: false, error };
@@ -27,29 +22,22 @@ export async function getUserFavorites(userId: string) {
 export async function addToFavorites(userId: string, propertyId: string) {
   try {
     // Check if already favorited
-    const { data: existing } = await supabase
-      .from('favorites')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('property_id', propertyId)
-      .single();
-    
+    const existing = await prisma.favorite.findUnique({
+      where: {
+        userId_propertyId: { userId, propertyId },
+      },
+    });
+
     if (existing) {
       return { success: true, message: 'Property already in favorites' };
     }
-    
+
     // Add to favorites
-    const { data, error } = await supabase
-      .from('favorites')
-      .insert({
-        user_id: userId,
-        property_id: propertyId
-      })
-      .select();
-    
-    if (error) throw error;
-    
-    return { success: true, favorite: data[0] };
+    const favorite = await prisma.favorite.create({
+      data: { userId, propertyId },
+    });
+
+    return { success: true, favorite };
   } catch (error) {
     console.error('Error adding to favorites:', error);
     return { success: false, error };
@@ -59,14 +47,12 @@ export async function addToFavorites(userId: string, propertyId: string) {
 // Remove a property from favorites
 export async function removeFromFavorites(userId: string, propertyId: string) {
   try {
-    const { error } = await supabase
-      .from('favorites')
-      .delete()
-      .eq('user_id', userId)
-      .eq('property_id', propertyId);
-    
-    if (error) throw error;
-    
+    await prisma.favorite.delete({
+      where: {
+        userId_propertyId: { userId, propertyId },
+      },
+    });
+
     return { success: true };
   } catch (error) {
     console.error('Error removing from favorites:', error);
@@ -77,18 +63,13 @@ export async function removeFromFavorites(userId: string, propertyId: string) {
 // Check if a property is in user's favorites
 export async function isPropertyFavorited(userId: string, propertyId: string) {
   try {
-    const { data, error } = await supabase
-      .from('favorites')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('property_id', propertyId)
-      .single();
-    
-    if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-      throw error;
-    }
-    
-    return { success: true, isFavorited: !!data };
+    const favorite = await prisma.favorite.findUnique({
+      where: {
+        userId_propertyId: { userId, propertyId },
+      },
+    });
+
+    return { success: true, isFavorited: !!favorite };
   } catch (error) {
     console.error('Error checking favorite status:', error);
     return { success: false, error };

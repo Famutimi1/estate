@@ -1,865 +1,396 @@
-"use client"
+"use client";
 
-// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import React, { useState, useRef } from 'react';
-import Image from 'next/image';
+type ChartDatum = { label: string; value: number };
 
-const Admin: React.FC = () => {
-  // Sidebar state
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+interface ChartCardProps {
+  title: string;
+  description: string;
+  data: ChartDatum[];
+  gradientId: string;
+  accent: string;
+  variant: 'area' | 'line';
+}
 
-  // Form state
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    property_status: '',
-    property_type: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    bedrooms: '',
-    bathrooms: '',
-    area: '',
-    garageSpaces: '',
-    amenities: {
-      pool: false,
-      garden: false,
-      airConditioning: false,
-      heating: false,
-      internet: false,
-      parking: false,
-      securitySystem: false,
-      laundry: false,
-      petsAllowed: false,
-      furnished: false
-    }
+const ChartCard: React.FC<ChartCardProps> = ({ title, description, data, gradientId, accent, variant }) => {
+  const [hoveredPoint, setHoveredPoint] = React.useState<{ x: number; y: number; label: string; value: number } | null>(null);
+  const svgRef = React.useRef<SVGSVGElement>(null);
+
+  const normalizedData = data.length > 1 ? data : [...data, ...data];
+  const maxValue = Math.max(...normalizedData.map((d) => d.value), 1);
+  const points = normalizedData.map((point, index) => {
+    const x = (index / (normalizedData.length - 1)) * 100;
+    const y = 100 - (point.value / maxValue) * 80 - 10;
+    return { ...point, x, y };
   });
 
-  // Image upload state
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [featuredImageIndex, setFeaturedImageIndex] = useState<number | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const linePath = points
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+    .join(' ');
 
-  // Notification state
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const areaPath = `${linePath} L ${points[points.length - 1].x} 100 L ${points[0].x} 100 Z`;
 
-  // Handle form changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
+  const firstLabel = normalizedData[0]?.label || '';
+  const lastLabel = normalizedData[normalizedData.length - 1]?.label || '';
 
-  // Handle checkbox changes
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData({
-      ...formData,
-      amenities: {
-        ...formData.amenities,
-        [name]: checked
+  const yAxisTicks = [0, 1, 2, 3, 4].map((i) => ({
+    value: Math.round((maxValue * (4 - i)) / 4),
+    y: 10 + (i * 80) / 4,
+  }));
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    
+    let closestPoint = points[0];
+    let minDistance = Math.abs(x - points[0].x);
+    
+    points.forEach((point) => {
+      const distance = Math.abs(x - point.x);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestPoint = point;
       }
     });
-  };
-
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
-      const imageUrls = filesArray.map(file => URL.createObjectURL(file));
-      setUploadedImages([...uploadedImages, ...imageUrls]);
-
-      // Set first image as featured if none selected
-      if (featuredImageIndex === null && uploadedImages.length === 0) {
-        setFeaturedImageIndex(0);
-      }
-    }
-  };
-
-  // Handle drag and drop
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (e.dataTransfer.files) {
-      const filesArray = Array.from(e.dataTransfer.files);
-      const imageUrls = filesArray.map(file => URL.createObjectURL(file));
-      setUploadedImages([...uploadedImages, ...imageUrls]);
-
-      // Set first image as featured if none selected
-      if (featuredImageIndex === null && uploadedImages.length === 0) {
-        setFeaturedImageIndex(0);
-      }
-    }
-  };
-
-  // Set featured image
-  const setAsFeatured = (index: number) => {
-    setFeaturedImageIndex(index);
-  };
-
-  // Remove image
-  const removeImage = (index: number) => {
-    const newImages = [...uploadedImages];
-    newImages.splice(index, 1);
-    setUploadedImages(newImages);
-
-    // Adjust featured image index if needed
-    if (featuredImageIndex === index) {
-      setFeaturedImageIndex(newImages.length > 0 ? 0 : null);
-    } else if (featuredImageIndex !== null && featuredImageIndex > index) {
-      setFeaturedImageIndex(featuredImageIndex - 1);
-    }
-  };
-
-  // Submit form
-  const handleSubmit = async (isDraft: boolean) => {
-    try {
-      // Validate required fields
-      if (!formData.title || !formData.price || !formData.property_status || !formData.property_type ||
-        !formData.description || !formData.address || !formData.city ||
-        !formData.state || !formData.zipCode) {
-        alert('Please fill in all required fields');
-        return;
-      }
-
-      // Validate that at least one image is uploaded
-      if (uploadedImages.length === 0) {
-        alert('Please upload at least one property image');
-        return;
-      }
-
-
-      const STATUS = {
-        DRAFT: 'draft',
-        PUBLISH: 'publish',
-      } as const;
-
-      const PROPERTY_STATUS = {
-        RENT: 'For Rent',
-        SALE: 'For Sale',
-      } as const;
-
-      const PROPERTY_TYPE = {
-         HOUSE: 'house',
-        APARTMENT: 'apartment',
-        VILLA: 'villa',
-        COMMERCIAL: 'commercial',
-        LAND: 'land',
-      } as const;
-      
-
-      // type Status = typeof STATUS[keyof typeof STATUS];
-
-      // Convert form data to match the database schema
-      const propertyData = {
-        title: formData.title,
-        price: parseFloat(formData.price),
-        status: isDraft ? STATUS.DRAFT : STATUS.PUBLISH,
-        property_status: formData.property_status === 'rent' ? PROPERTY_STATUS.RENT : PROPERTY_STATUS.SALE,
-        address: formData.address,
-        description: formData.description,
-        bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : 0,
-        bathrooms: formData.bathrooms ? parseFloat(formData.bathrooms) : 0,
-        area: formData.area ? parseFloat(formData.area) : 0,
-        area_unit: 'sq ft',
-        property_type: formData.property_type=== 'apartment'? PROPERTY_TYPE.APARTMENT :
-        formData.property_type === 'house'? PROPERTY_TYPE.HOUSE :
-        formData.property_type === 'villa'? PROPERTY_TYPE.VILLA :
-        formData.property_type === 'commercial'? PROPERTY_TYPE.COMMERCIAL :
-        formData.property_type === 'land'? PROPERTY_TYPE.LAND : PROPERTY_TYPE.HOUSE,
-        location: `${formData.city}, ${formData.state}`,
-        image_url: featuredImageIndex !== null ? uploadedImages[featuredImageIndex] : uploadedImages[0],
-        images: uploadedImages,
-        featured_image_index: featuredImageIndex,
-        city: formData.city,
-        state: formData.state,
-        zip_code: formData.zipCode,
-        garage_spaces: formData.garageSpaces ? parseInt(formData.garageSpaces) : 0,
-        amenities: formData.amenities,
-        // If you have user authentication, you can add user_id here
-        // user_id: currentUser?.id
-      };
-      
-
-      // Import the createProperty function
-      
-      const { createProperty } = await import('@/lib/services/properties');
-      
-      // Send data to the backend
-      const result = await createProperty(propertyData);
-      console.log(propertyData);
-
-      if (result) {
-        // Show success message
-        alert(isDraft ? 'Property saved as draft!' : 'Property published successfully!');
-
-        // Reset form after successful submission
-        setFormData({
-          title: '',
-          description: '',
-          price: '',
-          property_status: '',
-          property_type: '',
-          address: '',
-          city: '',
-          state: '',
-          zipCode: '',
-          bedrooms: '',
-          bathrooms: '',
-          area: '',
-          garageSpaces: '',
-          amenities: {
-            pool: false,
-            garden: false,
-            airConditioning: false,
-            heating: false,
-            internet: false,
-            parking: false,
-            securitySystem: false,
-            laundry: false,
-            petsAllowed: false,
-            furnished: false
-          }
-        });
-        setUploadedImages([]);
-        setFeaturedImageIndex(null);
-      } else {
-        alert('Error creating property. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting property:', error);
-      alert('An error occurred while submitting the property. Please try again.');
+    
+    if (minDistance < 8) {
+      setHoveredPoint(closestPoint);
+    } else {
+      setHoveredPoint(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Left Sidebar */}
-      <div className={`bg-white shadow-lg z-20 transition-all duration-300 ${sidebarCollapsed ? 'w-20' : 'w-64'} fixed h-full`}>
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <div className={`flex items-center ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
-            <span className={`font-bold text-blue-700 text-xl ${sidebarCollapsed ? 'hidden' : ''}`}>my<span className="text-pink-600">HOME</span></span>
-            {sidebarCollapsed && <span className="text-pink-600 text-xl font-bold">m</span>}
-          </div>
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="text-gray-500 hover:text-pink-600 cursor-pointer !rounded-button whitespace-nowrap"
-          >
-            <i className={`fas ${sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
-          </button>
-        </div>
-
-        <nav className="mt-6">
-          <ul>
-            <li>
-              <a href="#" className="flex items-center py-3 px-4 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors cursor-pointer">
-                <i className="fas fa-home text-lg w-8"></i>
-                <span className={`${sidebarCollapsed ? 'hidden' : ''}`}>Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center py-3 px-4 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors cursor-pointer">
-                <i className="fas fa-building text-lg w-8"></i>
-                <span className={`${sidebarCollapsed ? 'hidden' : ''}`}>Properties</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center py-3 px-4 bg-pink-50 text-pink-600 border-l-4 border-pink-600 cursor-pointer">
-                <i className="fas fa-plus text-lg w-8"></i>
-                <span className={`${sidebarCollapsed ? 'hidden' : ''}`}>Add Property</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center py-3 px-4 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors cursor-pointer">
-                <i className="fas fa-users text-lg w-8"></i>
-                <span className={`${sidebarCollapsed ? 'hidden' : ''}`}>Users</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center py-3 px-4 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors cursor-pointer">
-                <i className="fas fa-cog text-lg w-8"></i>
-                <span className={`${sidebarCollapsed ? 'hidden' : ''}`}>Settings</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="mb-6">
+        <h3 className="text-base font-semibold text-gray-800">{title}</h3>
       </div>
-
-      {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'}`}>
-        {/* Top Navigation */}
-        <div className="bg-blue-800 text-white shadow-md">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex justify-between items-center">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="bg-blue-700 text-white placeholder-blue-300 border-none rounded-sm py-2 pl-10 pr-4 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <i className="fas fa-search absolute left-3 top-3 text-blue-300"></i>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* Notifications */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    className="text-white hover:text-blue-200 cursor-pointer !rounded-button whitespace-nowrap"
-                  >
-                    <i className="fas fa-bell text-xl"></i>
-                    <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-                  </button>
-
-                  {showNotifications && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-sm shadow-lg z-10">
-                      <div className="p-3 border-b border-gray-200">
-                        <h3 className="font-semibold text-gray-800">Notifications</h3>
-                      </div>
-                      <div className="max-h-96 overflow-y-auto">
-                        <a href="#" className="block p-4 border-b border-gray-100 hover:bg-gray-50">
-                          <div className="flex items-start">
-                            <div className="flex-shrink-0 bg-blue-100 rounded-full p-2">
-                              <i className="fas fa-user-plus text-blue-800"></i>
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-800">New user registered</p>
-                              <p className="text-xs text-gray-500 mt-1">5 minutes ago</p>
-                            </div>
-                          </div>
-                        </a>
-                        <a href="#" className="block p-4 border-b border-gray-100 hover:bg-gray-50">
-                          <div className="flex items-start">
-                            <div className="flex-shrink-0 bg-green-100 rounded-full p-2">
-                              <i className="fas fa-check text-green-600"></i>
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-800">Property approved</p>
-                              <p className="text-xs text-gray-500 mt-1">1 hour ago</p>
-                            </div>
-                          </div>
-                        </a>
-                        <a href="#" className="block p-4 hover:bg-gray-50">
-                          <div className="flex items-start">
-                            <div className="flex-shrink-0 bg-pink-100 rounded-full p-2">
-                              <i className="fas fa-comment-alt text-pink-600"></i>
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-800">New message received</p>
-                              <p className="text-xs text-gray-500 mt-1">3 hours ago</p>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div className="p-2 border-t border-gray-200 text-center">
-                        <a href="#" className="text-sm text-blue-600 hover:underline">View all notifications</a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* User Profile */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center space-x-2 cursor-pointer !rounded-button whitespace-nowrap"
-                  >
-                    <Image
-                      src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish"
-                      alt="User"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                    <span>John Doe</span>
-                    <i className="fas fa-chevron-down text-xs"></i>
-                  </button>
-
-                  {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-lg z-10">
-                      <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                        <i className="fas fa-user mr-2 text-gray-600"></i>
-                        Profile
-                      </a>
-                      <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                        <i className="fas fa-cog mr-2 text-gray-600"></i>
-                        Settings
-                      </a>
-                      <div className="border-t border-gray-100"></div>
-                      <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                        <i className="fas fa-sign-out-alt mr-2 text-gray-600"></i>
-                        Logout
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="relative">
+        <div className="absolute left-0 top-0 bottom-8 flex flex-col justify-between text-xs text-gray-400 pr-2">
+          {yAxisTicks.map((tick) => (
+            <span key={tick.value}>{tick.value.toLocaleString()}</span>
+          ))}
         </div>
-
-        {/* Content */}
-        <div className="container mx-auto px-6 py-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Add New Property</h1>
-
-          <form>
-            {/* Basic Information */}
-            <div className="bg-white rounded-sm shadow-md p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Basic Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="title">
-                    Property Title <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter property title"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="price">
-                    Price <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-3 text-gray-500">$</span>
-                    <input
-                      type="text"
-                      id="price"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      className="w-full p-3 pl-8 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter price"
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="status">
-                    Status <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="property_status"
-                      name="property_status"
-                      value={formData.property_status}
-                      onChange={handleInputChange}
-                      className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-                      required
-                    >
-                      <option value="">Select status</option>
-                      <option value="sale">For Sale</option>
-                      <option value="rent">For Rent</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                      <i className="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="type">
-                    Property Type <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="property_type"
-                      name="property_type"
-                      value={formData.property_type}
-                      onChange={handleInputChange}
-                      className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-                      required
-                    >
-                      <option value="">Select type</option>
-                      <option value="house">House</option>
-                      <option value="apartment">Apartment</option>
-                      <option value="villa">Villa</option>
-                      <option value="commercial">Commercial</option>
-                      <option value="land">Land</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                      <i className="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-gray-700 mb-2" htmlFor="description">
-                    Description <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    rows={5}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter property description"
-                    required
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            {/* Location Details */}
-            <div className="bg-white rounded-sm shadow-md p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Location Details</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-gray-700 mb-2" htmlFor="address">
-                    Address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter street address"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="city">
-                    City <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter city"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="state">
-                    State <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="state"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter state"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="zipCode">
-                    ZIP Code <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="zipCode"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter ZIP code"
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <div className="h-64 bg-gray-200 rounded-sm flex items-center justify-center">
-                    <div className="text-center">
-                      <i className="fas fa-map-marker-alt text-4xl text-gray-400 mb-2"></i>
-                      <p className="text-gray-500">Map will be displayed here</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Property Features */}
-            <div className="bg-white rounded-sm shadow-md p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Property Features</h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="bedrooms">
-                    Bedrooms
-                  </label>
-                  <input
-                    type="number"
-                    id="bedrooms"
-                    name="bedrooms"
-                    value={formData.bedrooms}
-                    onChange={handleInputChange}
-                    min="0"
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Number of bedrooms"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="bathrooms">
-                    Bathrooms
-                  </label>
-                  <input
-                    type="number"
-                    id="bathrooms"
-                    name="bathrooms"
-                    value={formData.bathrooms}
-                    onChange={handleInputChange}
-                    min="0"
-                    step="0.5"
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Number of bathrooms"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="area">
-                    Area (sq ft)
-                  </label>
-                  <input
-                    type="number"
-                    id="area"
-                    name="area"
-                    value={formData.area}
-                    onChange={handleInputChange}
-                    min="0"
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Area in sq ft"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-2" htmlFor="garageSpaces">
-                    Garage Spaces
-                  </label>
-                  <input
-                    type="number"
-                    id="garageSpaces"
-                    name="garageSpaces"
-                    value={formData.garageSpaces}
-                    onChange={handleInputChange}
-                    min="0"
-                    className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Number of garage spaces"
-                  />
-                </div>
-              </div>
-
-              <h3 className="text-lg font-semibold text-gray-800 mt-6 mb-3">Amenities</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="pool"
-                    name="pool"
-                    checked={formData.amenities.pool}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="pool" className="ml-2 text-gray-700">Swimming Pool</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="garden"
-                    name="garden"
-                    checked={formData.amenities.garden}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="garden" className="ml-2 text-gray-700">Garden</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="airConditioning"
-                    name="airConditioning"
-                    checked={formData.amenities.airConditioning}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="airConditioning" className="ml-2 text-gray-700">Air Conditioning</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="heating"
-                    name="heating"
-                    checked={formData.amenities.heating}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="heating" className="ml-2 text-gray-700">Heating</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="internet"
-                    name="internet"
-                    checked={formData.amenities.internet}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="internet" className="ml-2 text-gray-700">Internet</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="parking"
-                    name="parking"
-                    checked={formData.amenities.parking}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="parking" className="ml-2 text-gray-700">Parking</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="securitySystem"
-                    name="securitySystem"
-                    checked={formData.amenities.securitySystem}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="securitySystem" className="ml-2 text-gray-700">Security System</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="laundry"
-                    name="laundry"
-                    checked={formData.amenities.laundry}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="laundry" className="ml-2 text-gray-700">Laundry</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="petsAllowed"
-                    name="petsAllowed"
-                    checked={formData.amenities.petsAllowed}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="petsAllowed" className="ml-2 text-gray-700">Pets Allowed</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="furnished"
-                    name="furnished"
-                    checked={formData.amenities.furnished}
-                    onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="furnished" className="ml-2 text-gray-700">Furnished</label>
-                </div>
-              </div>
-            </div>
-
-            {/* Image Upload */}
-            <div className="bg-white rounded-sm shadow-md p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Property Images</h2>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-sm p-8 text-center cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => fileInputRef.current?.click()}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                />
-                <i className="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Drag & Drop or Click to Upload</h3>
-                <p className="text-gray-500 mb-4">Upload high quality images (max 10 files)</p>
-                <button
-                  type="button"
-                  className="bg-blue-800 text-white px-6 py-2 font-semibold hover:bg-blue-900 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
-                >
-                  Browse Files
-                </button>
-              </div>
-
-              {uploadedImages.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Uploaded Images</h3>
-                  <p className="text-gray-500 mb-3">Select an image to set as featured (main) image</p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {uploadedImages.map((image, index) => (
-                      <div key={index} className={`relative rounded-sm overflow-hidden border-2 ${featuredImageIndex === index ? 'border-pink-600' : 'border-transparent'}`}>
-                        <Image
-                          src={image}
-                          alt={`Property image ${index + 1}`}
-                          className="w-full h-32 object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
-                          <div className="flex justify-end">
-                            <button
-                              type="button"
-                              onClick={() => removeImage(index)}
-                              className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-500 hover:bg-red-100 cursor-pointer !rounded-button whitespace-nowrap"
-                            >
-                              <i className="fas fa-times"></i>
-                            </button>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setAsFeatured(index)}
-                            className={`w-full py-1 text-xs font-semibold ${featuredImageIndex === index
-                                ? 'bg-pink-600 text-white'
-                                : 'bg-white text-gray-800 hover:bg-gray-100'
-                              } cursor-pointer !rounded-button whitespace-nowrap`}
-                          >
-                            {featuredImageIndex === index ? 'Featured' : 'Set as Featured'}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        <div className="ml-10 relative">
+          <svg 
+            ref={svgRef}
+            viewBox="0 0 100 100" 
+            className="w-full h-52 cursor-crosshair"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => setHoveredPoint(null)}
+          >
+            <defs>
+              <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={accent} stopOpacity={variant === 'area' ? 0.2 : 0} />
+                <stop offset="100%" stopColor={accent} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke="none">
+              {variant === 'area' && (
+                <path d={areaPath} fill={`url(#${gradientId})`} stroke="none" />
               )}
+              <path d={linePath} stroke={accent} strokeWidth={2.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              {points.map((point, idx) => (
+                <circle 
+                  key={point.label} 
+                  cx={point.x} 
+                  cy={point.y} 
+                  r={hoveredPoint?.label === point.label ? 4 : 2.5} 
+                  fill={accent} 
+                  opacity={hoveredPoint?.label === point.label ? 1 : (idx === 0 || idx === points.length - 1 ? 0.8 : 0)} 
+                  className="transition-all duration-150"
+                />
+              ))}
+            </g>
+            <g stroke="#e5e7eb" strokeWidth="0.5" opacity="0.5">
+              {[25, 50, 75].map((y) => (
+                <line key={y} x1="0" y1={y} x2="100" y2={y} strokeDasharray="3,3" />
+              ))}
+            </g>
+            {hoveredPoint && (
+              <g>
+                <line 
+                  x1={hoveredPoint.x} 
+                  y1="0" 
+                  x2={hoveredPoint.x} 
+                  y2="100" 
+                  stroke={accent} 
+                  strokeWidth="0.5" 
+                  strokeDasharray="2,2" 
+                  opacity="0.3"
+                />
+              </g>
+            )}
+          </svg>
+          {hoveredPoint && (
+            <div 
+              className="absolute bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg pointer-events-none z-10"
+              style={{
+                left: `${hoveredPoint.x}%`,
+                top: `${hoveredPoint.y * 0.52}%`,
+                transform: 'translate(-50%, -120%)',
+              }}
+            >
+              <div className="font-semibold">{hoveredPoint.label}</div>
+              <div className="text-gray-300">{hoveredPoint.value.toLocaleString()}</div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                onClick={() => handleSubmit(true)}
-                className="border adjust border-blue-800 text-blue-800 px-6 py-3 font-semibold hover:bg-blue-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                Save Draft
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSubmit(false)}
-                className="bg-pink-600 adjust text-white px-6 py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer"
-              >
-                Publish Property
-              </button>
-            </div>
-          </form>
+          )}
+        </div>
+        <div className="flex justify-between text-xs text-gray-400 mt-4 ml-10">
+          <span>{firstLabel}</span>
+          <span>{lastLabel}</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default Admin;
+interface Stats {
+  totalUsers: number;
+  totalProperties: number;
+  totalFavorites: number;
+  propertiesForSale: number;
+  propertiesForRent: number;
+  draftProperties: number;
+  publishedProperties: number;
+  recentUsers: { id: string; name: string; email: string; role: string; createdAt: string }[];
+  recentProperties: { id: string; title: string; price: number; propertyStatus: string; status: string; city: string; state: string; createdAt: string }[];
+}
 
+interface MonthlyStats {
+  monthlyData: { month: string; users: number; properties: number }[];
+}
+
+const AdminDashboard: React.FC = () => {
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [statsRes, monthlyRes] = await Promise.all([
+          fetch('/api/admin/stats'),
+          fetch('/api/admin/stats/monthly'),
+        ]);
+        const statsData = await statsRes.json();
+        const monthlyData = await monthlyRes.json();
+        setStats(statsData);
+        setMonthlyStats(monthlyData);
+      } catch (err) {
+        console.error('Failed to load dashboard stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+      </div>
+    );
+  }
+
+  if (!stats || !monthlyStats) {
+    return <p className="text-red-500">Failed to load dashboard data.</p>;
+  }
+
+  const summaryCards = [
+    { label: 'Total Users', value: stats.totalUsers, icon: 'fa-users', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+    { label: 'Total Properties', value: stats.totalProperties, icon: 'fa-building', bg: 'bg-green-100', iconColor: 'text-green-600' },
+    { label: 'For Sale', value: stats.propertiesForSale, icon: 'fa-tag', bg: 'bg-orange-100', iconColor: 'text-orange-600' },
+    { label: 'For Rent', value: stats.propertiesForRent, icon: 'fa-key', bg: 'bg-purple-100', iconColor: 'text-purple-600' },
+    { label: 'Published', value: stats.publishedProperties, icon: 'fa-check-circle', bg: 'bg-emerald-100', iconColor: 'text-emerald-600' },
+    { label: 'Drafts', value: stats.draftProperties, icon: 'fa-file-alt', bg: 'bg-yellow-100', iconColor: 'text-yellow-600' },
+    { label: 'Favorites', value: stats.totalFavorites, icon: 'fa-heart', bg: 'bg-pink-100', iconColor: 'text-pink-600' },
+  ];
+
+  const formatMonthLabel = (monthStr: string) => {
+    const [year, month] = monthStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1);
+    return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+  };
+
+  const userTrend = monthlyStats.monthlyData.map((item) => ({
+    label: formatMonthLabel(item.month),
+    value: item.users,
+  }));
+
+  const listingTrend = monthlyStats.monthlyData.map((item) => ({
+    label: formatMonthLabel(item.month),
+    value: item.properties,
+  }));
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        {summaryCards.map((card) => (
+          <div key={card.label} className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex items-center space-x-4">
+            <div className={`${card.bg} rounded-lg p-3`}>
+              <i className={`fas ${card.icon} text-xl ${card.iconColor}`}></i>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">{card.label}</p>
+              <p className="text-2xl font-bold text-gray-800">{card.value.toLocaleString()}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Performance Graphs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <ChartCard
+          title="User Signups"
+          description=""
+          data={userTrend}
+          gradientId="usersGradient"
+          accent="#34d399"
+          variant="line"
+        />
+        <ChartCard
+          title="Property Listings"
+          description=""
+          data={listingTrend}
+          gradientId="listingsGradient"
+          accent="#60a5fa"
+          variant="area"
+        />
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/admin/add-property" className="bg-pink-600 text-white px-5 py-2.5 rounded-md hover:bg-pink-700 transition-colors font-medium">
+            <i className="fas fa-plus mr-2"></i>Add Property
+          </Link>
+          <Link href="/admin/properties" className="bg-blue-700 text-white px-5 py-2.5 rounded-md hover:bg-blue-800 transition-colors font-medium">
+            <i className="fas fa-building mr-2"></i>View Properties
+          </Link>
+          <Link href="/admin/users" className="bg-emerald-600 text-white px-5 py-2.5 rounded-md hover:bg-emerald-700 transition-colors font-medium">
+            <i className="fas fa-users mr-2"></i>Manage Users
+          </Link>
+          <Link href="/admin/settings" className="bg-gray-600 text-white px-5 py-2.5 rounded-md hover:bg-gray-700 transition-colors font-medium">
+            <i className="fas fa-cog mr-2"></i>Settings
+          </Link>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Recent Properties */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Recent Properties</h2>
+            <Link href="/admin/properties" className="text-sm text-blue-600 hover:underline">View All</Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Title</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Price</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Status</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.recentProperties.map((p) => (
+                  <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
+                    <td className="py-3 px-2 font-medium text-gray-800 max-w-[150px] truncate">{p.title}</td>
+                    <td className="py-3 px-2 text-gray-600">${p.price.toLocaleString()}</td>
+                    <td className="py-3 px-2">
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                        p.propertyStatus === 'ForSale' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                      }`}>
+                        {p.propertyStatus === 'ForSale' ? 'For Sale' : 'For Rent'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-gray-500">{new Date(p.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+                {stats.recentProperties.length === 0 && (
+                  <tr><td colSpan={4} className="py-6 text-center text-gray-400">No properties yet</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Recent Users */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Recent Users</h2>
+            <Link href="/admin/users" className="text-sm text-blue-600 hover:underline">View All</Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Name</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Email</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Role</th>
+                  <th className="text-left py-3 px-2 text-gray-500 font-medium">Joined</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.recentUsers.map((u) => (
+                  <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50">
+                    <td className="py-3 px-2 font-medium text-gray-800">{u.name}</td>
+                    <td className="py-3 px-2 text-gray-600 max-w-[150px] truncate">{u.email}</td>
+                    <td className="py-3 px-2">
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                        u.role === 'admin' ? 'bg-red-100 text-red-700' :
+                        u.role === 'agent' ? 'bg-orange-100 text-orange-700' :
+                        'bg-gray-100 text-gray-700'
+                      }`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+                {stats.recentUsers.length === 0 && (
+                  <tr><td colSpan={4} className="py-6 text-center text-gray-400">No users yet</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Property Type Breakdown */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mt-8">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Property Overview</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <p className="text-3xl font-bold text-blue-700">{stats.propertiesForSale}</p>
+            <p className="text-sm text-gray-600 mt-1">For Sale</p>
+          </div>
+          <div className="text-center p-4 bg-purple-50 rounded-lg">
+            <p className="text-3xl font-bold text-purple-700">{stats.propertiesForRent}</p>
+            <p className="text-sm text-gray-600 mt-1">For Rent</p>
+          </div>
+          <div className="text-center p-4 bg-green-50 rounded-lg">
+            <p className="text-3xl font-bold text-green-700">{stats.publishedProperties}</p>
+            <p className="text-sm text-gray-600 mt-1">Published</p>
+          </div>
+          <div className="text-center p-4 bg-yellow-50 rounded-lg">
+            <p className="text-3xl font-bold text-yellow-700">{stats.draftProperties}</p>
+            <p className="text-sm text-gray-600 mt-1">Drafts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;

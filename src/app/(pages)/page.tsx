@@ -3,14 +3,14 @@
 import Image from "next/image";
 
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronDown, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import PropertyListing from '../components/PropertyListing';
-import { Property } from '@/lib/services/properties';
+import PropertyListing from '@/components/PropertyListing';
+import { Property } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
 const Home: React.FC = () => {
@@ -23,15 +23,41 @@ const Home: React.FC = () => {
   const [rooms, setRooms] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+
+  // Contact form state
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(false);
+  const [contactError, setContactError] = useState('');
+
+  // Tracks submitted filters separately from input state so that
+  // typing into a filter field does NOT trigger an automatic fetch.
+  const [appliedFilters, setAppliedFilters] = useState<{
+    propertyType?: string;
+    propertyStatus?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    location?: string;
+    bedrooms?: number;
+  }>({});
   const [searchTrigger, setSearchTrigger] = useState<number>(0);
- 
-  
-  const handleSearch = (e?: React.FormEvent) => {
+
+  const handleSearch = useCallback((e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    setCurrentPage(1); // Reset to first page when searching
-    // Increment the search trigger to cause PropertyListing to fetch new data
+    setCurrentPage(1);
+    setAppliedFilters({
+      propertyType: propertyType || undefined,
+      propertyStatus: propertyStatus || undefined,
+      minPrice: minPrice ? parseInt(minPrice) : undefined,
+      maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
+      location: location || undefined,
+      bedrooms: rooms ? parseInt(rooms) : undefined,
+    });
     setSearchTrigger(prev => prev + 1);
-  };
+  }, [propertyType, propertyStatus, minPrice, maxPrice, location, rooms]);
   
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -43,14 +69,55 @@ const Home: React.FC = () => {
     });
   };
   
-  const updateTotalPages = (total: number) => {
+  const updateTotalPages = useCallback((total: number) => {
     const pages = Math.ceil(total / 100); // 100 items per page
     setTotalPages(pages);
     console.log('Total properties:', total, 'Total pages:', pages);
-  };
+  }, []);
   
-  const handlePropertyClick = (property: Property) => {
+  const handlePropertyClick = useCallback((property: Property) => {
     router.push(`/properties/${property.id}`);
+  }, [router]);
+
+  const listingFilters = useMemo(() => {
+    return {
+      ...appliedFilters,
+      page: currentPage,
+      limit: 100,
+    };
+  }, [appliedFilters, currentPage]);
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactSubmitting(true);
+    setContactError('');
+    setContactSuccess(false);
+
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          phone: contactPhone,
+          message: contactMessage,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to send message');
+
+      setContactSuccess(true);
+      setContactName('');
+      setContactEmail('');
+      setContactPhone('');
+      setContactMessage('');
+    } catch (err: any) {
+      setContactError(err.message || 'Failed to send message');
+    } finally {
+      setContactSubmitting(false);
+    }
   };
 
   return (
@@ -228,16 +295,7 @@ const Home: React.FC = () => {
       {/* Property Listings */}
       <div className="container mx-auto px-6 py-10 md:py-16" id="property-listings">
         <PropertyListing
-          filters={{
-            propertyType: propertyType || undefined,
-            propertyStatus: propertyStatus || undefined,
-            minPrice: minPrice ? parseInt(minPrice) : undefined,
-            maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
-            location: location || undefined,
-            bedrooms: rooms ? parseInt(rooms) : undefined,
-            page: currentPage,
-            limit: 100
-          }}
+          filters={listingFilters}
           searchTrigger={searchTrigger}
           onTotalUpdate={updateTotalPages}
           onPropertyClick={handlePropertyClick}
@@ -289,6 +347,429 @@ const Home: React.FC = () => {
             </nav>
           </div>
         )}
+      </div>
+
+      {/* Stats Counter Section */}
+      <div className="bg-blue-700 py-14">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">2,500+</div>
+              <div className="text-blue-200 text-sm md:text-base">Properties Listed</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">1,800+</div>
+              <div className="text-blue-200 text-sm md:text-base">Happy Clients</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">150+</div>
+              <div className="text-blue-200 text-sm md:text-base">Expert Agents</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">98%</div>
+              <div className="text-blue-200 text-sm md:text-base">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="bg-white py-16">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">How It Works</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Finding your dream property is simple with our streamlined process</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <div className="text-center relative">
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Search</h3>
+              <p className="text-gray-600 text-sm">Browse our extensive collection of properties using advanced filters to narrow down your choices.</p>
+              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+            </div>
+            <div className="text-center relative">
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Explore</h3>
+              <p className="text-gray-600 text-sm">View detailed property information, high-quality photos, and virtual tours from the comfort of your home.</p>
+              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+            </div>
+            <div className="text-center relative">
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Schedule</h3>
+              <p className="text-gray-600 text-sm">Book a viewing at your convenience and visit the property with one of our experienced agents.</p>
+              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">4</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Move In</h3>
+              <p className="text-gray-600 text-sm">Complete the transaction securely and move into your new dream home with full support from our team.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Why Choose Us Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Why Choose Us?</h2>
+              <p className="text-gray-600 mb-8">We go beyond just listing properties. Our commitment to excellence and client satisfaction sets us apart in the real estate industry.</p>
+              <div className="space-y-5">
+                <div className="flex items-start">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-search-location text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Comprehensive Listings</h4>
+                    <p className="text-gray-600 text-sm">Access thousands of verified properties with detailed info, photos, and virtual tours.</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-hand-holding-usd text-pink-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Best Price Guarantee</h4>
+                    <p className="text-gray-600 text-sm">Our market analysis ensures you get the best value whether buying, selling, or renting.</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-headset text-green-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">24/7 Support</h4>
+                    <p className="text-gray-600 text-sm">Our dedicated team is always available to answer your questions and guide you through the process.</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-file-contract text-yellow-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Legal Assistance</h4>
+                    <p className="text-gray-600 text-sm">Get professional legal support for documentation, contracts, and property verification.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <i className="fas fa-home text-blue-600 text-3xl mb-3"></i>
+                <div className="text-2xl font-bold text-gray-800">500+</div>
+                <div className="text-gray-500 text-sm">Properties Sold</div>
+              </div>
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <i className="fas fa-key text-pink-600 text-3xl mb-3"></i>
+                <div className="text-2xl font-bold text-gray-800">1,200+</div>
+                <div className="text-gray-500 text-sm">Properties Rented</div>
+              </div>
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <i className="fas fa-map-marker-alt text-green-600 text-3xl mb-3"></i>
+                <div className="text-2xl font-bold text-gray-800">50+</div>
+                <div className="text-gray-500 text-sm">Neighborhoods</div>
+              </div>
+              <div className="bg-white rounded-lg shadow-md p-6 text-center">
+                <i className="fas fa-award text-yellow-600 text-3xl mb-3"></i>
+                <div className="text-2xl font-bold text-gray-800">15+</div>
+                <div className="text-gray-500 text-sm">Years Experience</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="bg-white py-16">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">What Our Clients Say</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Real stories from real people who found their dream properties with us</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="bg-gray-50 rounded-lg p-6 relative">
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <p className="text-gray-600 mb-6">The team made our home buying experience seamless. From the first viewing to getting the keys, everything was handled professionally. We couldn&apos;t be happier with our new home!</p>
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg mr-3">A</div>
+                <div>
+                  <div className="font-semibold text-gray-800">Adebayo Johnson</div>
+                  <div className="text-sm text-gray-500">Homeowner, Lagos</div>
+                </div>
+              </div>
+              <div className="flex mt-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <i key={star} className="fas fa-star text-yellow-400 text-sm mr-1"></i>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-6 relative">
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <p className="text-gray-600 mb-6">As a first-time investor, I was nervous about buying property. The agents here guided me through every step and helped me find a property that has already appreciated in value.</p>
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-pink-700 font-bold text-lg mr-3">C</div>
+                <div>
+                  <div className="font-semibold text-gray-800">Chioma Okafor</div>
+                  <div className="text-sm text-gray-500">Investor, Abuja</div>
+                </div>
+              </div>
+              <div className="flex mt-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <i key={star} className="fas fa-star text-yellow-400 text-sm mr-1"></i>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-6 relative">
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <p className="text-gray-600 mb-6">I needed to find a rental quickly for my family relocation. Within a week, they found us the perfect apartment in a great neighborhood with excellent schools nearby.</p>
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold text-lg mr-3">E</div>
+                <div>
+                  <div className="font-semibold text-gray-800">Emmanuel Nwachukwu</div>
+                  <div className="text-sm text-gray-500">Tenant, Port Harcourt</div>
+                </div>
+              </div>
+              <div className="flex mt-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <i key={star} className="fas fa-star text-yellow-400 text-sm mr-1"></i>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Popular Neighborhoods Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Popular Neighborhoods</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Explore the most sought-after areas with thriving communities and excellent amenities</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
+            {[
+              { name: 'Lekki Phase 1', count: '320+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
+              { name: 'Victoria Island', count: '280+ Properties', icon: 'fa-building', color: 'bg-pink-600' },
+              { name: 'Ikoyi', count: '190+ Properties', icon: 'fa-landmark', color: 'bg-green-600' },
+              { name: 'Ajah', count: '410+ Properties', icon: 'fa-home', color: 'bg-purple-600' },
+              { name: 'Ikeja GRA', count: '150+ Properties', icon: 'fa-tree', color: 'bg-yellow-600' },
+              { name: 'Banana Island', count: '85+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
+              { name: 'Surulere', count: '260+ Properties', icon: 'fa-store', color: 'bg-indigo-600' },
+              { name: 'Yaba', count: '200+ Properties', icon: 'fa-graduation-cap', color: 'bg-teal-600' },
+            ].map((area) => (
+              <div key={area.name} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-5 cursor-pointer group">
+                <div className={`w-12 h-12 ${area.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200`}>
+                  <i className={`fas ${area.icon} text-white text-lg`}></i>
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">{area.name}</h3>
+                <p className="text-sm text-gray-500">{area.count}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="bg-white py-16">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+              <p className="text-lg text-gray-600">Got questions? We have answers to help you get started</p>
+            </div>
+            <div className="space-y-4">
+              {[
+                {
+                  q: 'How do I schedule a property viewing?',
+                  a: 'Simply find a property you like, click on it to view the details, and use the "Schedule a Viewing" form on the property page. Choose your preferred date and time, and our agent will confirm your appointment.',
+                },
+                {
+                  q: 'Are the property listings verified?',
+                  a: 'Yes, every property listed on our platform goes through a thorough verification process. Our team physically inspects properties and verifies ownership documents to ensure authenticity.',
+                },
+                {
+                  q: 'What are the fees for using your service?',
+                  a: 'Browsing and searching properties is completely free. Our commission structure is transparent and competitive — we only charge a standard agency fee upon successful completion of a transaction.',
+                },
+                {
+                  q: 'Can I list my property on your platform?',
+                  a: 'Absolutely! Property owners and agents can list their properties by creating an account. Our team will review and verify your listing before it goes live to maintain quality standards.',
+                },
+                {
+                  q: 'Do you offer mortgage or financing assistance?',
+                  a: 'Yes, we partner with leading financial institutions to help you explore mortgage options and financing plans. Our agents can connect you with the right lender based on your needs.',
+                },
+              ].map((faq, index) => (
+                <details key={index} className="group bg-gray-50 rounded-lg">
+                  <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+                    <span>{faq.q}</span>
+                    <i className="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform duration-200"></i>
+                  </summary>
+                  <div className="px-5 pb-5 text-gray-600 text-sm leading-relaxed">{faq.a}</div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Form Section */}
+      <div className="bg-blue-700 py-16" id="contact-section">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
+            <div className="text-white">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Get In Touch With Us</h2>
+              <p className="text-blue-200 mb-8 text-lg">Have a question or need help finding the perfect property? Send us a message and our team will get back to you within 24 hours.</p>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-map-marker-alt text-white text-lg"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Our Office</h4>
+                    <p className="text-blue-200 text-sm">123 Victoria Island, Lagos, Nigeria</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-phone-alt text-white text-lg"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Phone</h4>
+                    <p className="text-blue-200 text-sm">+234 801 234 5678</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-envelope text-white text-lg"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Email</h4>
+                    <p className="text-blue-200 text-sm">info@estate.com</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-clock text-white text-lg"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Working Hours</h4>
+                    <p className="text-blue-200 text-sm">Mon - Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 4:00 PM</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-xl p-8">
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">Send Us a Message</h3>
+              <p className="text-gray-500 text-sm mb-6">Fill out the form below and we&apos;ll respond as soon as possible.</p>
+
+              {contactSuccess && (
+                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center">
+                  <i className="fas fa-check-circle text-green-600 mr-3"></i>
+                  <span className="text-green-700 text-sm">Your message has been sent successfully! We&apos;ll get back to you soon.</span>
+                </div>
+              )}
+              {contactError && (
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
+                  <i className="fas fa-exclamation-circle text-red-600 mr-3"></i>
+                  <span className="text-red-700 text-sm">{contactError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleContactSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      value={contactPhone}
+                      onChange={(e) => setContactPhone(e.target.value)}
+                      placeholder="+234 800 000 0000"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    placeholder="Tell us how we can help you..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  disabled={contactSubmitting}
+                  className="w-full bg-pink-600 text-white py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {contactSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <i className="fas fa-spinner fa-spin mr-2"></i>
+                      Sending...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      <i className="fas fa-paper-plane mr-2"></i>
+                      Send Message
+                    </span>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-gray-900 py-14">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Find Your Dream Home?</h2>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">Join thousands of satisfied clients who found their perfect property through our platform. Start your search today.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="bg-pink-600 text-white px-8 py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 cursor-pointer rounded-sm"
+            >
+              <i className="fas fa-search mr-2"></i>
+              Browse Properties
+            </button>
+            <button
+              onClick={() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="border-2 border-white text-white px-8 py-3 font-semibold hover:bg-white hover:text-gray-900 transition-colors duration-200 cursor-pointer rounded-sm"
+            >
+              <i className="fas fa-envelope mr-2"></i>
+              Contact Us
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

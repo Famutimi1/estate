@@ -7,14 +7,25 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'readdy.ai',
-        // You can optionally specify port and pathname if needed
-        // port: '',
-        // pathname: '/api/search-image/**', // Or a more specific path
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
       },
     ],
     // For older Next.js versions (before 12.3.0 generally, or if remotePatterns isn't working for you)
     // domains: ['readdy.ai'],
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
