@@ -1,17 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+const ALLOW_OFFLINE_BUILD = process.env.ALLOW_OFFLINE_BUILD === 'true';
+
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get('search') || '';
+  const page = Number(searchParams.get('page') || '1');
+  const limit = Number(searchParams.get('limit') || '10');
+  const propertyType = searchParams.get('propertyType') || '';
+  const propertyStatus = searchParams.get('propertyStatus') || '';
+  const status = searchParams.get('status') || '';
+  const sortBy = searchParams.get('sortBy') || 'newest';
+  const skip = (page - 1) * limit;
+
+  const emptyResponse = () => NextResponse.json({
+    properties: [],
+    total: 0,
+    page,
+    limit,
+    totalPages: 0,
+  });
+
+  if (ALLOW_OFFLINE_BUILD && process.env.NODE_ENV === 'production') {
+    console.warn('[admin/properties] Skipping DB query because ALLOW_OFFLINE_BUILD=true');
+    return emptyResponse();
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search') || '';
-    const page = Number(searchParams.get('page') || '1');
-    const limit = Number(searchParams.get('limit') || '10');
-    const propertyType = searchParams.get('propertyType') || '';
-    const propertyStatus = searchParams.get('propertyStatus') || '';
-    const status = searchParams.get('status') || '';
-    const sortBy = searchParams.get('sortBy') || 'newest';
-    const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};
 
@@ -95,6 +111,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Admin properties error:', error);
+    if (ALLOW_OFFLINE_BUILD) {
+      return emptyResponse();
+    }
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 });
   }
 }
