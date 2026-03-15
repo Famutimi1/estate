@@ -306,7 +306,7 @@ const AdminDashboard: React.FC = () => {
                 {stats.recentProperties.map((p) => (
                   <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
                     <td className="py-3 px-2 font-medium text-gray-800 max-w-[150px] truncate">{p.title}</td>
-                    <td className="py-3 px-2 text-gray-600">${p.price.toLocaleString()}</td>
+                    <td className="py-3 px-2 text-gray-600">₦{p.price.toLocaleString()}</td>
                     <td className="py-3 px-2">
                       <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
                         p.propertyStatus === 'ForSale' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'

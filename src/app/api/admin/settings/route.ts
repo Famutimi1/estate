@@ -13,7 +13,7 @@ export async function GET() {
           contactEmail: 'admin@myhome.com',
           contactPhone: '+234 800 000 0000',
           address: 'Lagos, Nigeria',
-          currency: 'USD',
+          currency: 'NGN',
           propertiesPerPage: 12,
           enableRegistration: true,
           enableFavorites: true,

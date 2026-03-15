@@ -67,7 +67,7 @@ const AdminSettingsPage: React.FC = () => {
           contactEmail: data.contactEmail || '',
           contactPhone: data.contactPhone || '',
           address: data.address || '',
-          currency: data.currency || 'USD',
+          currency: data.currency || 'NGN',
           propertiesPerPage: String(data.propertiesPerPage || 12),
           enableRegistration: data.enableRegistration ?? true,
           enableFavorites: data.enableFavorites ?? true,
@@ -226,8 +226,8 @@ const AdminSettingsPage: React.FC = () => {
               onChange={handleSiteChange}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="USD">USD ($)</option>
               <option value="NGN">NGN (₦)</option>
+              <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="GBP">GBP (£)</option>
             </select>

@@ -67,6 +67,9 @@ model Property {
   state              String         @db.VarChar(100)
   zipCode            String         @map("zip_code") @db.VarChar(20)
   garageSpaces       Int?           @map("garage_spaces")
+  videoUrl           String?        @map("video_url") @db.VarChar(500)
+  brochureUrl        String?        @map("brochure_url") @db.VarChar(500)
+  floorPlanUrl       String?        @map("floor_plan_url") @db.VarChar(500)
   amenities          Json?
 
   userId String? @map("user_id") @db.Uuid

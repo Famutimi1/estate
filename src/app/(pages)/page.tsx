@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+// teal/cyan (teal-600), 
+
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -153,7 +155,7 @@ const Home: React.FC = () => {
                   <h2 className="text-4xl font-bold mb-1">1243 Main Avenue</h2>
                   <p className="text-2xl mb-4">Left Town</p>
                   <div className="bg-blue-700 inline-block px-4 py-2 text-white font-bold mb-6">
-                    $ 482,900
+                    ₦ 482,900
                   </div>
                   <h3 className="text-5xl font-light mb-8">Find your home</h3>
                 </div>
@@ -193,7 +195,8 @@ const Home: React.FC = () => {
                   <option value="apartment">Apartment</option>
                   <option value="house">House</option>
                   <option value="villa">Villa</option>
-                  <option value="commercial">Commercial</option>
+                  <option value="commercial">Commercial Land</option>
+                  <option value="land">Land</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                   <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
@@ -228,11 +231,11 @@ const Home: React.FC = () => {
                       onChange={(e) => setMinPrice(e.target.value)}
                     >
                       <option value="">No min</option>
-                      <option value="100000">$100,000</option>
-                      <option value="200000">$200,000</option>
-                      <option value="300000">$300,000</option>
-                      <option value="400000">$400,000</option>
-                      <option value="500000">$500,000</option>
+                      <option value="100000">₦100,000</option>
+                      <option value="200000">₦200,000</option>
+                      <option value="300000">₦300,000</option>
+                      <option value="400000">₦400,000</option>
+                      <option value="500000">₦500,000</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                       <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
@@ -248,11 +251,11 @@ const Home: React.FC = () => {
                       onChange={(e) => setMaxPrice(e.target.value)}
                     >
                       <option value="">No max</option>
-                      <option value="300000">$300,000</option>
-                      <option value="500000">$500,000</option>
-                      <option value="700000">$700,000</option>
-                      <option value="1000000">$1,000,000</option>
-                      <option value="1500000">$1,500,000</option>
+                      <option value="300000">₦300,000</option>
+                      <option value="500000">₦500,000</option>
+                      <option value="700000">₦700,000</option>
+                      <option value="1000000">₦1,000,000</option>
+                      <option value="1500000">₦1,500,000</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                       <FontAwesomeIcon icon={faChevronDown} className="text-gray-400" />
@@ -285,7 +288,7 @@ const Home: React.FC = () => {
           <div className="mt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-pink-600 text-white px-8 py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 cursor-pointer !rounded-button whitespace-nowrap"
+              className="bg-blue-600 text-white px-8 py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer !rounded-button whitespace-nowrap"
             >
               SEARCH PROPERTIES
             </button>
@@ -382,25 +385,25 @@ const Home: React.FC = () => {
           </div>
           <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Search</h3>
               <p className="text-gray-600 text-sm">Browse our extensive collection of properties using advanced filters to narrow down your choices.</p>
-              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
             </div>
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Explore</h3>
               <p className="text-gray-600 text-sm">View detailed property information, high-quality photos, and virtual tours from the comfort of your home.</p>
-              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
             </div>
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Schedule</h3>
               <p className="text-gray-600 text-sm">Book a viewing at your convenience and visit the property with one of our experienced agents.</p>
-              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">4</div>
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">4</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Move In</h3>
               <p className="text-gray-600 text-sm">Complete the transaction securely and move into your new dream home with full support from our team.</p>
             </div>
@@ -426,8 +429,8 @@ const Home: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-hand-holding-usd text-pink-600"></i>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-hand-holding-usd text-blue-600"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Best Price Guarantee</h4>
@@ -461,7 +464,7 @@ const Home: React.FC = () => {
                 <div className="text-gray-500 text-sm">Properties Sold</div>
               </div>
               <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                <i className="fas fa-key text-pink-600 text-3xl mb-3"></i>
+                <i className="fas fa-key text-blue-600 text-3xl mb-3"></i>
                 <div className="text-2xl font-bold text-gray-800">1,200+</div>
                 <div className="text-gray-500 text-sm">Properties Rented</div>
               </div>
@@ -489,7 +492,7 @@ const Home: React.FC = () => {
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">The team made our home buying experience seamless. From the first viewing to getting the keys, everything was handled professionally. We couldn&apos;t be happier with our new home!</p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg mr-3">A</div>
@@ -505,10 +508,10 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">As a first-time investor, I was nervous about buying property. The agents here guided me through every step and helped me find a property that has already appreciated in value.</p>
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-pink-700 font-bold text-lg mr-3">C</div>
+                <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg mr-3">C</div>
                 <div>
                   <div className="font-semibold text-gray-800">Chioma Okafor</div>
                   <div className="text-sm text-gray-500">Investor, Abuja</div>
@@ -521,7 +524,7 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">I needed to find a rental quickly for my family relocation. Within a week, they found us the perfect apartment in a great neighborhood with excellent schools nearby.</p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold text-lg mr-3">E</div>
@@ -549,14 +552,10 @@ const Home: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {[
-              { name: 'Lekki Phase 1', count: '320+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
-              { name: 'Victoria Island', count: '280+ Properties', icon: 'fa-building', color: 'bg-pink-600' },
-              { name: 'Ikoyi', count: '190+ Properties', icon: 'fa-landmark', color: 'bg-green-600' },
-              { name: 'Ajah', count: '410+ Properties', icon: 'fa-home', color: 'bg-purple-600' },
-              { name: 'Ikeja GRA', count: '150+ Properties', icon: 'fa-tree', color: 'bg-yellow-600' },
-              { name: 'Banana Island', count: '85+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
-              { name: 'Surulere', count: '260+ Properties', icon: 'fa-store', color: 'bg-indigo-600' },
-              { name: 'Yaba', count: '200+ Properties', icon: 'fa-graduation-cap', color: 'bg-teal-600' },
+              { name: 'Lagos', count: '1,200+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
+              { name: 'Ogun', count: '450+ Properties', icon: 'fa-building', color: 'bg-green-600' },
+              { name: 'Oyo', count: '380+ Properties', icon: 'fa-landmark', color: 'bg-purple-600' },
+              { name: 'Abuja', count: '620+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
             ].map((area) => (
               <div key={area.name} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-5 cursor-pointer group">
                 <div className={`w-12 h-12 ${area.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200`}>
@@ -728,7 +727,7 @@ const Home: React.FC = () => {
                 <button
                   type="submit"
                   disabled={contactSubmitting}
-                  className="w-full bg-pink-600 text-white py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 text-white py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {contactSubmitting ? (
                     <span className="flex items-center justify-center">
@@ -756,7 +755,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="bg-pink-600 text-white px-8 py-3 font-semibold hover:bg-pink-700 transition-colors duration-200 cursor-pointer rounded-sm"
+              className="bg-blue-600 text-white px-8 py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer rounded-sm"
             >
               <i className="fas fa-search mr-2"></i>
               Browse Properties

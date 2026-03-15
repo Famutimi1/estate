@@ -65,7 +65,7 @@ const AdminPropertiesPage: React.FC = () => {
     { value: 'house', label: 'House', badgeClassName: 'bg-blue-50 text-blue-700' },
     { value: 'apartment', label: 'Apartment', badgeClassName: 'bg-purple-50 text-purple-700' },
     { value: 'villa', label: 'Villa', badgeClassName: 'bg-green-50 text-green-700' },
-    { value: 'commercial', label: 'Commercial', badgeClassName: 'bg-orange-50 text-orange-700' },
+    { value: 'commercial', label: 'Commercial Land', badgeClassName: 'bg-orange-50 text-orange-700' },
     { value: 'land', label: 'Land', badgeClassName: 'bg-emerald-50 text-emerald-700' },
   ];
 
@@ -361,7 +361,7 @@ const AdminPropertiesPage: React.FC = () => {
                           <span className="font-medium text-gray-800 max-w-[180px] truncate">{prop.title}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-gray-700 font-medium">${prop.price.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-gray-700 font-medium">₦{prop.price.toLocaleString()}</td>
                       <td className="py-3 px-4">
                         <span className="capitalize text-gray-600">{prop.propertyType}</span>
                       </td>
@@ -505,7 +505,7 @@ const AdminPropertiesPage: React.FC = () => {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm text-gray-500">Price</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    ${previewProperty.price.toLocaleString()}
+                    ₦{previewProperty.price.toLocaleString()}
                   </p>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4">

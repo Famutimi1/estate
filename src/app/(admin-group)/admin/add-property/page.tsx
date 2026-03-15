@@ -49,6 +49,9 @@ const createInitialFormState = () => ({
   bathrooms: '',
   area: '',
   garageSpaces: '',
+  videoUrl: '',
+  brochureUrl: '',
+  floorPlanUrl: '',
   amenities: createEmptyAmenities(),
 });
 
@@ -62,7 +65,13 @@ const AddPropertyPage: React.FC = () => {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [featuredImageIndex, setFeaturedImageIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const brochureInputRef = useRef<HTMLInputElement>(null);
+  const floorPlanInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [isUploadingBrochure, setIsUploadingBrochure] = useState(false);
+  const [isUploadingFloorPlan, setIsUploadingFloorPlan] = useState(false);
   const [loadingProperty, setLoadingProperty] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -106,6 +115,69 @@ const AddPropertyPage: React.FC = () => {
     if (e.target.files) {
       await uploadFilesToCloudinary(Array.from(e.target.files));
       e.target.value = '';
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setIsUploadingVideo(true);
+      try {
+        const file = e.target.files[0];
+        const payload = new FormData();
+        payload.append('file', file);
+        const response = await fetch('/api/upload', { method: 'POST', body: payload });
+        const data = await response.json();
+        if (!response.ok || !data.url) throw new Error(data.error || 'Failed to upload video');
+        setFormData((prev) => ({ ...prev, videoUrl: data.url }));
+      } catch (error) {
+        console.error('Video upload failed:', error);
+        alert('Failed to upload video. Please try again.');
+      } finally {
+        setIsUploadingVideo(false);
+        e.target.value = '';
+      }
+    }
+  };
+
+  const handleBrochureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setIsUploadingBrochure(true);
+      try {
+        const file = e.target.files[0];
+        const payload = new FormData();
+        payload.append('file', file);
+        const response = await fetch('/api/upload', { method: 'POST', body: payload });
+        const data = await response.json();
+        if (!response.ok || !data.url) throw new Error(data.error || 'Failed to upload brochure');
+        setFormData((prev) => ({ ...prev, brochureUrl: data.url }));
+      } catch (error) {
+        console.error('Brochure upload failed:', error);
+        alert('Failed to upload brochure. Please try again.');
+      } finally {
+        setIsUploadingBrochure(false);
+        e.target.value = '';
+      }
+    }
+  };
+
+  const handleFloorPlanUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setIsUploadingFloorPlan(true);
+      try {
+        const file = e.target.files[0];
+        const payload = new FormData();
+        payload.append('file', file);
+        const response = await fetch('/api/upload', { method: 'POST', body: payload });
+        const data = await response.json();
+        if (!response.ok || !data.url) throw new Error(data.error || 'Failed to upload floor plan');
+        setFormData((prev) => ({ ...prev, floorPlanUrl: data.url }));
+      } catch (error) {
+        console.error('Floor plan upload failed:', error);
+        alert('Failed to upload floor plan. Please try again.');
+      } finally {
+        setIsUploadingFloorPlan(false);
+        e.target.value = '';
+      }
     }
   };
 
@@ -162,6 +234,9 @@ const AddPropertyPage: React.FC = () => {
           bathrooms: property.bathrooms !== undefined ? String(property.bathrooms) : '',
           area: property.area !== undefined ? String(property.area) : '',
           garageSpaces: property.garageSpaces !== undefined && property.garageSpaces !== null ? String(property.garageSpaces) : '',
+          videoUrl: property.videoUrl || '',
+          brochureUrl: property.brochureUrl || '',
+          floorPlanUrl: property.floorPlanUrl || '',
           amenities: { ...createEmptyAmenities(), ...(property.amenities || {}) },
         });
 
@@ -231,6 +306,9 @@ const AddPropertyPage: React.FC = () => {
         state: formData.state,
         zip_code: formData.zipCode,
         garage_spaces: formData.garageSpaces ? parseInt(formData.garageSpaces) : 0,
+        video_url: formData.videoUrl || null,
+        brochure_url: formData.brochureUrl || null,
+        floor_plan_url: formData.floorPlanUrl || null,
         amenities: formData.amenities,
       };
 
@@ -291,7 +369,7 @@ const AddPropertyPage: React.FC = () => {
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="price">Price <span className="text-red-500">*</span></label>
                 <div className="relative">
-                  <span className="absolute left-3 top-3 text-gray-500">$</span>
+                  <span className="absolute left-3 top-3 text-gray-500">₦</span>
                   <input type="text" id="price" name="price" value={formData.price} onChange={handleInputChange}
                     className="w-full p-3 pl-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter price" required />
                 </div>
@@ -313,7 +391,7 @@ const AddPropertyPage: React.FC = () => {
                   <option value="house">House</option>
                   <option value="apartment">Apartment</option>
                   <option value="villa">Villa</option>
-                  <option value="commercial">Commercial</option>
+                  <option value="commercial">Commercial Land</option>
                   <option value="land">Land</option>
                 </select>
               </div>
@@ -437,6 +515,117 @@ const AddPropertyPage: React.FC = () => {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Media & Documents */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Media & Documents</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Video Upload */}
+              <div>
+                <label className="block text-gray-700 mb-2">Property Video</label>
+                <input
+                  type="file"
+                  ref={videoInputRef}
+                  onChange={handleVideoUpload}
+                  accept="video/*"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={isUploadingVideo}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-md hover:border-blue-500 transition-colors cursor-pointer flex flex-col items-center justify-center"
+                >
+                  <i className="fas fa-video text-3xl text-gray-400 mb-2"></i>
+                  <span className="text-sm text-gray-600">
+                    {isUploadingVideo ? 'Uploading...' : formData.videoUrl ? 'Change Video' : 'Upload Video'}
+                  </span>
+                </button>
+                {formData.videoUrl && (
+                  <div className="mt-2 flex items-center justify-between bg-green-50 p-2 rounded">
+                    <span className="text-xs text-green-700 truncate">Video uploaded</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, videoUrl: '' })}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Brochure Upload */}
+              <div>
+                <label className="block text-gray-700 mb-2">Property Brochure</label>
+                <input
+                  type="file"
+                  ref={brochureInputRef}
+                  onChange={handleBrochureUpload}
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => brochureInputRef.current?.click()}
+                  disabled={isUploadingBrochure}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-md hover:border-blue-500 transition-colors cursor-pointer flex flex-col items-center justify-center"
+                >
+                  <i className="fas fa-file-pdf text-3xl text-gray-400 mb-2"></i>
+                  <span className="text-sm text-gray-600">
+                    {isUploadingBrochure ? 'Uploading...' : formData.brochureUrl ? 'Change Brochure' : 'Upload Brochure'}
+                  </span>
+                </button>
+                {formData.brochureUrl && (
+                  <div className="mt-2 flex items-center justify-between bg-green-50 p-2 rounded">
+                    <span className="text-xs text-green-700 truncate">Brochure uploaded</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, brochureUrl: '' })}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Floor Plan Upload */}
+              <div>
+                <label className="block text-gray-700 mb-2">Floor Plan</label>
+                <input
+                  type="file"
+                  ref={floorPlanInputRef}
+                  onChange={handleFloorPlanUpload}
+                  accept="image/*,.pdf"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => floorPlanInputRef.current?.click()}
+                  disabled={isUploadingFloorPlan}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-md hover:border-blue-500 transition-colors cursor-pointer flex flex-col items-center justify-center"
+                >
+                  <i className="fas fa-drafting-compass text-3xl text-gray-400 mb-2"></i>
+                  <span className="text-sm text-gray-600">
+                    {isUploadingFloorPlan ? 'Uploading...' : formData.floorPlanUrl ? 'Change Floor Plan' : 'Upload Floor Plan'}
+                  </span>
+                </button>
+                {formData.floorPlanUrl && (
+                  <div className="mt-2 flex items-center justify-between bg-green-50 p-2 rounded">
+                    <span className="text-xs text-green-700 truncate">Floor plan uploaded</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, floorPlanUrl: '' })}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Action Buttons */}

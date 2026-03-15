@@ -220,7 +220,7 @@ const PropertiesPage = () => {
                 <option value="apartment">Apartment</option>
                 <option value="villa">Villa</option>
                 <option value="land">Land</option>
-                <option value="commercial">Commercial</option>
+                <option value="commercial">Commercial Land</option>
               </select>
             </div>
             <div>
@@ -249,11 +249,11 @@ const PropertiesPage = () => {
                 onChange={(e) => setMinPrice(e.target.value)}
               >
                 <option value="">No Min</option>
-                <option value="100000">$100,000</option>
-                <option value="200000">$200,000</option>
-                <option value="300000">$300,000</option>
-                <option value="500000">$500,000</option>
-                <option value="1000000">$1,000,000</option>
+                <option value="100000">₦100,000</option>
+                <option value="200000">₦200,000</option>
+                <option value="300000">₦300,000</option>
+                <option value="500000">₦500,000</option>
+                <option value="1000000">₦1,000,000</option>
               </select>
             </div>
             <div>
@@ -267,11 +267,11 @@ const PropertiesPage = () => {
                 onChange={(e) => setMaxPrice(e.target.value)}
               >
                 <option value="">No Max</option>
-                <option value="300000">$300,000</option>
-                <option value="500000">$500,000</option>
-                <option value="750000">$750,000</option>
-                <option value="1000000">$1,000,000</option>
-                <option value="2000000">$2,000,000+</option>
+                <option value="300000">₦300,000</option>
+                <option value="500000">₦500,000</option>
+                <option value="750000">₦750,000</option>
+                <option value="1000000">₦1,000,000</option>
+                <option value="2000000">₦2,000,000+</option>
               </select>
             </div>
             <div>

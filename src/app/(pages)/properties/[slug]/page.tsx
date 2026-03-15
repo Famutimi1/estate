@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 // import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AdminSelect, { AdminSelectOption } from '@/app/(admin-group)/admin/components/AdminSelect';
-import { fetchPropertyById, Property } from '@/lib/api';
+import { fetchPropertyById, fetchProperties, Property } from '@/lib/api';
 
 import {
     faArrowLeft,
@@ -37,6 +37,8 @@ const PropertyDetail = () => {
     const [property, setProperty] = useState<Property | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
+    const [selectedImage, setSelectedImage] = useState<string>('');
     const [viewerType, setViewerType] = useState('');
     const [preferredTime, setPreferredTime] = useState('');
     const [preferredDate, setPreferredDate] = useState('');
@@ -88,6 +90,27 @@ const PropertyDetail = () => {
 
                 setProperty(propertyData);
                 setError(null);
+
+                // Set initial selected image to featured or first image
+                const featuredIndex = propertyData.featuredImageIndex ?? propertyData.featured_image_index ?? 0;
+                const allImages = propertyData.images || [];
+                if (allImages.length > 0) {
+                    setSelectedImage(allImages[featuredIndex] || allImages[0]);
+                } else {
+                    setSelectedImage(propertyData.image_url || propertyData.imageUrl || '');
+                }
+
+                // Fetch similar properties based on city and bedrooms
+                const similarData = await fetchProperties({
+                    location: propertyData.city,
+                    bedrooms: propertyData.bedrooms,
+                    limit: 3,
+                });
+                // Filter out the current property from similar properties
+                const filteredSimilar = similarData.properties.filter(
+                    (p) => p.id !== propertyData.id
+                );
+                setSimilarProperties(filteredSimilar.slice(0, 3));
             } catch (err) {
                 console.error('Error fetching property:', err);
                 setError('Failed to load property details');
@@ -241,53 +264,49 @@ const PropertyDetail = () => {
             </div>
             {/* Property Images */}
             <div className="grid grid-cols-4 gap-4 mb-8">
-                <div className="col-span-2 row-span-2">
+                {/* Main selected image */}
+                <div className="col-span-2 row-span-2 overflow-hidden rounded-sm group">
                     <Image
-                        src={(property.image_url || property.imageUrl || '').trimEnd()}
+                        src={selectedImage || (property.image_url || property.imageUrl || '').trimEnd()}
                         alt={property.title}
                         width={800}
                         height={600}
-                        className="w-full h-full object-cover rounded-sm"
+                        className="w-full h-full object-cover rounded-sm transition-transform duration-300 group-hover:scale-110 cursor-zoom-in"
                     />
                 </div>
-                {/* Additional property images would be displayed here if available */}
-                {/* For now, we'll use the main image in all slots */}
-                <div>
-                    <Image
-                        src={(property.image_url || property.imageUrl || '').trimEnd()}
-                        alt={`${property.title} - View 1`}
-                        width={400}
-                        height={300}
-                        className="w-full h-full object-cover rounded-sm"
-                    />
-                </div>
-                <div>
-                    <Image
-                        src={(property.image_url || property.imageUrl || '').trimEnd()}
-                        width={400}
-                        height={300}
-                        alt={`${property.title} - View 2`}
-                        className="w-full h-full object-cover rounded-sm"
-                    />
-                </div>
-                <div>
-                    <Image
-                        src={(property.image_url || property.imageUrl || '').trimEnd()}
-                        width={400}
-                        height={300}
-                        alt={`${property.title} - View 3`}
-                        className="w-full h-full object-cover rounded-sm"
-                    />
-                </div>
-                <div>
-                    <Image
-                        src={(property.image_url || property.imageUrl || '').trimEnd()}
-                        width={400}
-                        height={300}
-                        alt={`${property.title} - View 4`}
-                        className="w-full h-full object-cover rounded-sm"
-                    />
-                </div>
+                {/* Thumbnail images */}
+                {property.images && property.images.length > 0 ? (
+                    property.images.slice(0, 4).map((img, idx) => (
+                        <div 
+                            key={idx}
+                            onClick={() => setSelectedImage(img)}
+                            className={`overflow-hidden rounded-sm cursor-pointer transition-all duration-200 ${
+                                selectedImage === img ? 'ring-2 ring-blue-600' : 'hover:opacity-80'
+                            }`}
+                        >
+                            <Image
+                                src={img.trimEnd()}
+                                alt={`${property.title} - View ${idx + 1}`}
+                                width={400}
+                                height={300}
+                                className="w-full h-full object-cover rounded-sm"
+                            />
+                        </div>
+                    ))
+                ) : (
+                    // Fallback: show main image in thumbnails if no images array
+                    Array(4).fill(null).map((_, idx) => (
+                        <div key={idx} className="overflow-hidden rounded-sm opacity-50">
+                            <Image
+                                src={(property.image_url || property.imageUrl || '').trimEnd()}
+                                alt={`${property.title} - View ${idx + 1}`}
+                                width={400}
+                                height={300}
+                                className="w-full h-full object-cover rounded-sm"
+                            />
+                        </div>
+                    ))
+                )}
             </div>
             {/* Property Navigation */}
             <div className="flex border-b border-gray-200 mb-8">
@@ -401,38 +420,81 @@ const PropertyDetail = () => {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-800 mb-4">Property Documents</h3>
                             <div className="grid grid-cols-2 gap-4">
-                                <a href="#" className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer">
-                                    <FontAwesomeIcon icon={faFilePdf} className="text-red-500 text-2xl mr-3" />
-                                    <div>
-                                        <div className="font-medium">Property Brochure</div>
-                                        <div className="text-sm text-gray-500">PDF (2.5 MB)</div>
+                                {property.brochureUrl ? (
+                                    <a
+                                        href={property.brochureUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        <FontAwesomeIcon icon={faFilePdf} className="text-red-500 text-2xl mr-3" />
+                                        <div>
+                                            <div className="font-medium">Property Brochure</div>
+                                            <div className="text-sm text-gray-500">Click to view/download</div>
+                                        </div>
+                                    </a>
+                                ) : (
+                                    <div className="flex items-center p-4 border border-gray-200 rounded-sm opacity-50 cursor-not-allowed">
+                                        <FontAwesomeIcon icon={faFilePdf} className="text-red-500 text-2xl mr-3" />
+                                        <div>
+                                            <div className="font-medium">Property Brochure</div>
+                                            <div className="text-sm text-gray-500">Not available</div>
+                                        </div>
                                     </div>
-                                </a>
-                                <a href="#" className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer">
-                                    <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
-                                    <div>
-                                        <div className="font-medium">Floor Plans</div>
-                                        <div className="text-sm text-gray-500">PDF (1.8 MB)</div>
+                                )}
+                                {property.floorPlanUrl ? (
+                                    <a
+                                        href={property.floorPlanUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
+                                        <div>
+                                            <div className="font-medium">Floor Plans</div>
+                                            <div className="text-sm text-gray-500">Click to view/download</div>
+                                        </div>
+                                    </a>
+                                ) : (
+                                    <div className="flex items-center p-4 border border-gray-200 rounded-sm opacity-50 cursor-not-allowed">
+                                        <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
+                                        <div>
+                                            <div className="font-medium">Floor Plans</div>
+                                            <div className="text-sm text-gray-500">Not available</div>
+                                        </div>
                                     </div>
-                                </a>
+                                )}
                             </div>
                         </div>
                     )}
                     {activeTab === 'video' && (
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-6">Property Video Tour</h2>
-                            <div className="aspect-w-16 aspect-h-9 mb-6">
-                                <div className="w-full h-0 pb-[56.25%] relative bg-gray-200 rounded-sm">
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="text-center">
-                                            <div className="w-20 h-20 rounded-full bg-blue-600 bg-opacity-80 flex items-center justify-center mx-auto mb-4 cursor-pointer">
-                                                <FontAwesomeIcon icon={faPlay} className="text-white text-2xl" />
+                            {property.videoUrl ? (
+                                <div className="aspect-w-16 aspect-h-9 mb-6">
+                                    <video
+                                        controls
+                                        className="w-full rounded-sm"
+                                        poster={(property.image_url || property.imageUrl || '').trimEnd()}
+                                    >
+                                        <source src={property.videoUrl} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            ) : (
+                                <div className="aspect-w-16 aspect-h-9 mb-6">
+                                    <div className="w-full h-0 pb-[56.25%] relative bg-gray-200 rounded-sm">
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="text-center">
+                                                <FontAwesomeIcon icon={faPlay} className="text-gray-400 text-4xl mb-4" />
+                                                <p className="text-gray-600">No video available for this property</p>
                                             </div>
-                                            <p className="text-gray-600">Click to play property video tour</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                             <h3 className="text-xl font-bold text-gray-800 mb-4">Virtual Reality Tour</h3>
                             <p className="text-gray-600 mb-6">
                                 Experience this stunning property from the comfort of your current location with our immersive
@@ -749,7 +811,7 @@ const PropertyDetail = () => {
                             <label className="block text-gray-600 text-sm mb-2">Purchase Price</label>
                             <input
                                 type="text"
-                                value="$2,850,000"
+                                value="₦2,850,000"
                                 className="w-full p-3 border border-gray-300 rounded-sm focus:outline-none focus:border-green-500 text-sm"
                             />
                         </div>
@@ -780,11 +842,11 @@ const PropertyDetail = () => {
                         <div className="p-4 bg-gray-50 rounded-sm mb-4">
                             <div className="flex justify-between mb-2">
                                 <span className="text-gray-600">Monthly Payment:</span>
-                                <span className="font-bold">$9,945</span>
+                                <span className="font-bold">₦9,945</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-gray-600">Total Loan Amount:</span>
-                                <span className="font-bold">$2,280,000</span>
+                                <span className="font-bold">₦2,280,000</span>
                             </div>
                         </div>
                         <button className="w-full border border-green-500 text-green-500 py-3 font-semibold hover:bg-green-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer">
@@ -795,41 +857,47 @@ const PropertyDetail = () => {
             </div>
             <div className="mt-12 bg-white p-6 rounded-sm shadow-md">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Similar Properties You May Like</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((item) => (
-                        <div key={item} className="border border-gray-200 rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer">
-                            <div className="relative">
-                                <Image
-                                    src={`https://readdy.ai/api/search-image?query=Luxury%20waterfront%20property%20with%20modern%20architecture%2C%20floor%20to%20ceiling%20windows%2C%20infinity%20pool%2C%20ocean%20view%2C%20sunset%20lighting%2C%20high-end%20real%20estate%20photography%2C%20exclusive%20beachfront%20residence&width=400&height=250&seq=${item + 20}&orientation=landscape`}
-                                    width={400}
-                                    height={250}
-                                    alt={`Similar Property ${item}`}
-                                    className="w-full h-48 object-cover"
-                                />
-                                <div className="absolute top-3 left-3 bg-blue-600 text-white px-2 py-1 text-xs font-semibold">
-                                    FOR SALE
+                {similarProperties.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {similarProperties.map((similarProp) => (
+                            <div 
+                                key={similarProp.id} 
+                                onClick={() => router.push(`/properties/${similarProp.id}`)}
+                                className="border border-gray-200 rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
+                            >
+                                <div className="relative">
+                                    <Image
+                                        src={(similarProp.image_url || similarProp.imageUrl || '').trimEnd()}
+                                        width={400}
+                                        height={250}
+                                        alt={similarProp.title}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <div className="absolute top-3 left-3 bg-blue-600 text-white px-2 py-1 text-xs font-semibold uppercase">
+                                        {similarProp.propertyStatus || similarProp.property_status}
+                                    </div>
+                                </div>
+                                <div className="p-4">
+                                    <h3 className="font-bold text-gray-800 mb-1">{similarProp.title}</h3>
+                                    <p className="text-gray-600 text-sm mb-2">
+                                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1 text-blue-600" />
+                                        {similarProp.city}, {similarProp.state}
+                                    </p>
+                                    <div className="font-bold text-blue-600 mb-2">#{similarProp.price.toLocaleString()}</div>
+                                    <div className="flex justify-between text-xs text-gray-600">
+                                        <span><FontAwesomeIcon icon={faBed} className="mr-1" /> {similarProp.bedrooms} Beds</span>
+                                        <span><FontAwesomeIcon icon={faBath} className="mr-1" /> {similarProp.bathrooms} Baths</span>
+                                        <span><FontAwesomeIcon icon={faRulerCombined} className="mr-1" /> {similarProp.area.toLocaleString()} {similarProp.area_unit}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="p-4">
-                                <h3 className="font-bold text-gray-800 mb-1">Luxury Oceanfront Villa</h3>
-                                <p className="text-gray-600 text-sm mb-2">
-                                    <i className="fas fa-map-marker-alt mr-1 text-blue-600"></i>
-                                    Ikoyi, Lagos
-                                </p>
-                                <div className="font-bold text-blue-600 mb-2">${(2500000 + item * 150000).toLocaleString()}</div>
-                                <div className="flex justify-between text-xs text-gray-600">
-                                    <span><i className="fas fa-bed mr-1"></i> 4-5 Beds</span>
-                                    <span><i className="fas fa-bath mr-1"></i> 4 Baths</span>
-                                    <span><i className="fas fa-ruler-combined mr-1"></i> 3,500+ sqft</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-600 text-center py-8">No similar properties found at the moment.</p>
+                )}
             </div>
         </div>
     );
 };
-
-
 export default PropertyDetail;

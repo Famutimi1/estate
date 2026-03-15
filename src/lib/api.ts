@@ -23,6 +23,9 @@ export interface Property {
   state: string;
   zipCode: string;
   garageSpaces: number | null;
+  videoUrl: string | null;
+  brochureUrl: string | null;
+  floorPlanUrl: string | null;
   amenities: Record<string, boolean> | null;
   userId: string | null;
   // snake_case aliases for backward compatibility with templates
@@ -32,6 +35,9 @@ export interface Property {
   property_type?: string;
   zip_code?: string;
   garage_spaces?: number | null;
+  video_url?: string | null;
+  brochure_url?: string | null;
+  floor_plan_url?: string | null;
   featured_image_index?: number | null;
   created_at?: string;
   user_id?: string | null;
@@ -60,6 +66,9 @@ function normalizeProperty(p: Record<string, unknown>): Property {
     state: p.state as string,
     zipCode: (p.zipCode ?? p.zip_code ?? '') as string,
     garageSpaces: (p.garageSpaces ?? p.garage_spaces ?? null) as number | null,
+    videoUrl: (p.videoUrl ?? p.video_url ?? null) as string | null,
+    brochureUrl: (p.brochureUrl ?? p.brochure_url ?? null) as string | null,
+    floorPlanUrl: (p.floorPlanUrl ?? p.floor_plan_url ?? null) as string | null,
     amenities: (p.amenities ?? null) as Record<string, boolean> | null,
     userId: (p.userId ?? p.user_id ?? null) as string | null,
     // snake_case aliases
@@ -69,6 +78,9 @@ function normalizeProperty(p: Record<string, unknown>): Property {
     property_type: (p.propertyType ?? p.property_type ?? '') as string,
     zip_code: (p.zipCode ?? p.zip_code ?? '') as string,
     garage_spaces: (p.garageSpaces ?? p.garage_spaces ?? null) as number | null,
+    video_url: (p.videoUrl ?? p.video_url ?? null) as string | null,
+    brochure_url: (p.brochureUrl ?? p.brochure_url ?? null) as string | null,
+    floor_plan_url: (p.floorPlanUrl ?? p.floor_plan_url ?? null) as string | null,
     featured_image_index: (p.featuredImageIndex ?? p.featured_image_index ?? null) as number | null,
     created_at: (p.createdAt ?? p.created_at ?? '') as string,
     user_id: (p.userId ?? p.user_id ?? null) as string | null,

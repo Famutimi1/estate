@@ -232,7 +232,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({ filters, searchTrigge
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
                 <div className={`text-xl font-bold ${property.property_status === 'For Sale' ? 'text-blue-700' : 'text-blue-500'}`}>
-                  #{property.price.toLocaleString()}{property.property_status === 'For Rent' ? '/mo' : ''}
+                  ₦{property.price.toLocaleString()}{property.property_status === 'For Rent' ? '/mo' : ''}
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
