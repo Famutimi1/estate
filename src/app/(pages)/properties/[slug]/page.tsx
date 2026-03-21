@@ -580,14 +580,14 @@ const PropertyDetail = () => {
                     <div className="bg-white p-6 rounded-sm shadow-md mb-6">
                         <div className="flex items-center mb-6">
                             <Image
-                                src="https://readdy.ai/api/search-image?query=Professional%20real%20estate%20agent%20headshot%2C%20confident%20smile%2C%20business%20attire%2C%20studio%20lighting%2C%20clean%20background%2C%20high%20quality%20portrait%20photography%2C%20realtor%20profile%20picture&width=100&height=100&seq=13&orientation=squarish"
+                                src={property?.user?.avatarUrl || "https://readdy.ai/api/search-image?query=Professional%20real%20estate%20agent%20headshot%2C%20confident%20smile%2C%20business%20attire%2C%20studio%20lighting%2C%20clean%20background%2C%20high%20quality%20portrait%20photography%2C%20realtor%20profile%20picture&width=100&height=100&seq=13&orientation=squarish"}
                                 width={100} height={100}
                                 alt="Agent"
                                 className="w-16 h-16 rounded-full object-cover mr-4"
                             />
                             <div>
-                                <h3 className="font-bold text-gray-800">Sarah Johnson</h3>
-                                <p className="text-gray-600">Luxury Property Specialist</p>
+                                <h3 className="font-bold text-gray-800">{property?.user?.name || "Property Agent"}</h3>
+                                <p className="text-gray-600 capitalize">{property?.user?.role === "agent" ? "Property Agent" : property?.user?.role || "Real Estate Professional"}</p>
                                 {/* <div className="flex items-center mt-1">
                                     <div className="flex">
                                         {[1, 2, 3, 4, 5].map((star) => (
@@ -606,14 +606,14 @@ const PropertyDetail = () => {
                         </button>
                         <div className="flex justify-between">
                             <a 
-                                href="tel:+2348012345678"
+                                href={`tel:${property?.user?.phone || "+2348012345678"}`}
                                 className="flex-1 mr-2 border border-gray-300 py-3 font-semibold hover:bg-gray-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer text-center"
                             >
                                 <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
                                 Call
                             </a>
                             <a 
-                                href="mailto:sarah.johnson@estate.com?subject=Inquiry about Property: ${property?.title}"
+                                href={`mailto:${property?.user?.email || "contact@estate.com"}?subject=Inquiry about Property: ${property?.title}`}
                                 className="flex-1 ml-2 border border-gray-300 py-3 font-semibold hover:bg-gray-50 transition-colors duration-200 !rounded-button whitespace-nowrap cursor-pointer text-center"
                             >
                                 <FontAwesomeIcon icon={faEnvelope} className="mr-2" />

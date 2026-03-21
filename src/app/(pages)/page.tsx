@@ -14,9 +14,11 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import PropertyListing from '@/components/PropertyListing';
 import { Property } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { useSettings } from '@/hooks/useSettings';
 
 const Home: React.FC = () => {
   const router = useRouter();
+  const { settings, loading: settingsLoading } = useSettings();
   const [propertyType, setPropertyType] = useState<string>('');
   const [propertyStatus, setPropertyStatus] = useState<string>('');
   const [minPrice, setMinPrice] = useState<string>('');

@@ -496,7 +496,7 @@ const AddPropertyPage: React.FC = () => {
                 <p className="text-gray-500 mb-3">Select an image to set as featured (main) image</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {uploadedImages.map((image, index) => (
-                    <div key={index} className={`relative rounded-lg overflow-hidden border-2 ${featuredImageIndex === index ? 'border-pink-600' : 'border-transparent'}`}>
+                    <div key={index} className={`relative rounded-lg overflow-hidden border-2 ${featuredImageIndex === index ? 'border-blue-600' : 'border-transparent'}`}>
                       <Image src={image.url} alt={`Property image ${index + 1}`} width={300} height={200} className="w-full h-32 object-cover" />
                       <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                         <div className="flex justify-end">
@@ -506,7 +506,7 @@ const AddPropertyPage: React.FC = () => {
                           </button>
                         </div>
                         <button type="button" onClick={() => setAsFeatured(index)}
-                          className={`w-full py-1 text-xs font-semibold rounded ${featuredImageIndex === index ? 'bg-pink-600 text-white' : 'bg-white text-gray-800 hover:bg-gray-100'} cursor-pointer`}>
+                          className={`w-full py-1 text-xs font-semibold rounded ${featuredImageIndex === index ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 hover:bg-gray-100'} cursor-pointer`}>
                           {featuredImageIndex === index ? 'Featured' : 'Set as Featured'}
                         </button>
                       </div>
@@ -635,7 +635,7 @@ const AddPropertyPage: React.FC = () => {
               {isEditMode ? 'Save as Draft' : 'Save Draft'}
             </button>
             <button type="button" onClick={() => handleSubmit(false)}
-              className="bg-pink-600 text-white px-6 py-3 font-semibold hover:bg-pink-700 transition-colors rounded-md cursor-pointer">
+              className="bg-blue-600 text-white px-6 py-3 font-semibold hover:bg-blue-700 transition-colors rounded-md cursor-pointer">
               {isEditMode ? 'Update & Publish' : 'Publish Property'}
             </button>
           </div>

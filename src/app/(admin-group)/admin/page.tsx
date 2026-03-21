@@ -192,7 +192,7 @@ const AdminDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -208,7 +208,7 @@ const AdminDashboard: React.FC = () => {
     { label: 'For Rent', value: stats.propertiesForRent, icon: 'fa-key', bg: 'bg-purple-100', iconColor: 'text-purple-600' },
     { label: 'Published', value: stats.publishedProperties, icon: 'fa-check-circle', bg: 'bg-emerald-100', iconColor: 'text-emerald-600' },
     { label: 'Drafts', value: stats.draftProperties, icon: 'fa-file-alt', bg: 'bg-yellow-100', iconColor: 'text-yellow-600' },
-    { label: 'Favorites', value: stats.totalFavorites, icon: 'fa-heart', bg: 'bg-pink-100', iconColor: 'text-pink-600' },
+    { label: 'Favorites', value: stats.totalFavorites, icon: 'fa-heart', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
   ];
 
   const formatMonthLabel = (monthStr: string) => {
@@ -270,7 +270,7 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
-          <Link href="/admin/add-property" className="bg-pink-600 text-white px-5 py-2.5 rounded-md hover:bg-pink-700 transition-colors font-medium">
+          <Link href="/admin/add-property" className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium">
             <i className="fas fa-plus mr-2"></i>Add Property
           </Link>
           <Link href="/admin/properties" className="bg-blue-700 text-white px-5 py-2.5 rounded-md hover:bg-blue-800 transition-colors font-medium">

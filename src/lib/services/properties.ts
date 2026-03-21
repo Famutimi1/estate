@@ -4,13 +4,29 @@ import { Prisma, Property as PrismaProperty, PropertyStatus, PropertyType, Statu
 export type Property = Omit<PrismaProperty, 'price' | 'area'> & {
   price: number;
   area: number;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    avatarUrl?: string;
+    role: string;
+  };
 };
 
-function serializeProperty(p: PrismaProperty): Property {
+function serializeProperty(p: PrismaProperty & { user?: any }): Property {
   return {
     ...p,
     price: Number(p.price),
     area: Number(p.area),
+    user: p.user ? {
+      id: p.user.id,
+      name: p.user.name,
+      email: p.user.email,
+      phone: p.user.phone || undefined,
+      avatarUrl: p.user.avatarUrl || undefined,
+      role: p.user.role,
+    } : undefined,
   } as Property;
 }
 
@@ -121,10 +137,26 @@ export async function getPropertyById(id: string) {
         id,
         status: Status.publish, // Only return published properties on frontend
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            avatarUrl: true,
+            role: true,
+          },
+        },
+      },
     });
 
     if (!property) return null;
-    return serializeProperty(property);
+    
+    return {
+      ...serializeProperty(property),
+      user: property.user,
+    };
   } catch (error) {
     console.error('Error fetching property:', error);
     return null;

@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: 'fa-home' },
+  { href: '/admin/users', label: 'Users', icon: 'fa-users' },
   { href: '/admin/properties', label: 'Properties', icon: 'fa-building' },
   { href: '/admin/add-property', label: 'Add Property', icon: 'fa-plus' },
   { href: '/admin/schedules', label: 'Schedules', icon: 'fa-calendar-alt' },
   { href: '/admin/contacts', label: 'Contacts', icon: 'fa-envelope' },
-  { href: '/admin/users', label: 'Users', icon: 'fa-users' },
   { href: '/admin/settings', label: 'Settings', icon: 'fa-cog' },
 ];
 
@@ -47,22 +47,22 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <div className={`flex items-center ${desktopCollapsed ? 'md:justify-center md:w-full' : ''}`}>
             <Link href="/">
               {/* Full logo: always on mobile sidebar, on desktop when expanded */}
-              <span className={`font-bold text-blue-700 text-xl ${desktopCollapsed ? 'md:hidden' : ''}`}>my<span className="text-pink-600">HOME</span></span>
+              <span className={`font-bold text-blue-700 text-xl ${desktopCollapsed ? 'md:hidden' : ''}`}>my<span className="text-blue-600">HOME</span></span>
               {/* Short logo: only on desktop collapsed */}
-              <span className={`text-pink-600 text-xl font-bold hidden ${desktopCollapsed ? 'md:inline' : ''}`}>m</span>
+              <span className={`text-blue-600 text-xl font-bold hidden ${desktopCollapsed ? 'md:inline' : ''}`}>m</span>
             </Link>
           </div>
           {/* Mobile: X close button */}
           <button
             onClick={() => setSidebarOpen(false)}
-            className="text-gray-500 hover:text-pink-600 cursor-pointer md:hidden"
+            className="text-gray-500 hover:text-blue-600 cursor-pointer md:hidden"
           >
             <i className="fas fa-times"></i>
           </button>
           {/* Desktop: collapse/expand chevron */}
           <button
             onClick={() => setDesktopCollapsed(!desktopCollapsed)}
-            className="text-gray-500 hover:text-pink-600 cursor-pointer hidden md:block"
+            className="text-gray-500 hover:text-blue-600 cursor-pointer hidden md:block"
           >
             <i className={`fas ${desktopCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
           </button>
@@ -81,8 +81,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center py-3 px-4 transition-colors cursor-pointer ${
                       isActive
-                        ? 'bg-pink-50 text-pink-600 border-l-4 border-pink-600'
-                        : 'text-gray-600 hover:bg-pink-50 hover:text-pink-600'
+                        ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
                     }`}
                   >
                     <i className={`fas ${item.icon} text-lg w-8`}></i>
@@ -128,7 +128,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     className="text-white hover:text-blue-200 cursor-pointer"
                   >
                     <i className="fas fa-bell text-xl"></i>
-                    <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                   </button>
 
                   {showNotifications && (

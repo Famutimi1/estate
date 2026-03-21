@@ -240,7 +240,7 @@ const AdminPropertiesPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-800">Properties</h1>
         <Link
           href="/admin/add-property"
-          className="bg-pink-600 text-white px-5 py-2.5 rounded-md hover:bg-pink-700 transition-colors font-medium"
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium"
         >
           <i className="fas fa-plus mr-2"></i>Add Property
         </Link>
@@ -320,7 +320,7 @@ const AdminPropertiesPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pink-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
           </div>
         ) : (
           <>

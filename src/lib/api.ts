@@ -28,6 +28,14 @@ export interface Property {
   floorPlanUrl: string | null;
   amenities: Record<string, boolean> | null;
   userId: string | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    avatarUrl?: string;
+    role: string;
+  };
   // snake_case aliases for backward compatibility with templates
   property_status?: string;
   image_url?: string;

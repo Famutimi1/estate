@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SettingsProvider } from '@/contexts/SettingsContext';
 
 export const metadata: Metadata = {
   title: "myHOME - Find Your Perfect Place to Live",
@@ -23,7 +24,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <SettingsProvider>
+          {children}
+        </SettingsProvider>
       </body>
     </html>
   );

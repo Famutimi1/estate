@@ -20,6 +20,7 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@types/bcrypt": "^5.0.2",
     "@types/pg": "^8.16.0",
+    "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
@@ -28,7 +29,8 @@
     "next-auth": "^4.24.11",
     "pg": "^8.18.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

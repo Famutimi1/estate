@@ -5,12 +5,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { name, email, phone, message } = body;
+    const { name, email, phone, subject, message } = body;
 
     // Validate required fields
-    if (!name || !email || !phone || !message) {
+    if (!name || !email || !message) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: name, email, and message are required' },
         { status: 400 }
       );
     }
@@ -24,12 +24,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate name length
+    if (name.length < 2 || name.length > 255) {
+      return NextResponse.json(
+        { error: 'Name must be between 2 and 255 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Validate subject length if provided
+    if (subject && (subject.length < 2 || subject.length > 255)) {
+      return NextResponse.json(
+        { error: 'Subject must be between 2 and 255 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Validate message length
+    if (message.length < 10 || message.length > 5000) {
+      return NextResponse.json(
+        { error: 'Message must be between 10 and 5000 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Validate phone format if provided
+    if (phone) {
+      const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+      if (!phoneRegex.test(phone)) {
+        return NextResponse.json(
+          { error: 'Invalid phone format' },
+          { status: 400 }
+        );
+      }
+    }
+
     // Create contact entry
     const contact = await prisma.contact.create({
       data: {
         name,
         email,
-        phone,
+        phone: phone || null,
+        subject: subject || null,
         message,
         status: 'unread',
       },

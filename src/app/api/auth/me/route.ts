@@ -20,7 +20,18 @@ export async function GET(request: NextRequest) {
     }
 
     const result = await getCurrentUser(userId);
-    return NextResponse.json(result);
+    if (!result.user) {
+      return NextResponse.json({ user: null });
+    }
+
+    // Transform field names to match frontend interface
+    const { avatarUrl, ...userWithoutAvatar } = result.user;
+    const transformedUser = {
+      ...userWithoutAvatar,
+      avatar_url: avatarUrl, // Transform avatarUrl to avatar_url
+    };
+
+    return NextResponse.json({ user: transformedUser });
   } catch (error) {
     console.error('API error getting current user:', error);
     return NextResponse.json(

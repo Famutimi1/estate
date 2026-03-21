@@ -137,15 +137,18 @@ export async function getCurrentUser(userId?: string) {
 export async function updateUserProfile({
     id,
     name,
+    phone,
     avatar_url
 }: {
     id: string;
     name?: string;
+    phone?: string;
     avatar_url?: string;
 }) {
     try {
-        const data: { name?: string; avatarUrl?: string } = {};
+        const data: { name?: string; phone?: string; avatarUrl?: string } = {};
         if (name) data.name = name;
+        if (phone !== undefined) data.phone = phone;
         if (avatar_url) data.avatarUrl = avatar_url;
 
         const user = await prisma.user.update({

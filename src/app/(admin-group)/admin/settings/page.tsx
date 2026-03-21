@@ -142,7 +142,7 @@ const AdminSettingsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -155,7 +155,7 @@ const AdminSettingsPage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-pink-600 text-white px-6 py-2.5 rounded-md hover:bg-pink-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-blue-600 text-white px-6 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i className={`fas ${saving ? 'fa-spinner fa-spin' : 'fa-save'} mr-2`}></i>
           {saving ? 'Saving...' : 'Save Changes'}
@@ -266,7 +266,7 @@ const AdminSettingsPage: React.FC = () => {
               <button
                 onClick={() => handleToggle(toggle.key)}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  siteSettings[toggle.key as keyof typeof siteSettings] ? 'bg-pink-600' : 'bg-gray-300'
+                  siteSettings[toggle.key as keyof typeof siteSettings] ? 'bg-blue-600' : 'bg-gray-300'
                 }`}
               >
                 <span
@@ -356,7 +356,7 @@ const AdminSettingsPage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-pink-600 text-white px-8 py-3 rounded-md hover:bg-pink-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i className={`fas ${saving ? 'fa-spinner fa-spin' : 'fa-save'} mr-2`}></i>
           {saving ? 'Saving...' : 'Save All Settings'}
