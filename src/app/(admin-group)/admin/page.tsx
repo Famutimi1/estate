@@ -270,17 +270,17 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
-          <Link href="/admin/add-property" className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium">
-            <i className="fas fa-plus mr-2"></i>Add Property
+          <Link href="/admin/add-property" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+            <i className="fas fa-plus mr-2 text-white"></i>Add Property
           </Link>
-          <Link href="/admin/properties" className="bg-blue-700 text-white px-5 py-2.5 rounded-md hover:bg-blue-800 transition-colors font-medium">
-            <i className="fas fa-building mr-2"></i>View Properties
+          <Link href="/admin/properties" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+            <i className="fas fa-building mr-2 text-white"></i>View Properties
           </Link>
-          <Link href="/admin/users" className="bg-emerald-600 text-white px-5 py-2.5 rounded-md hover:bg-emerald-700 transition-colors font-medium">
-            <i className="fas fa-users mr-2"></i>Manage Users
+          <Link href="/admin/users" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+            <i className="fas fa-users mr-2 text-white"></i>Manage Users
           </Link>
-          <Link href="/admin/settings" className="bg-gray-600 text-white px-5 py-2.5 rounded-md hover:bg-gray-700 transition-colors font-medium">
-            <i className="fas fa-cog mr-2"></i>Settings
+          <Link href="/admin/settings" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+            <i className="fas fa-cog mr-2 text-white"></i>Settings
           </Link>
         </div>
       </div>

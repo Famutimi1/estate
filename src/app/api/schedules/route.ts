@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendAdminNotificationEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,6 +40,25 @@ export async function POST(request: NextRequest) {
         status: 'pending',
       },
     });
+
+    // Send admin notification
+    try {
+      await sendAdminNotificationEmail('schedule', {
+        name,
+        email,
+        phone,
+        preferredDate,
+        preferredTime,
+        viewerType,
+        message: message || null,
+        propertyTitle: propertyTitle || null,
+        propertyId: propertyId || null
+      });
+      console.log('Admin notification sent for new viewing schedule:', email);
+    } catch (notificationError) {
+      console.error('Failed to send admin notification:', notificationError);
+      // Don't fail schedule creation if notification fails, but log the error
+    }
 
     return NextResponse.json(
       { 

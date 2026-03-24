@@ -4,6 +4,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBuilding, faUsers, faAward, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { useSettings } from '@/hooks/useSettings';
+import ContactInfo from '@/components/ContactInfo';
 
 const AboutPage: React.FC = () => {
   const { settings } = useSettings();
@@ -123,20 +124,7 @@ const AboutPage: React.FC = () => {
         {/* Contact Info */}
         <div className="bg-white rounded-lg shadow-sm p-8">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Get in Touch</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Address</h3>
-              <p className="text-gray-600">{settings?.address || 'Victoria Island, Lagos, Nigeria'}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Phone</h3>
-              <p className="text-gray-600">{settings?.contactPhone || '+234 800 000 0000'}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Email</h3>
-              <p className="text-gray-600">{settings?.contactEmail || 'info@myhome.ng'}</p>
-            </div>
-          </div>
+          <ContactInfo variant="compact" className="grid md:grid-cols-3 gap-8" />
         </div>
       </div>
     </div>

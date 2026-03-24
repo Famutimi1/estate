@@ -6,22 +6,15 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
+import { useSettings } from "@/contexts/SettingsContext";
+import SocialMediaLinks from "@/components/SocialMediaLinks";
+import ContactInfo from "@/components/ContactInfo";
 import {
-  faPhoneAlt,
-  faMapMarkerAlt,
-  faEnvelope,
   faCommentAlt,
   faBars,
   faTimes,
   faHeart
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  faFacebookF,
-  faTwitter,
-  faInstagram,
-  faYoutube,
-  faLinkedinIn
-} from '@fortawesome/free-brands-svg-icons';
 
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -38,6 +31,7 @@ export default function PublicLayout({
   const [favoritesCount, setFavoritesCount] = useState(0);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: currentUser, loading: authLoading } = useAuth();
+  const { settings } = useSettings();
   const displayName = currentUser?.name?.split(' ')[0] || 'User';
 
   // Fetch favorites count
@@ -77,35 +71,10 @@ export default function PublicLayout({
       {/* Top Bar */}
       <div className=" hidden bg-blue-900 text-white py-2 px-4 md:px-6 md:flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
         <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-2 md:space-y-0 text-xs md:text-sm">
-          <div className="flex items-center">
-            <FontAwesomeIcon icon={faPhoneAlt} className="mr-2 text-xs" />
-            <span>+234 803 123 4567</span>
-          </div>
-          <div className="flex items-center">
-            <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-xs" />
-            <span>Victoria Island, Lagos</span>
-          </div>
-          <div className="flex items-center">
-            <FontAwesomeIcon icon={faEnvelope} className="mr-2 text-xs" />
-            <span>info@myhome.ng</span>
-          </div>
+          <ContactInfo variant="inline" />
         </div>
         <div className="flex items-center space-x-2 md:space-x-3">
-          <a href="#" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-pink-600 flex items-center justify-center">
-            <FontAwesomeIcon icon={faCommentAlt} className="text-white text-xs" />
-          </a>
-          <a href="#" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-blue-500 flex items-center justify-center">
-            <FontAwesomeIcon icon={faFacebookF} className="text-white text-xs" />
-          </a>
-          <a href="#" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-blue-400 flex items-center justify-center">
-            <FontAwesomeIcon icon={faTwitter} className="text-white text-xs" />
-          </a>
-          <a href="#" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-pink-500 flex items-center justify-center">
-            <FontAwesomeIcon icon={faInstagram} className="text-white text-xs" />
-          </a>
-          <a href="#" className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-red-500 flex items-center justify-center">
-            <FontAwesomeIcon icon={faYoutube} className="text-white text-xs" />
-          </a>
+          <SocialMediaLinks variant="icons" />
         </div>
       </div>
       {/* Navigation */}
@@ -257,18 +226,7 @@ export default function PublicLayout({
                 myHOME is Nigeria&apos;s premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="text-white hover:text-white">
-                  <FontAwesomeIcon icon={faFacebookF} className="text-xs" />
-                </a>
-                <a href="#" className="text-white hover:text-white">
-                  <FontAwesomeIcon icon={faTwitter} className="text-xs" />
-                </a>
-                <a href="#" className="text-whit hover:text-white">
-                  <FontAwesomeIcon icon={faInstagram} className="text-xs" />
-                </a>
-                <a href="#" className="text-white hover:text-white">
-                  <FontAwesomeIcon icon={faLinkedinIn} className="text-xs" />
-                </a>
+                <SocialMediaLinks variant="footer" />
               </div>
             </div>
             <div className="flex flex-1 gap-5 md:gap-10 mr-0">
@@ -301,20 +259,7 @@ export default function PublicLayout({
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="mt-1 mr-3 text-blue-500 text-xs" />
-                  <span className="text-white">Victoria Island, Lagos, Nigeria</span>
-                </li>
-                <li className="flex items-start">
-                  <FontAwesomeIcon icon={faPhoneAlt} className="mt-1 mr-3 text-blue-500 text-xs" />
-                  <span className="text-white">+234 803 123 4567</span>
-                </li>
-                <li className="flex items-start">
-                  <FontAwesomeIcon icon={faEnvelope} className="mt-1 mr-3 text-blue-500 text-xs" />
-                  <span className="text-white">info@myhome.ng</span>
-                </li>
-              </ul>
+              <ContactInfo variant="list" />
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-white">

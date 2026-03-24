@@ -58,7 +58,7 @@ function AlertToast({
   onDismiss: (id: string) => void;
 }) {
   const [exiting, setExiting] = useState(false);
-  const colors = colorMap[alert.type];
+  const colors = colorMap[alert.type] || colorMap.info; // Fallback to info type if invalid
 
   const dismiss = useCallback(() => {
     setExiting(true);
@@ -76,7 +76,7 @@ function AlertToast({
         colors.bg
       } ${colors.border} ${exiting ? "opacity-0 translate-x-8" : "opacity-100 translate-x-0"}`}
     >
-      <i className={`${iconMap[alert.type]} ${colors.icon} text-lg mt-0.5`}></i>
+      <i className={`${iconMap[alert.type] || iconMap.info} ${colors.icon} text-lg mt-0.5`}></i>
       <p className={`flex-1 text-sm font-medium ${colors.text}`}>{alert.message}</p>
       <button
         onClick={dismiss}
@@ -108,6 +108,12 @@ export function useAlerts() {
 
   const addAlert = useCallback(
     (type: AlertType, message: string, duration?: number) => {
+      // Validate alert type
+      if (!type || !colorMap[type]) {
+        console.warn(`Invalid alert type: ${type}. Defaulting to 'info'.`);
+        type = 'info';
+      }
+      
       const id = `alert-${++alertCounter}-${Date.now()}`;
       setAlerts((prev) => [...prev, { id, type, message, duration }]);
     },

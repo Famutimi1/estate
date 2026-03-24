@@ -11,10 +11,11 @@ export default function LogoutPage() {
   useEffect(() => {
     const performLogout = async () => {
       await logout();
-      router.push('/');
+      // Force a page refresh to ensure all components update
+      window.location.href = '/';
     };
     performLogout();
-  }, [logout, router]);
+  }, [logout]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">

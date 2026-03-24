@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -12,6 +13,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const isLogin = mode === 'login';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
+  const [forgotPasswordSuccess, setForgotPasswordSuccess] = useState(false);
+  const [forgotPasswordError, setForgotPasswordError] = useState<string | null>(null);
+  const [resendCountdown, setResendCountdown] = useState(0);
+  
+  // Import useAuth for proper state management
+  const { refetch } = useAuth();
   
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -23,6 +33,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
   const [registerRole, setRegisterRole] = useState<'user' | 'agent'>('user');
+  
+  // Countdown timer effect
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      const timer = setTimeout(() => {
+        setResendCountdown(resendCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCountdown]);
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +59,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       
       if (data.success && data.token) {
         localStorage.setItem('token', data.token);
-        router.push('/');
+        // Refetch auth state to update UI immediately
+        await refetch();
+        // Force a page refresh to ensure all components update
+        window.location.href = '/';
       } else {
         setError(data.error?.message || 'Failed to sign in');
       }
@@ -50,6 +73,42 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
      
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotPasswordLoading(true);
+    setForgotPasswordError(null);
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(forgotPasswordEmail)) {
+      setForgotPasswordError('Please enter a valid email address');
+      setForgotPasswordLoading(false);
+      return;
+    }
+    
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotPasswordEmail }),
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setForgotPasswordSuccess(true);
+        setResendCountdown(30); // Start 30-second countdown
+      } else {
+        setForgotPasswordError(data.error?.message || 'Failed to send reset email');
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setForgotPasswordError(err.message || 'An unexpected error occurred');
+      }
+    } finally {
+      setForgotPasswordLoading(false);
     }
   };
   
@@ -80,7 +139,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       
       if (data.success && data.token) {
         localStorage.setItem('token', data.token);
-        router.push('/');
+        // Refetch auth state to update UI immediately
+        await refetch();
+        // Force a page refresh to ensure all components update
+        window.location.href = '/';
       } else {
         setError(data.error?.message || 'Failed to register');
       }
@@ -166,9 +228,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 </div>
                 
                 <div className="text-sm">
-                  <a href="#" className="text-blue-700 hover:text-blue-500">
+                  <button 
+                    type="button"
+                    onClick={() => setShowForgotPassword(true)}
+                    className="text-blue-700 hover:text-blue-500 focus:outline-none focus:underline"
+                  >
                     Forgot your password?
-                  </a>
+                  </button>
                 </div>
               </div>
               
@@ -241,7 +307,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 />
               </div>
               
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   Account Type
                 </label>
@@ -273,7 +339,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
               
               <button
                 type="submit"
@@ -299,6 +365,107 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           </div>
         </div>
       </div>
+      
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Reset Your Password</h3>
+              
+              {!forgotPasswordSuccess ? (
+                <form onSubmit={handleForgotPassword}>
+                  <div className="mb-4">
+                    <label htmlFor="reset-email" className="block text-gray-700 text-sm font-bold mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      id="reset-email"
+                      type="email"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={forgotPasswordEmail}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      placeholder="Enter your email address"
+                    />
+                  </div>
+                  
+                  {forgotPasswordError && (
+                    <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-4 text-red-700">
+                      <p className="text-sm">{forgotPasswordError}</p>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setForgotPasswordEmail('');
+                        setForgotPasswordError(null);
+                      }}
+                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-sm hover:bg-gray-400 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={forgotPasswordLoading}
+                      className="px-4 py-2 bg-blue-700 text-white rounded-sm hover:bg-blue-800 transition-colors disabled:opacity-50"
+                    >
+                      {forgotPasswordLoading ? 'Sending...' : 'Send Reset Email'}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div>
+                  <div className="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700">
+                    <p className="text-sm">
+                      If an account with that email exists, password reset instructions have been sent. 
+                      Please check your inbox and follow the instructions to reset your password.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {resendCountdown > 0 ? (
+                      <div className="text-center text-gray-600 text-sm">
+                        Resend available in <span className="font-semibold text-blue-600">{resendCountdown}s</span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setForgotPasswordSuccess(false);
+                          setForgotPasswordError(null);
+                          handleForgotPassword({ preventDefault: () => {} } as React.FormEvent);
+                        }}
+                        disabled={forgotPasswordLoading}
+                        className="w-full px-4 py-2 bg-blue-700 text-white rounded-sm hover:bg-blue-800 transition-colors disabled:opacity-50"
+                      >
+                        {forgotPasswordLoading ? 'Sending...' : 'Resend Email'}
+                      </button>
+                    )}
+                    
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setForgotPasswordEmail('');
+                        setForgotPasswordSuccess(false);
+                        setForgotPasswordError(null);
+                        setResendCountdown(0);
+                      }}
+                      className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-sm hover:bg-gray-300 transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

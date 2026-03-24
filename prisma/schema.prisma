@@ -31,14 +31,16 @@ enum Status {
 }
 
 model User {
-  id         String     @id @default(uuid()) @db.Uuid
-  createdAt  DateTime   @default(now()) @map("created_at")
-  email      String     @unique @db.VarChar(255)
-  name       String     @db.VarChar(255)
-  phone      String?    @db.VarChar(50)
-  avatarUrl  String?    @map("avatar_url") @db.VarChar(255)
-  password   String     @db.VarChar(255)
-  role       UserRole   @default(user)
+  id             String     @id @default(uuid()) @db.Uuid
+  createdAt      DateTime   @default(now()) @map("created_at")
+  email          String     @unique @db.VarChar(255)
+  name           String     @db.VarChar(255)
+  phone          String?    @db.VarChar(50)
+  avatarUrl      String?    @map("avatar_url") @db.VarChar(255)
+  password       String     @db.VarChar(255)
+  role           UserRole   @default(user)
+  resetToken     String?    @map("reset_token") @db.VarChar(255)
+  resetTokenExpiry DateTime? @map("reset_token_expiry")
 
   properties Property[]
   favorites  Favorite[]

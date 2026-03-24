@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AdminAlert, { useAlerts } from '../components/AdminAlert';
 
 const AdminSettingsPage: React.FC = () => {
-  const { alerts, addAlert, removeAlert } = useAlerts();
+  const { alerts, addAlert, dismissAlert } = useAlerts();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -89,7 +89,7 @@ const AdminSettingsPage: React.FC = () => {
         });
       } catch (error) {
         console.error('Error fetching settings:', error);
-        addAlert('Failed to load settings', 'error');
+        addAlert('error', 'Failed to load settings');
       } finally {
         setLoading(false);
       }
@@ -130,10 +130,10 @@ const AdminSettingsPage: React.FC = () => {
 
       if (!res.ok) throw new Error('Failed to save settings');
 
-      addAlert('Settings saved successfully!', 'success');
+      addAlert('success', 'Settings saved successfully!');
     } catch (error) {
       console.error('Error saving settings:', error);
-      addAlert('Failed to save settings', 'error');
+      addAlert('error', 'Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -149,7 +149,7 @@ const AdminSettingsPage: React.FC = () => {
 
   return (
     <div>
-      <AdminAlert alerts={alerts} onClose={removeAlert} />
+      <AdminAlert alerts={alerts} onDismiss={dismissAlert} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Settings</h1>
         <button
