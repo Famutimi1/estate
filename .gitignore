@@ -27,11 +27,11 @@
 # debug
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,5 +39,35 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Test files and scripts
+test-*.js
+check-*.js
+debug-*.js
+simple-debug.js
+*.test.js
+
+# BMAD and configuration files (should not be tracked)
+.bmad-core/
+.windsurf/
+.cursor/
+
+# Database and migration files that shouldn't be tracked
+prisma/seed.js
+prisma/migrations/
+
+# Temporary files and scripts
+temp-*.js
+*.tmp
+
+# Documentation files that shouldn't be tracked
+PROFILE_SETUP_GUIDE.md
+PROFILE_SYSTEM_DOCUMENTATION.md
+
+# Expansion packs (should not be tracked)
+expansion-packs/
+
+# Local environment files
+database.sql
 
 /src/generated/prisma
