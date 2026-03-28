@@ -79,10 +79,16 @@ export default function PublicLayout({
       </div>
       {/* Navigation */}
       <div className="relative flex flex-col md:flex-row justify-between items-center h-auto md:h-15 py-4 md:py-0 bg-white shadow-md">
-        <div className="w-full md:w-auto px-4  md:px-8 bg-white flex items-center justify-between">
-          <Link href="/" className="text-xl md:text-2xl font-bold hover:opacity-80 transition-opacity">
-            <span className="text-gray-500">my</span>
-            <span className="text-gray-700">HOME</span>
+        <div className="w-full md:w-auto px-4  md:px-8 bg-white flex items-center justify-between  overflow-hidden">
+          <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold hover:opacity-80 transition-opacity">
+            <Image
+              src="/company_logo/company_logo.png"
+              alt="Company Logo"
+              width={180}
+              height={440}
+              className="h-12 w-12 object-contain scale-200"
+              // className="w-8 h-8 object-contain"
+            />
           </Link>
           <div className="flex md:hidden">
             <button
@@ -127,11 +133,54 @@ export default function PublicLayout({
                 </Link>
               </div>
             ) : (
-              <div className="flex flex-col p-4 space-y-2">
-                <span className="text-gray-700 text-sm text-center">Hi, {displayName}</span>
-                <Link href="/auth/logout" className="w-full py-2 px-4 bg-red-600 text-white text-sm text-center rounded-sm hover:bg-red-700 transition-colors duration-200">
-                  LOGOUT
-                </Link>
+              <div className="flex flex-col p-4 space-y-3">
+                {/* User Profile Section */}
+                <div className="flex items-center space-x-3 pb-3 border-b border-gray-200">
+                  <Image
+                    src={currentUser.avatar_url || 'https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish'}
+                    alt="User"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="text-gray-800 font-medium text-sm">Hi, {displayName}</div>
+                    <div className="text-gray-500 text-xs">
+                      {currentUser.role === 'admin' ? 'Administrator' : currentUser.role === 'agent' ? 'Agent' : 'User'}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Navigation Links */}
+                <nav className="flex flex-col space-y-1">
+                  <Link href="/profile" className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i className="fas fa-user text-gray-500 w-4"></i>
+                    <span className="text-sm">Profile</span>
+                  </Link>
+                  <Link href="/favorites" className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i className="fas fa-heart text-gray-500 w-4"></i>
+                    <span className="text-sm">Favorites</span>
+                    {favoritesCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {favoritesCount > 99 ? '99+' : favoritesCount}
+                      </span>
+                    )}
+                  </Link>
+                  {currentUser?.role === 'admin' && (
+                    <Link href="/admin" className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                      <i className="fas fa-cog text-gray-500 w-4"></i>
+                      <span className="text-sm">Admin Dashboard</span>
+                    </Link>
+                  )}
+                </nav>
+                
+                {/* Logout Button */}
+                <div className="pt-2 border-t border-gray-200">
+                  <Link href="/auth/logout" className="w-full flex items-center justify-center space-x-2 py-3 px-4 !bg-red-500 !text-white text-sm font-medium rounded-lg hover:!bg-red-600 transition-colors duration-200 border-2 border-red-500">
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                  </Link>
+                </div>
               </div>
             )}
           </div>
@@ -166,21 +215,21 @@ export default function PublicLayout({
               </Link>
               
               {/* Profile Menu */}
-              <div className="relative flex items-center mr-10" ref={profileMenuRef}>
+              <div className="relative flex items-center mr-2 md:mr-10" ref={profileMenuRef}>
               <button
                 onClick={() => setShowProfileMenu((prev) => !prev)}
-                className="flex items-center space-x-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                className="flex items-center space-x-1 md:space-x-2 cursor-pointer px-2 md:px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
               >
                 <Image
                   src={currentUser.avatar_url || 'https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish'}
                   alt="User"
                   width={40}
                   height={40}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
                 />
-                <span className="text-gray-700 text-sm">Hi, {displayName}</span>
+                <span className="text-gray-700 text-xs md:text-sm hidden sm:inline">Hi, {displayName}</span>
                 <svg
-                  className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${
+                  className={`w-3 h-3 md:w-4 md:h-4 text-gray-600 transition-transform duration-200 ${
                     showProfileMenu ? 'rotate-180' : ''
                   }`}
                   fill="none"
@@ -196,18 +245,28 @@ export default function PublicLayout({
                 </svg>
               </button>
               {showProfileMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-sm shadow-lg z-20">
-                  <Link href="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                <div className="absolute right-0 top-full mt-2 w-44 md:w-48 bg-white rounded-sm shadow-lg z-20">
+                  <Link href="/profile" className="block px-3 py-2 text-gray-800 hover:bg-gray-100 text-sm">
                     <i className="fas fa-user mr-2 text-gray-600"></i>
-                    Profile
+                    <span className="hidden sm:inline">Profile</span>
+                    <span className="sm:hidden">Account</span>
                   </Link>
-                  <Link href="/favorites" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                  <Link href="/favorites" className="block px-3 py-2 text-gray-800 hover:bg-gray-100 text-sm">
                     <i className="fas fa-heart mr-2 text-gray-600"></i>
-                    Favorites
+                    <span className="hidden sm:inline">Favorites</span>
+                    <span className="sm:hidden">Saved</span>
                   </Link>
-                  <Link href="/auth/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                  {currentUser?.role === 'admin' && (
+                    <Link href="/admin" className="block px-3 py-2 text-gray-800 hover:bg-gray-100 text-sm">
+                      <i className="fas fa-cog mr-2 text-gray-600"></i>
+                      <span className="hidden sm:inline">Admin</span>
+                      <span className="sm:hidden">Admin</span>
+                    </Link>
+                  )}
+                  <Link href="/auth/logout" className="block px-3 py-2 text-gray-800 hover:bg-gray-100 text-sm">
                     <i className="fas fa-sign-out-alt mr-2 text-gray-600"></i>
-                    Logout
+                    <span className="hidden sm:inline">Logout</span>
+                    <span className="sm:hidden">Exit</span>
                   </Link>
                 </div>
               )}
@@ -250,10 +309,10 @@ export default function PublicLayout({
               <div className="min-w-[150px]">
                 <h3 className="text-xl font-bold mb-4">Cities</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-white hover:text-blue-200">Lagos</a></li>
-                  <li><a href="#" className="text-white hover:text-blue-200">Ogun</a></li>
-                  <li><a href="#" className="text-white hover:text-blue-200">Oyo</a></li>
-                  <li><a href="#" className="text-white hover:text-blue-200">Abuja</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Lagos')}`} className="text-white hover:text-blue-200">Lagos</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Ogun')}`} className="text-white hover:text-blue-200">Ogun</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Oyo')}`} className="text-white hover:text-blue-200">Oyo</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Abuja')}`} className="text-white hover:text-blue-200">Abuja</a></li>
                 </ul>
               </div>
             </div>

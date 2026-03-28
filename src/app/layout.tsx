@@ -3,7 +3,7 @@ import "./globals.css";
 import { SettingsProvider } from '@/contexts/SettingsContext';
 
 export const metadata: Metadata = {
-  title: "myHOME - Find Your Perfect Place to Live",
+  title: "Stan Grace Properties LTD - Find Your Perfect Place to Live",
   description: "Nigeria's premier real estate platform, connecting buyers, sellers, and renters with the perfect properties.",
 };
 

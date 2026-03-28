@@ -359,11 +359,11 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">2,500+</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">1,000+</div>
               <div className="text-blue-200 text-sm md:text-base">Properties Listed</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">1,800+</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">1,000+</div>
               <div className="text-blue-200 text-sm md:text-base">Happy Clients</div>
             </div>
             <div>
@@ -532,7 +532,7 @@ const Home: React.FC = () => {
                 <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold text-lg mr-3">E</div>
                 <div>
                   <div className="font-semibold text-gray-800">Emmanuel Nwachukwu</div>
-                  <div className="text-sm text-gray-500">Tenant, Port Harcourt</div>
+                  <div className="text-sm text-gray-500">Tenant, Abeokuta</div>
                 </div>
               </div>
               <div className="flex mt-3">
@@ -554,12 +554,16 @@ const Home: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {[
-              { name: 'Lagos', count: '1,200+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
-              { name: 'Ogun', count: '450+ Properties', icon: 'fa-building', color: 'bg-green-600' },
-              { name: 'Oyo', count: '380+ Properties', icon: 'fa-landmark', color: 'bg-purple-600' },
-              { name: 'Abuja', count: '620+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
+              { name: 'Lagos', count: '1,000+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
+              { name: 'Ogun', count: '400+ Properties', icon: 'fa-building', color: 'bg-green-600' },
+              { name: 'Oyo', count: '300+ Properties', icon: 'fa-landmark', color: 'bg-purple-600' },
+              { name: 'Abuja', count: '500+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
             ].map((area) => (
-              <div key={area.name} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-5 cursor-pointer group">
+              <div 
+                key={area.name} 
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-5 cursor-pointer group"
+                onClick={() => window.location.href = `/properties?location=${encodeURIComponent(area.name)}`}
+              >
                 <div className={`w-12 h-12 ${area.color} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200`}>
                   <i className={`fas ${area.icon} text-white text-lg`}></i>
                 </div>

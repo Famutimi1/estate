@@ -8,9 +8,9 @@ export async function GET() {
     if (!settings) {
       settings = await prisma.adminSettings.create({
         data: {
-          siteName: 'myHOME',
+          siteName: 'Stan Grace Properties LTD',
           siteDescription: 'Find your perfect home from our wide selection of properties.',
-          contactEmail: 'admin@myhome.com',
+          contactEmail: 'admin@realestate.com',
           contactPhone: '+234 800 000 0000',
           address: 'Lagos, Nigeria',
           currency: 'NGN',
@@ -18,8 +18,9 @@ export async function GET() {
           enableRegistration: true,
           enableFavorites: true,
           maintenanceMode: false,
-          metaTitle: 'myHOME - Real Estate Platform',
-          metaDescription: 'Discover your dream home with myHOME. Browse luxury properties for sale and rent.',
+          metaTitle: 'Stan Grace Properties LTD - Find Your Dream Home',
+          metaDescription: 'Discover your dream home with Stan Grace Properties LTD. Browse properties for sale and rent.',
+          whatsappUrl: null,
         },
       });
     }
@@ -51,6 +52,7 @@ export async function PUT(request: Request) {
       instagramUrl,
       linkedinUrl,
       youtubeUrl,
+      whatsappUrl,
       metaTitle,
       metaDescription,
       googleAnalyticsId,
@@ -76,6 +78,7 @@ export async function PUT(request: Request) {
           instagramUrl: instagramUrl || null,
           linkedinUrl: linkedinUrl || null,
           youtubeUrl: youtubeUrl || null,
+          whatsappUrl: whatsappUrl || null,
           metaTitle,
           metaDescription,
           googleAnalyticsId: googleAnalyticsId || null,
@@ -100,6 +103,7 @@ export async function PUT(request: Request) {
           instagramUrl: instagramUrl || null,
           linkedinUrl: linkedinUrl || null,
           youtubeUrl: youtubeUrl || null,
+          whatsappUrl: whatsappUrl || null,
           metaTitle,
           metaDescription,
           googleAnalyticsId: googleAnalyticsId || null,

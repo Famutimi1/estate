@@ -122,6 +122,7 @@ model AdminSettings {
   instagramUrl String? @map("instagram_url") @db.VarChar(255)
   linkedinUrl  String? @map("linkedin_url") @db.VarChar(255)
   youtubeUrl   String? @map("youtube_url") @db.VarChar(255)
+  whatsappUrl  String? @map("whatsapp_url") @db.VarChar(255)
 
   metaTitle         String  @map("meta_title") @db.VarChar(255)
   metaDescription   String  @map("meta_description") @db.Text

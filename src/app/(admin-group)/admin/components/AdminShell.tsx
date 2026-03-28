@@ -47,9 +47,25 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <div className={`flex items-center ${desktopCollapsed ? 'md:justify-center md:w-full' : ''}`}>
             <Link href="/">
               {/* Full logo: always on mobile sidebar, on desktop when expanded */}
-              <span className={`font-bold text-blue-700 text-xl ${desktopCollapsed ? 'md:hidden' : ''}`}>my<span className="text-blue-600">HOME</span></span>
+              <div className={`flex items-center space-x-2 ${desktopCollapsed ? 'md:hidden' : ''}`}>
+                <Image
+                  src="/company_logo/company_logo.png"
+                  alt="Company Logo"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
               {/* Short logo: only on desktop collapsed */}
-              <span className={`text-blue-600 text-xl font-bold hidden ${desktopCollapsed ? 'md:inline' : ''}`}>m</span>
+              <div className={`hidden ${desktopCollapsed ? 'md:inline' : ''}`}>
+                <Image
+                  src="/company_logo/company_logo.png"
+                  alt="Company Logo"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain"
+                />
+              </div>
             </Link>
           </div>
           {/* Mobile: X close button */}

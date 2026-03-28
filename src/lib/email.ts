@@ -39,7 +39,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Password Reset - myHOME</title>
+      <title>Password Reset - Real Estate Platform</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -91,14 +91,14 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
     </head>
     <body>
       <div class="header">
-        <h1>myHOME</h1>
+        <h1>Stan Grace Properties LTD</h1>
         <p>Password Reset Request</p>
       </div>
       
       <div class="content">
         <h2>Hello ${userName || 'there'},</h2>
         
-        <p>We received a request to reset your password for your myHOME account. Click the button below to reset your password:</p>
+        <p>We received a request to reset your password for your account. Click the button below to reset your password:</p>
         
         <div style="text-align: center;">
           <a href="${resetUrl}" class="button">Reset Password</a>
@@ -121,7 +121,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
         <p>If you have any questions or didn't request this reset, please contact our support team.</p>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Nigeria's Premier Real Estate Platform</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
 
   return sendEmail({
     to: email,
-    subject: 'Reset Your myHOME Password',
+    subject: 'Reset Your Stan Grace Properties LTD Password',
     html,
   });
 }
@@ -145,7 +145,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Welcome to myHOME - ${userName}!</title>
+      <title>Welcome to Real Estate Platform - ${userName}!</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -218,7 +218,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
     </head>
     <body>
       <div class="header">
-        <h1>myHOME</h1>
+        <h1>Stan Grace Properties LTD</h1>
         <p>Welcome to Nigeria's Premier Real Estate Platform!</p>
       </div>
       
@@ -231,7 +231,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
         
         <h2>Welcome, ${userName}!</h2>
         
-        <p>Thank you for joining myHOME! We're excited to have you as part of our real estate community. Your account has been successfully created${userRole === 'agent' ? ' as a Property Agent' : userRole === 'admin' ? ' as an Administrator' : ''}.</p>
+        <p>Thank you for joining Stan Grace Properties LTD! We're excited to have you as part of our real estate community. Your account has been successfully created${userRole === 'agent' ? ' as a Property Agent' : userRole === 'admin' ? ' as an Administrator' : ''}.</p>
         
         <div class="feature-list">
           <h3>🏠 What You Can Do Now:</h3>
@@ -261,14 +261,14 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
           <ul style="margin: 10px 0; padding-left: 20px;">
             <li>Keep your password secure and don't share it with anyone</li>
             <li>We'll never ask for your password via email</li>
-            <li>Always check that you're on the official myHOME website</li>
+            <li>Always check that you're on the official Stan Grace Properties LTD website</li>
           </ul>
         </div>
         
         <p>If you have any questions or need help getting started, our support team is here to help!</p>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Nigeria's Premier Real Estate Platform</p>
           <p>📧 Email: support@myhome.ng | 📞 Phone: +234 803 123 4567</p>
         </div>
@@ -279,7 +279,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
 
   return sendEmail({
     to: email,
-    subject: `Welcome to myHOME - Your Account is Ready!`,
+    subject: `Welcome to Stan Grace Properties LTD - Your Account is Ready!`,
     html,
   });
 }
@@ -415,7 +415,7 @@ function generateRegistrationNotificationHTML(data: {
     <body>
       <div class="header">
         <h1>🎉 New User Registration</h1>
-        <p>A new user has joined myHOME</p>
+        <p>A new user has joined Stan Grace Properties LTD</p>
       </div>
       
       <div class="content">
@@ -459,7 +459,7 @@ function generateRegistrationNotificationHTML(data: {
         </div>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Admin Notification System</p>
         </div>
       </div>
@@ -562,7 +562,7 @@ function generateContactNotificationHTML(data: {
     <body>
       <div class="header">
         <h1>📧 New Contact Message</h1>
-        <p>Someone has contacted myHOME</p>
+        <p>Someone has contacted Stan Grace Properties LTD</p>
       </div>
       
       <div class="content">
@@ -609,7 +609,7 @@ function generateContactNotificationHTML(data: {
         </div>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Admin Notification System</p>
         </div>
       </div>
@@ -799,7 +799,7 @@ function generateScheduleNotificationHTML(data: {
         </div>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Admin Notification System</p>
         </div>
       </div>
@@ -870,7 +870,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
     </head>
     <body>
       <div class="header">
-        <h1>myHOME</h1>
+        <h1>Stan Grace Properties LTD</h1>
         <p>Password Reset Successful</p>
       </div>
       
@@ -885,7 +885,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
         
         <p>Hi ${userName || 'there'},</p>
         
-        <p>Your myHOME password has been successfully reset. You can now log in to your account with your new password.</p>
+        <p>Your Stan Grace Properties LTD password has been successfully reset. You can now log in to your account with your new password.</p>
         
         <div style="text-align: center;">
           <a href="${process.env.NEXT_PUBLIC_APP_URL}/auth/login" class="button">Log In to Your Account</a>
@@ -894,7 +894,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
         <p>If you didn't reset your password or have any security concerns, please contact our support team immediately.</p>
         
         <div class="footer">
-          <p>&copy; ${new Date().getFullYear()} myHOME. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Nigeria's Premier Real Estate Platform</p>
         </div>
       </div>
@@ -904,7 +904,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
 
   return sendEmail({
     to: email,
-    subject: 'Your myHOME Password Has Been Reset',
+    subject: 'Your Stan Grace Properties LTD Password Has Been Reset',
     html,
   });
 }

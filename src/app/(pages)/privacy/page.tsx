@@ -26,12 +26,12 @@ const PrivacyPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
           <p className="text-gray-600 mb-4">
-            At {settings?.siteName || 'myHOME'}, we are committed to protecting your privacy and 
+            At {settings?.siteName || 'Stan Grace Properties LTD'}, we are committed to protecting your privacy and 
             ensuring the security of your personal information. This Privacy Policy explains how we 
             collect, use, and protect your information when you use our real estate platform.
           </p>
           <p className="text-gray-600">
-            By using {settings?.siteName || 'myHOME'}, you agree to the collection and use of 
+            By using {settings?.siteName || 'Stan Grace Properties LTD'}, you agree to the collection and use of 
             information in accordance with this policy.
           </p>
         </div>

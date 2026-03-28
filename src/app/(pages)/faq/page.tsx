@@ -190,7 +190,7 @@ const FAQPage: React.FC = () => {
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Find answers to common questions about {settings?.siteName || 'myHOME'} and our real estate services.
+            Welcome to {settings?.siteName || 'Stan Grace Properties LTD'} FAQ and our real estate services.
           </p>
         </div>
 

@@ -80,6 +80,22 @@ const PropertiesPage = () => {
     loadProperties();
   }, [loadProperties]);
 
+  // Handle URL parameters for location filtering
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const locationParam = urlParams.get('location');
+      
+      if (locationParam) {
+        setLocation(locationParam);
+        setAppliedFilters(prev => ({
+          ...prev,
+          location: locationParam
+        }));
+      }
+    }
+  }, []);
+
   
   // Array of mock properties for fallback if needed
   // const mockProperties = [
@@ -181,9 +197,21 @@ const PropertiesPage = () => {
       {/* Page Header */}
       <div className="bg-blue-700 py-16 px-6">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Browse Properties</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">
+            Browse Properties
+            {appliedFilters.location && (
+              <span className="text-2xl font-normal text-blue-100 ml-3">
+                in {appliedFilters.location}
+              </span>
+            )}
+          </h1>
           <p className="text-blue-100 text-lg max-w-2xl mx-auto">
             Find your perfect home from our wide selection of properties across Nigeria.
+            {appliedFilters.location && (
+              <span className="block mt-2 text-blue-200">
+                Showing properties in {appliedFilters.location}
+              </span>
+            )}
           </p>
         </div>
       </div>
@@ -327,8 +355,28 @@ const PropertiesPage = () => {
         <div className="flex justify-between items-center mb-6">
           <div className="text-gray-600">
             Showing <span className="font-bold">{isLoading ? '...' : properties.length}</span> of <span className="font-bold">{totalProperties}</span> properties
+            {appliedFilters.location && (
+              <span className="ml-2 text-blue-600">
+                in {appliedFilters.location}
+              </span>
+            )}
           </div>
           <div className="flex items-center space-x-4">
+            {appliedFilters.location && (
+              <button
+                onClick={() => {
+                  setLocation('');
+                  setAppliedFilters(prev => ({ ...prev, location: '' }));
+                  // Update URL to remove location parameter
+                  const url = new URL(window.location.href);
+                  url.searchParams.delete('location');
+                  window.history.replaceState({}, '', url.toString());
+                }}
+                className="text-sm text-gray-500 hover:text-gray-700 underline"
+              >
+                Clear Location Filter
+              </button>
+            )}
             <div>
               <label className="text-gray-600 mr-2 text-sm">Sort by:</label>
               <select

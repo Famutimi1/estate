@@ -7,7 +7,8 @@ import {
   faTwitter, 
   faInstagram, 
   faYoutube, 
-  faLinkedinIn 
+  faLinkedinIn,
+  faWhatsapp
 } from '@fortawesome/free-brands-svg-icons';
 import { useSettings } from '@/contexts/SettingsContext';
 
@@ -59,6 +60,13 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
       url: settings?.linkedinUrl || 'https://linkedin.com',
       color: 'bg-blue-700',
       hoverColor: 'hover:bg-blue-800',
+    },
+    {
+      name: 'WhatsApp',
+      icon: faWhatsapp,
+      url: settings?.whatsappUrl || 'https://wa.me/2348031234567',
+      color: 'bg-green-600',
+      hoverColor: 'hover:bg-green-700',
     },
   ];
 

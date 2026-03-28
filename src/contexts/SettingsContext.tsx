@@ -20,6 +20,7 @@ export interface Settings {
   instagramUrl: string | null;
   linkedinUrl: string | null;
   youtubeUrl: string | null;
+  whatsappUrl: string | null;
   metaTitle: string;
   metaDescription: string;
   googleAnalyticsId: string | null;

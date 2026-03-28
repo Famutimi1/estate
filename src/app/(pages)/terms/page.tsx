@@ -26,8 +26,8 @@ const TermsPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Introduction</h2>
           <p className="text-gray-600 mb-4">
-            Welcome to {settings?.siteName || 'myHOME'}. These Terms of Service govern your 
-            use of our real estate platform and services. By accessing or using {settings?.siteName || 'myHOME'}, 
+            Welcome to {settings?.siteName || 'Stan Grace Properties LTD'}. These Terms of Service govern your 
+            use of our real estate platform and services. By accessing or using {settings?.siteName || 'Stan Grace Properties LTD'}, 
             you agree to be bound by these terms.
           </p>
           <p className="text-gray-600">
@@ -39,7 +39,7 @@ const TermsPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Acceptance of Terms</h2>
           <p className="text-gray-600 mb-4">
-            By accessing and using {settings?.siteName || 'myHOME'}, you:
+            By accessing and using {settings?.siteName || 'Stan Grace Properties LTD'}, you:
           </p>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
             <li>Confirm that you are at least 18 years of age</li>
