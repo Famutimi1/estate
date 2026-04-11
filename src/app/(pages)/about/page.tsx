@@ -46,7 +46,7 @@ const AboutPage: React.FC = () => {
                 value and financial security.
               </p>
             </div>
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg h-64 flex items-center justify-center">
+            <div className="bg-gradient-to-r from-green-700 to-green-800 rounded-lg h-64 flex items-center justify-center">
               <FontAwesomeIcon icon={faBuilding} className="text-6xl text-white" />
             </div>
           </div>
