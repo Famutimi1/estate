@@ -281,9 +281,9 @@ export default function PublicLayout({
         <div className="container mx-auto px-6">
             <div className="flex flex-1 flex-col md:flex-row gap-8 justify-between  ">
             <div className="flex-1">
-              <h3 className="text-xl font-bold mb-4">About myHOME</h3>
+              <h3 className="text-xl font-bold mb-4">About Stan Grace Properties</h3>
               <p className="text-white mb-4">
-                myHOME is Nigeria&apos;s premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
+                Stan Grace Properties LTD is Nigeria&apos;s premier real estate platform, connecting buyers, sellers, and renters with the perfect properties across the country.
               </p>
               <div className="flex space-x-4">
                 <SocialMediaLinks variant="footer" />
