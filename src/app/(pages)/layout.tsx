@@ -78,7 +78,7 @@ export default function PublicLayout({
         </div>
       </div>
       {/* Navigation */}
-      <div className="relative flex flex-col md:flex-row justify-between items-center h-auto md:h-15 py-4 md:py-0 bg-white shadow-md">
+      <div className="relative flex flex-col md:flex-row justify-between items-center h-auto md:h-15 py-4 md:py-0 bg-white shadow-md sticky top-0 z-40">
         <div className="w-full md:w-auto px-4  md:px-8 bg-white flex items-center justify-between  overflow-hidden">
           <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold hover:opacity-80 transition-opacity">
             <Image
@@ -89,6 +89,7 @@ export default function PublicLayout({
               className="h-12 w-12 object-contain scale-200"
               // className="w-8 h-8 object-contain"
             />
+            <h1 className="md:hidden text-sm font-bold text-green-800 leading-tight ml-7">Stan Grace Properties LTD</h1>
           </Link>
           <div className="flex md:hidden">
             <button
