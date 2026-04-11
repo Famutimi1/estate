@@ -75,8 +75,8 @@ const AboutPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-800 mb-8">What We Do</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start space-x-4">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <FontAwesomeIcon icon={faHome} className="text-xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                <FontAwesomeIcon icon={faHome} className="text-xl text-green-600" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Land Sales & Acquisition</h3>
@@ -86,8 +86,8 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <FontAwesomeIcon icon={faChartLine} className="text-xl text-blue-600" />
+              <div className="bg-pink-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                <FontAwesomeIcon icon={faChartLine} className="text-xl text-pink-600" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Land Banking Opportunities</h3>
@@ -97,8 +97,8 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <FontAwesomeIcon icon={faShieldAlt} className="text-xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                <FontAwesomeIcon icon={faShieldAlt} className="text-xl text-green-600" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Property Documentation & Verification</h3>
@@ -108,8 +108,8 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
             <div className="flex items-start space-x-4">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <FontAwesomeIcon icon={faUsers} className="text-xl text-blue-600" />
+              <div className="bg-pink-100 rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+                <FontAwesomeIcon icon={faUsers} className="text-xl text-pink-600" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Real Estate Investment Advisory</h3>
@@ -126,8 +126,8 @@ const AboutPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-800 mb-8">Our Core Values</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon={faCheckCircle} className="text-2xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faCheckCircle} className="text-2xl text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Integrity</h3>
               <p className="text-gray-600 text-sm">
@@ -135,8 +135,8 @@ const AboutPage: React.FC = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon={faAward} className="text-2xl text-blue-600" />
+              <div className="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faAward} className="text-2xl text-pink-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Excellence</h3>
               <p className="text-gray-600 text-sm">
@@ -144,8 +144,8 @@ const AboutPage: React.FC = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon={faUsers} className="text-2xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faUsers} className="text-2xl text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Customer Commitment</h3>
               <p className="text-gray-600 text-sm">
@@ -153,8 +153,8 @@ const AboutPage: React.FC = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon={faChartLine} className="text-2xl text-blue-600" />
+              <div className="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon icon={faChartLine} className="text-2xl text-pink-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Innovation</h3>
               <p className="text-gray-600 text-sm">
@@ -192,20 +192,20 @@ const AboutPage: React.FC = () => {
         </div>
 
         {/* Our Impact */}
-        <div className="bg-blue-600 text-white rounded-lg p-8 mb-12">
+        <div className="bg-green-600 text-white rounded-lg p-8 mb-12">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">Our Impact</h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="text-3xl font-bold mb-2">100+</div>
-              <div className="text-blue-100">Satisfied Clients Served</div>
+              <div className="text-green-100">Satisfied Clients Served</div>
             </div>
             <div>
               <div className="text-3xl font-bold mb-2">Multiple</div>
-              <div className="text-blue-100">Successful Land Transactions Completed</div>
+              <div className="text-green-100">Successful Land Transactions Completed</div>
             </div>
             <div>
               <div className="text-3xl font-bold mb-2">Key Locations</div>
-              <div className="text-blue-100">Presence in Ogun State and Beyond</div>
+              <div className="text-green-100">Presence in Ogun State and Beyond</div>
             </div>
           </div>
         </div>
@@ -220,12 +220,12 @@ const AboutPage: React.FC = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-8 mb-12 text-center">
+        <div className="bg-gradient-to-r from-green-600 to-pink-600 text-white rounded-lg p-8 mb-12 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Let's Build Something Great Together</h2>
-          <p className="text-xl text-blue-100 mb-6">
+          <p className="text-xl text-green-100 mb-6">
             Ready to secure your future through smart real estate investment?
           </p>
-          <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          <button className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
             Contact Us Today
           </button>
         </div>
@@ -235,22 +235,22 @@ const AboutPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Contact Us</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <FontAwesomeIcon icon={faHome} className="text-xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                <FontAwesomeIcon icon={faHome} className="text-xl text-green-600" />
               </div>
               <h3 className="font-semibold text-gray-800 mb-1">Location</h3>
               <p className="text-gray-600">Abeokuta, Nigeria</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <FontAwesomeIcon icon={faEnvelope} className="text-xl text-blue-600" />
+              <div className="bg-pink-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                <FontAwesomeIcon icon={faEnvelope} className="text-xl text-pink-600" />
               </div>
               <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
               <p className="text-gray-600">info@stangraceproperties24.com</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <FontAwesomeIcon icon={faPhone} className="text-xl text-blue-600" />
+              <div className="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                <FontAwesomeIcon icon={faPhone} className="text-xl text-green-600" />
               </div>
               <h3 className="font-semibold text-gray-800 mb-1">Phone</h3>
               <p className="text-gray-600">+234 9075875787</p>

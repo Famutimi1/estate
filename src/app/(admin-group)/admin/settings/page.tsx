@@ -142,7 +142,7 @@ const AdminSettingsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
@@ -155,7 +155,7 @@ const AdminSettingsPage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-600 text-white px-6 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-green-600 text-white px-6 py-2.5 rounded-md hover:bg-green-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i className={`fas ${saving ? 'fa-spinner fa-spin' : 'fa-save'} mr-2`}></i>
           {saving ? 'Saving...' : 'Save Changes'}
@@ -175,7 +175,7 @@ const AdminSettingsPage: React.FC = () => {
               name="siteName"
               value={siteSettings.siteName}
               onChange={handleSiteChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -185,7 +185,7 @@ const AdminSettingsPage: React.FC = () => {
               name="contactEmail"
               value={siteSettings.contactEmail}
               onChange={handleSiteChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -195,7 +195,7 @@ const AdminSettingsPage: React.FC = () => {
               name="contactPhone"
               value={siteSettings.contactPhone}
               onChange={handleSiteChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -205,7 +205,7 @@ const AdminSettingsPage: React.FC = () => {
               name="address"
               value={siteSettings.address}
               onChange={handleSiteChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div className="md:col-span-2">
@@ -215,7 +215,7 @@ const AdminSettingsPage: React.FC = () => {
               value={siteSettings.siteDescription}
               onChange={handleSiteChange}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -224,7 +224,7 @@ const AdminSettingsPage: React.FC = () => {
               name="currency"
               value={siteSettings.currency}
               onChange={handleSiteChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="NGN">NGN (₦)</option>
               <option value="USD">USD ($)</option>
@@ -241,7 +241,7 @@ const AdminSettingsPage: React.FC = () => {
               onChange={handleSiteChange}
               min="1"
               max="100"
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         </div>
@@ -266,7 +266,7 @@ const AdminSettingsPage: React.FC = () => {
               <button
                 onClick={() => handleToggle(toggle.key)}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  siteSettings[toggle.key as keyof typeof siteSettings] ? 'bg-blue-600' : 'bg-gray-300'
+                  siteSettings[toggle.key as keyof typeof siteSettings] ? 'bg-green-600' : 'bg-gray-300'
                 }`}
               >
                 <span
@@ -287,10 +287,10 @@ const AdminSettingsPage: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
-            { name: 'facebook', icon: 'fa-facebook-f', color: 'text-blue-600' },
+            { name: 'facebook', icon: 'fa-facebook-f', color: 'text-green-600' },
             { name: 'twitter', icon: 'fa-twitter', color: 'text-sky-500' },
             { name: 'instagram', icon: 'fa-instagram', color: 'text-pink-500' },
-            { name: 'linkedin', icon: 'fa-linkedin-in', color: 'text-blue-700' },
+            { name: 'linkedin', icon: 'fa-linkedin-in', color: 'text-pink-700' },
             { name: 'youtube', icon: 'fa-youtube', color: 'text-red-600' },
           ].map((social) => (
             <div key={social.name} className="relative">
@@ -324,7 +324,7 @@ const AdminSettingsPage: React.FC = () => {
               name="metaTitle"
               value={seoSettings.metaTitle}
               onChange={handleSeoChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -334,7 +334,7 @@ const AdminSettingsPage: React.FC = () => {
               value={seoSettings.metaDescription}
               onChange={handleSeoChange}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div>
@@ -345,7 +345,7 @@ const AdminSettingsPage: React.FC = () => {
               value={seoSettings.googleAnalyticsId}
               onChange={handleSeoChange}
               placeholder="G-XXXXXXXXXX"
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         </div>
@@ -356,7 +356,7 @@ const AdminSettingsPage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-pink-600 text-white px-8 py-3 rounded-md hover:bg-pink-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i className={`fas ${saving ? 'fa-spinner fa-spin' : 'fa-save'} mr-2`}></i>
           {saving ? 'Saving...' : 'Save All Settings'}

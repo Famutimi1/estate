@@ -37,19 +37,19 @@ const AdminSchedulesPage: React.FC = () => {
     { value: '', label: 'All Statuses', badgeClassName: 'bg-gray-100 text-gray-700' },
     { value: 'pending', label: 'Pending', badgeClassName: 'bg-yellow-50 text-yellow-700' },
     { value: 'confirmed', label: 'Confirmed', badgeClassName: 'bg-green-50 text-green-700' },
-    { value: 'completed', label: 'Completed', badgeClassName: 'bg-blue-50 text-blue-700' },
+    { value: 'completed', label: 'Completed', badgeClassName: 'bg-pink-50 text-pink-700' },
     { value: 'cancelled', label: 'Cancelled', badgeClassName: 'bg-red-50 text-red-700' },
   ];
 
   const statusOptions: AdminSelectOption[] = [
     { value: 'pending', label: 'Pending', badgeClassName: 'bg-yellow-50 text-yellow-700' },
     { value: 'confirmed', label: 'Confirmed', badgeClassName: 'bg-green-50 text-green-700' },
-    { value: 'completed', label: 'Completed', badgeClassName: 'bg-blue-50 text-blue-700' },
+    { value: 'completed', label: 'Completed', badgeClassName: 'bg-pink-50 text-pink-700' },
     { value: 'cancelled', label: 'Cancelled', badgeClassName: 'bg-red-50 text-red-700' },
   ];
 
   const actionOptions: AdminSelectOption[] = [
-    { value: 'view', label: 'View', iconClassName: 'fas fa-eye text-blue-600' },
+    { value: 'view', label: 'View', iconClassName: 'fas fa-eye text-green-600' },
     { value: 'delete', label: 'Delete', iconClassName: 'fas fa-trash text-red-600' },
   ];
 
@@ -165,7 +165,7 @@ const AdminSchedulesPage: React.FC = () => {
       <div className="bg-white rounded-sm shadow-md overflow-hidden">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           </div>
         ) : schedules.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
@@ -214,7 +214,7 @@ const AdminSchedulesPage: React.FC = () => {
                       <div className="text-sm text-gray-500">{schedule.preferredTime}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-pink-100 text-pink-800">
                         {schedule.viewerType}
                       </span>
                     </td>

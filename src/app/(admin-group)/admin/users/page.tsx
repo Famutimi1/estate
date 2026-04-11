@@ -69,7 +69,7 @@ const AdminUsersPage: React.FC = () => {
   ];
 
   const actionOptions: AdminSelectOption[] = [
-    { value: 'preview', label: 'Preview', iconClassName: 'fas fa-eye text-blue-600' },
+    { value: 'preview', label: 'Preview', iconClassName: 'fas fa-eye text-green-600' },
     { value: 'edit', label: 'Edit', iconClassName: 'fas fa-edit text-gray-500' },
     { value: 'delete', label: 'Delete', iconClassName: 'fas fa-trash text-red-600' },
   ];
@@ -193,7 +193,7 @@ const AdminUsersPage: React.FC = () => {
 
   const statCards = data
     ? [
-        { label: 'Total Users', value: data.totalAll, icon: 'fa-users', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+        { label: 'Total Users', value: data.totalAll, icon: 'fa-users', bg: 'bg-green-100', iconColor: 'text-green-600' },
         { label: 'Regular Users', value: data.userCount, icon: 'fa-user', bg: 'bg-green-100', iconColor: 'text-green-600' },
         { label: 'Agents', value: data.agentCount, icon: 'fa-user-tie', bg: 'bg-orange-100', iconColor: 'text-orange-600' },
         { label: 'Admins', value: data.adminCount, icon: 'fa-user-shield', bg: 'bg-red-100', iconColor: 'text-red-600' },
@@ -230,7 +230,7 @@ const AdminUsersPage: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search by name or email..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -259,7 +259,7 @@ const AdminUsersPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
           </div>
         ) : (
           <>
@@ -281,7 +281,7 @@ const AdminUsersPage: React.FC = () => {
                     <tr key={user.id} className="border-t border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
+                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
                           <span className="font-medium text-gray-800">{user.name}</span>
@@ -349,7 +349,7 @@ const AdminUsersPage: React.FC = () => {
                           onClick={() => setCurrentPage(p)}
                           className={`px-3 py-1 rounded border text-sm ${
                             currentPage === p
-                              ? 'bg-blue-700 text-white border-blue-700'
+                              ? 'bg-green-700 text-white border-green-700'
                               : 'border-gray-300 hover:bg-gray-50'
                           }`}
                         >
@@ -383,7 +383,7 @@ const AdminUsersPage: React.FC = () => {
             </div>
             <div className="p-6">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-2xl">
+                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-2xl">
                   {selectedUser.name.charAt(0).toUpperCase()}
                 </div>
                 <div>

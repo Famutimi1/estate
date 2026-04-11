@@ -136,7 +136,7 @@ const Home: React.FC = () => {
         />
         <div className="absolute inset-0 flex items-center z-10">
           <div className="-mt-115 bg-black bg-opacity-70 opacity-75 md:-mt-70 p-2 max-w-2xl md:ml-10 md:rounded-lg text-white backdrop-blur-sm">
-            <div className="text-blue-300 font-medium mb-4">
+            <div className="text-green-300 font-medium mb-4">
               DISCOVER YOUR DREAM HOME
             </div>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -290,7 +290,7 @@ const Home: React.FC = () => {
           <div className="mt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-8 py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer !rounded-button whitespace-nowrap"
+              className="bg-green-600 text-white px-8 py-3 font-semibold hover:bg-green-700 transition-colors duration-200 cursor-pointer !rounded-button whitespace-nowrap"
             >
               SEARCH PROPERTIES
             </button>
@@ -334,7 +334,7 @@ const Home: React.FC = () => {
                 return (
                   <button 
                     key={pageNum}
-                    className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded-sm mr-2 ${currentPage === pageNum ? 'bg-blue-700 text-white' : 'hover:bg-gray-100'} cursor-pointer !rounded-button whitespace-nowrap`}
+                    className={`w-10 h-10 flex items-center justify-center border border-gray-300 rounded-sm mr-2 ${currentPage === pageNum ? 'bg-green-700 text-white' : 'hover:bg-gray-100'} cursor-pointer !rounded-button whitespace-nowrap`}
                     onClick={() => handlePageChange(pageNum)}
                   >
                     {pageNum}
@@ -355,24 +355,24 @@ const Home: React.FC = () => {
       </div>
 
       {/* Stats Counter Section */}
-      <div className="bg-blue-700 py-14">
+      <div className="bg-green-700 py-14">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">1,000+</div>
-              <div className="text-blue-200 text-sm md:text-base">Properties Listed</div>
+              <div className="text-green-200 text-sm md:text-base">Properties Listed</div>
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">1,000+</div>
-              <div className="text-blue-200 text-sm md:text-base">Happy Clients</div>
+              <div className="text-green-200 text-sm md:text-base">Happy Clients</div>
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">150+</div>
-              <div className="text-blue-200 text-sm md:text-base">Expert Agents</div>
+              <div className="text-green-200 text-sm md:text-base">Expert Agents</div>
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">98%</div>
-              <div className="text-blue-200 text-sm md:text-base">Client Satisfaction</div>
+              <div className="text-green-200 text-sm md:text-base">Client Satisfaction</div>
             </div>
           </div>
         </div>
@@ -387,25 +387,25 @@ const Home: React.FC = () => {
           </div>
           <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Search</h3>
               <p className="text-gray-600 text-sm">Browse our extensive collection of properties using advanced filters to narrow down your choices.</p>
-              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-green-200"></div>
             </div>
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Explore</h3>
               <p className="text-gray-600 text-sm">View detailed property information, high-quality photos, and virtual tours from the comfort of your home.</p>
-              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-pink-200"></div>
             </div>
             <div className="text-center relative">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Schedule</h3>
               <p className="text-gray-600 text-sm">Book a viewing at your convenience and visit the property with one of our experienced agents.</p>
-              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-blue-200"></div>
+              <div className="hidden md:block absolute top-8 left-[67%] w-[80%] border-t-2 border-dashed border-green-200"></div>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">4</div>
+              <div className="w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">4</div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Move In</h3>
               <p className="text-gray-600 text-sm">Complete the transaction securely and move into your new dream home with full support from our team.</p>
             </div>
@@ -422,8 +422,8 @@ const Home: React.FC = () => {
               <p className="text-gray-600 mb-8">We go beyond just listing properties. Our commitment to excellence and client satisfaction sets us apart in the real estate industry.</p>
               <div className="space-y-5">
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-search-location text-blue-600"></i>
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-search-location text-green-600"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Comprehensive Listings</h4>
@@ -431,8 +431,8 @@ const Home: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-hand-holding-usd text-blue-600"></i>
+                  <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <i className="fas fa-hand-holding-usd text-pink-600"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Best Price Guarantee</h4>
@@ -461,12 +461,12 @@ const Home: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                <i className="fas fa-home text-blue-600 text-3xl mb-3"></i>
+                <i className="fas fa-home text-green-600 text-3xl mb-3"></i>
                 <div className="text-2xl font-bold text-gray-800">500+</div>
                 <div className="text-gray-500 text-sm">Properties Sold</div>
               </div>
               <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                <i className="fas fa-key text-blue-600 text-3xl mb-3"></i>
+                <i className="fas fa-key text-pink-600 text-3xl mb-3"></i>
                 <div className="text-2xl font-bold text-gray-800">1,200+</div>
                 <div className="text-gray-500 text-sm">Properties Rented</div>
               </div>
@@ -494,10 +494,10 @@ const Home: React.FC = () => {
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">The team made our home buying experience seamless. From the first viewing to getting the keys, everything was handled professionally. We couldn&apos;t be happier with our new home!</p>
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg mr-3">A</div>
+                <div className="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-pink-700 font-bold text-lg mr-3">A</div>
                 <div>
                   <div className="font-semibold text-gray-800">Adebayo Johnson</div>
                   <div className="text-sm text-gray-500">Homeowner, Lagos</div>
@@ -510,10 +510,10 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">As a first-time investor, I was nervous about buying property. The agents here guided me through every step and helped me find a property that has already appreciated in value.</p>
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg mr-3">C</div>
+                <div className="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-pink-700 font-bold text-lg mr-3">C</div>
                 <div>
                   <div className="font-semibold text-gray-800">Chioma Okafor</div>
                   <div className="text-sm text-gray-500">Investor, Abuja</div>
@@ -526,7 +526,7 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-6 relative">
-              <div className="text-blue-600 text-4xl mb-4 leading-none">&ldquo;</div>
+              <div className="text-pink-600 text-4xl mb-4 leading-none">&ldquo;</div>
               <p className="text-gray-600 mb-6">I needed to find a rental quickly for my family relocation. Within a week, they found us the perfect apartment in a great neighborhood with excellent schools nearby.</p>
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold text-lg mr-3">E</div>
@@ -554,10 +554,10 @@ const Home: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {[
-              { name: 'Lagos', count: '1,000+ Properties', icon: 'fa-city', color: 'bg-blue-600' },
+              { name: 'Lagos', count: '1,000+ Properties', icon: 'fa-city', color: 'bg-green-600' },
               { name: 'Ogun', count: '400+ Properties', icon: 'fa-building', color: 'bg-green-600' },
-              { name: 'Oyo', count: '300+ Properties', icon: 'fa-landmark', color: 'bg-purple-600' },
-              { name: 'Abuja', count: '500+ Properties', icon: 'fa-gem', color: 'bg-red-600' },
+              { name: 'Oyo', count: '300+ Properties', icon: 'fa-landmark', color: 'bg-pink-600' },
+              { name: 'Abuja', count: '500+ Properties', icon: 'fa-gem', color: 'bg-green-600' },
             ].map((area) => (
               <div 
                 key={area.name} 
@@ -607,7 +607,7 @@ const Home: React.FC = () => {
                 },
               ].map((faq, index) => (
                 <details key={index} className="group bg-gray-50 rounded-lg">
-                  <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+                  <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-gray-800 hover:text-green-600 transition-colors">
                     <span>{faq.q}</span>
                     <i className="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform duration-200"></i>
                   </summary>
@@ -620,47 +620,47 @@ const Home: React.FC = () => {
       </div>
 
       {/* Contact Form Section */}
-      <div className="bg-blue-700 py-16" id="contact-section">
+      <div className="bg-green-700 py-16" id="contact-section">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
             <div className="text-white">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Get In Touch With Us</h2>
-              <p className="text-blue-200 mb-8 text-lg">Have a question or need help finding the perfect property? Send us a message and our team will get back to you within 24 hours.</p>
+              <p className="text-green-200 mb-8 text-lg">Have a question or need help finding the perfect property? Send us a message and our team will get back to you within 24 hours.</p>
               <div className="space-y-6">
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                     <i className="fas fa-map-marker-alt text-white text-lg"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Our Office</h4>
-                    <p className="text-blue-200 text-sm">123 Victoria Island, Lagos, Nigeria</p>
+                    <p className="text-green-200 text-sm">123 Victoria Island, Lagos, Nigeria</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                     <i className="fas fa-phone-alt text-white text-lg"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Phone</h4>
-                    <p className="text-blue-200 text-sm">+234 801 234 5678</p>
+                    <p className="text-green-200 text-sm">+234 801 234 5678</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                     <i className="fas fa-envelope text-white text-lg"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Email</h4>
-                    <p className="text-blue-200 text-sm">info@estate.com</p>
+                    <p className="text-green-200 text-sm">info@estate.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                     <i className="fas fa-clock text-white text-lg"></i>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Working Hours</h4>
-                    <p className="text-blue-200 text-sm">Mon - Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 4:00 PM</p>
+                    <p className="text-green-200 text-sm">Mon - Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 4:00 PM</p>
                   </div>
                 </div>
               </div>
@@ -692,7 +692,7 @@ const Home: React.FC = () => {
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -704,7 +704,7 @@ const Home: React.FC = () => {
                       value={contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
                       placeholder="your@email.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                     />
                   </div>
                   <div>
@@ -715,7 +715,7 @@ const Home: React.FC = () => {
                       value={contactPhone}
                       onChange={(e) => setContactPhone(e.target.value)}
                       placeholder="+234 800 000 0000"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                     />
                   </div>
                 </div>
@@ -727,13 +727,13 @@ const Home: React.FC = () => {
                     value={contactMessage}
                     onChange={(e) => setContactMessage(e.target.value)}
                     placeholder="Tell us how we can help you..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm resize-none"
                   ></textarea>
                 </div>
                 <button
                   type="submit"
                   disabled={contactSubmitting}
-                  className="w-full bg-blue-600 text-white py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-green-600 text-white py-3 font-semibold hover:bg-green-700 transition-colors duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {contactSubmitting ? (
                     <span className="flex items-center justify-center">
@@ -761,7 +761,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="bg-blue-600 text-white px-8 py-3 font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer rounded-sm"
+              className="bg-green-600 text-white px-8 py-3 font-semibold hover:bg-green-700 transition-colors duration-200 cursor-pointer rounded-sm"
             >
               <i className="fas fa-search mr-2"></i>
               Browse Properties

@@ -69,7 +69,7 @@ export default function PublicLayout({
     <>
       <FontAwesomeConfig />
       {/* Top Bar */}
-      <div className=" hidden bg-blue-900 text-white py-2 px-4 md:px-6 md:flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+      <div className=" hidden bg-green-900 text-white py-2 px-4 md:px-6 md:flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
         <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-2 md:space-y-0 text-xs md:text-sm">
           <ContactInfo variant="inline" />
         </div>
@@ -125,10 +125,10 @@ export default function PublicLayout({
               </div>
             ) : !currentUser ? (
               <div className="flex flex-col p-4 space-y-2">
-                <Link href="/auth/login" className="w-full py-2 px-4 bg-blue-700 text-black text-sm text-center rounded-sm hover:bg-pink-700 transition-colors duration-200">
+                <Link href="/auth/login" className="w-full py-2 px-4 bg-green-700 text-white text-sm text-center rounded-sm hover:bg-green-800 transition-colors duration-200">
                   LOGIN
                 </Link>
-                <Link href="/auth/register" className="w-full py-2 px-4 bg-pink-600 text-black text-sm text-center rounded-sm hover:bg-pink-700 transition-colors duration-200">
+                <Link href="/auth/register" className="w-full py-2 px-4 bg-pink-600 text-white text-sm text-center rounded-sm hover:bg-pink-700 transition-colors duration-200">
                   REGISTER
                 </Link>
               </div>
@@ -192,10 +192,10 @@ export default function PublicLayout({
             </div>
           ) : !currentUser ? (
             <>
-              <Link href="/auth/login" className="py-3 md:py-5 px-6 md:px-8 m-2 rounded-sm bg-blue-700 text-black text-sm flex items-center hover:bg-pink-700 transition-colors duration-200 whitespace-nowrap !rounded-button">
+              <Link href="/auth/login" className="py-3 md:py-5 px-6 md:px-8 m-2 rounded-sm bg-green-700 text-white text-sm flex items-center hover:bg-green-800 transition-colors duration-200 whitespace-nowrap !rounded-button">
                 LOGIN
               </Link>
-              <Link href="/auth/register" className="py-3 md:py-5 px-6 md:px-8 m-2 rounded-sm bg-pink-600 text-black text-sm flex items-center hover:bg-pink-700 transition-colors duration-200 whitespace-nowrap !rounded-button">
+              <Link href="/auth/register" className="py-3 md:py-5 px-6 md:px-8 m-2 rounded-sm bg-pink-600 text-white text-sm flex items-center hover:bg-pink-700 transition-colors duration-200 whitespace-nowrap !rounded-button">
                 REGISTER
               </Link>
             </>
@@ -276,7 +276,7 @@ export default function PublicLayout({
         </div>
       </div>
       {children}
-      <footer className="bg-blue-700 text-white py-12">
+      <footer className="bg-green-700 text-white py-12">
         <div className="container mx-auto px-6">
             <div className="flex flex-1 flex-col md:flex-row gap-8 justify-between  ">
             <div className="flex-1">
@@ -292,11 +292,11 @@ export default function PublicLayout({
               <div className="min-w-[150px]">
                 <h3 className="text-xl font-bold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
-                  <li><Link href="/" className="text-white hover:text-blue-200">Home</Link></li>
-                  <li><Link href="/properties" className="text-white hover:text-blue-200">Properties</Link></li>
-                  <li><Link href="/about" className="text-white hover:text-blue-200">About Us</Link></li>
-                  <li><Link href="/faq" className="text-white hover:text-blue-200">FAQ</Link></li>
-                  <li><Link href="/contact" className="text-white hover:text-blue-200">Contact Us</Link></li>
+                  <li><Link href="/" className="text-white hover:text-green-200">Home</Link></li>
+                  <li><Link href="/properties" className="text-white hover:text-green-200">Properties</Link></li>
+                  <li><Link href="/about" className="text-white hover:text-green-200">About Us</Link></li>
+                  <li><Link href="/faq" className="text-white hover:text-green-200">FAQ</Link></li>
+                  <li><Link href="/contact" className="text-white hover:text-green-200">Contact Us</Link></li>
                 </ul>
               </div>
               {/* <div className="min-w-[150px]">
@@ -309,10 +309,10 @@ export default function PublicLayout({
               <div className="min-w-[150px]">
                 <h3 className="text-xl font-bold mb-4">Cities</h3>
                 <ul className="space-y-2">
-                  <li><a href={`/properties?location=${encodeURIComponent('Lagos')}`} className="text-white hover:text-blue-200">Lagos</a></li>
-                  <li><a href={`/properties?location=${encodeURIComponent('Ogun')}`} className="text-white hover:text-blue-200">Ogun</a></li>
-                  <li><a href={`/properties?location=${encodeURIComponent('Oyo')}`} className="text-white hover:text-blue-200">Oyo</a></li>
-                  <li><a href={`/properties?location=${encodeURIComponent('Abuja')}`} className="text-white hover:text-blue-200">Abuja</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Lagos')}`} className="text-white hover:text-green-200">Lagos</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Ogun')}`} className="text-white hover:text-green-200">Ogun</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Oyo')}`} className="text-white hover:text-green-200">Oyo</a></li>
+                  <li><a href={`/properties?location=${encodeURIComponent('Abuja')}`} className="text-white hover:text-green-200">Abuja</a></li>
                 </ul>
               </div>
             </div>
@@ -325,9 +325,9 @@ export default function PublicLayout({
             <div className="flex justify-between items-center">
               <p>&copy; {new Date().getFullYear()} myHOME. All rights reserved.</p>
               <div className="flex space-x-4">
-                <Link href="/privacy" className="text-white hover:text-blue-200 text-sm">Privacy Policy</Link>
+                <Link href="/privacy" className="text-white hover:text-green-200 text-sm">Privacy Policy</Link>
                 <span className="text-white text-sm">•</span>
-                <Link href="/terms" className="text-white hover:text-blue-200 text-sm">Terms of Service</Link>
+                <Link href="/terms" className="text-white hover:text-green-200 text-sm">Terms of Service</Link>
               </div>
             </div>
           </div>

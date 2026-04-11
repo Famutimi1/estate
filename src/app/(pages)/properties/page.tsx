@@ -195,20 +195,20 @@ const PropertiesPage = () => {
     <div className="min-h-screen bg-gray-50">
     
       {/* Page Header */}
-      <div className="bg-blue-700 py-16 px-6">
+      <div className="bg-green-700 py-16 px-6">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl font-bold text-white mb-4">
             Browse Properties
             {appliedFilters.location && (
-              <span className="text-2xl font-normal text-blue-100 ml-3">
+              <span className="text-2xl font-normal text-green-100 ml-3">
                 in {appliedFilters.location}
               </span>
             )}
           </h1>
-          <p className="text-blue-100 text-lg max-w-2xl mx-auto">
+          <p className="text-green-100 text-lg max-w-2xl mx-auto">
             Find your perfect home from our wide selection of properties across Nigeria.
             {appliedFilters.location && (
-              <span className="block mt-2 text-blue-200">
+              <span className="block mt-2 text-green-200">
                 Showing properties in {appliedFilters.location}
               </span>
             )}
@@ -228,7 +228,7 @@ const PropertiesPage = () => {
                 id="search-location"
                 type="text"
                 placeholder="Enter location"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
@@ -239,7 +239,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="property-type"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
               >
@@ -257,7 +257,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="property-status"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={propertyStatus}
                 onChange={(e) => setPropertyStatus(e.target.value)}
               >
@@ -272,7 +272,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="min-price"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
               >
@@ -290,7 +290,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="max-price"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
               >
@@ -308,7 +308,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="bedrooms"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={bedrooms}
                 onChange={(e) => setBedrooms(e.target.value)}
               >
@@ -326,7 +326,7 @@ const PropertiesPage = () => {
               </label>
               <select
                 id="bathrooms"
-                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={bathrooms}
                 onChange={(e) => setBathrooms(e.target.value)}
               >
@@ -342,7 +342,7 @@ const PropertiesPage = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-blue-700 text-white px-8 py-3 rounded-sm hover:bg-blue-800 transition-colors duration-200"
+              className="bg-green-700 text-white px-8 py-3 rounded-sm hover:bg-green-800 transition-colors duration-200"
             >
               Search Properties
             </button>
@@ -356,7 +356,7 @@ const PropertiesPage = () => {
           <div className="text-gray-600">
             Showing <span className="font-bold">{isLoading ? '...' : properties.length}</span> of <span className="font-bold">{totalProperties}</span> properties
             {appliedFilters.location && (
-              <span className="ml-2 text-blue-600">
+              <span className="ml-2 text-green-600">
                 in {appliedFilters.location}
               </span>
             )}
@@ -380,7 +380,7 @@ const PropertiesPage = () => {
             <div>
               <label className="text-gray-600 mr-2 text-sm">Sort by:</label>
               <select
-                className="border border-gray-300 rounded-sm px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 rounded-sm px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -392,13 +392,13 @@ const PropertiesPage = () => {
             </div>
             <div className="flex border border-gray-300 rounded-sm">
               <button
-                className={`px-3 py-1 ${viewType === 'grid' ? 'bg-blue-700 text-white' : 'bg-white text-gray-600'}`}
+                className={`px-3 py-1 ${viewType === 'grid' ? 'bg-green-700 text-white' : 'bg-white text-gray-600'}`}
                 onClick={() => setViewType('grid')}
               >
                 <i className="fas fa-th-large"></i>
               </button>
               <button
-                className={`px-3 py-1 ${viewType === 'list' ? 'bg-blue-700 text-white' : 'bg-white text-gray-600'}`}
+                className={`px-3 py-1 ${viewType === 'list' ? 'bg-pink-700 text-white' : 'bg-white text-gray-600'}`}
                 onClick={() => setViewType('list')}
               >
                 <i className="fas fa-list"></i>
@@ -409,7 +409,7 @@ const PropertiesPage = () => {
 
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
           </div>
         ) : properties.length === 0 ? (
           <div className="text-center py-20">
@@ -429,31 +429,31 @@ const PropertiesPage = () => {
                       alt={property.title}
                       className="w-full h-64 object-cover"
                     />
-                    <div className="absolute top-4 left-4 bg-blue-700 text-white px-3 py-1 text-sm font-semibold">
+                    <div className="absolute top-4 left-4 bg-green-700 text-white px-3 py-1 text-sm font-semibold">
                       {property.property_status}
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
-                      <div className="text-xl font-bold text-blue-700">#{property.price.toLocaleString()}</div>
+                      <div className="text-xl font-bold text-green-700">#{property.price.toLocaleString()}</div>
                     </div>
                     <p className="text-gray-600 mb-4">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-blue-700" />
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-green-700" />
                       {property.address}
                     </p>
                     <p className="text-gray-700 mb-4 line-clamp-2">{property.description}</p>
                     <div className="flex justify-between text-gray-600 border-t border-gray-200 pt-4">
                       <div className="flex items-center">
-                        <FontAwesomeIcon icon={faBed} className="mr-2 text-blue-700" />
+                        <FontAwesomeIcon icon={faBed} className="mr-2 text-green-700" />
                         <span>{property.bedrooms} Beds</span>
                       </div>
                       <div className="flex items-center">
-                        <FontAwesomeIcon icon={faBath} className="mr-2 text-blue-700" />
+                        <FontAwesomeIcon icon={faBath} className="mr-2 text-pink-700" />
                         <span>{property.bathrooms} Baths</span>
                       </div>
                       <div className="flex items-center">
-                        <FontAwesomeIcon icon={faRulerCombined} className="mr-2 text-blue-700" />
+                        <FontAwesomeIcon icon={faRulerCombined} className="mr-2 text-green-700" />
                         <span>{property.area} {property.area_unit}</span>
                       </div>
                     </div>
@@ -476,31 +476,31 @@ const PropertiesPage = () => {
                         height={400}
                         className="w-full h-64 md:h-full object-cover"
                       />
-                      <div className="absolute top-4 left-4 bg-blue-700 text-white px-3 py-1 text-sm font-semibold">
+                      <div className="absolute top-4 left-4 bg-green-700 text-white px-3 py-1 text-sm font-semibold">
                         {property.property_status}
                       </div>
                     </div>
                     <div className="p-6 md:w-2/3">
                       <div className="flex justify-between items-start mb-4">
                         <h3 className="text-xl font-bold text-gray-800">{property.title}</h3>
-                        <div className="text-xl font-bold text-blue-700">#{property.price.toLocaleString()}</div>
+                        <div className="text-xl font-bold text-green-700">#{property.price.toLocaleString()}</div>
                       </div>
                       <p className="text-gray-600 mb-4">
-                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-blue-700" />
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-green-700" />
                         {property.address}
                       </p>
                       <p className="text-gray-700 mb-4">{property.description}</p>
                       <div className="flex justify-between text-gray-600 border-t border-gray-200 pt-4">
                         <div className="flex items-center">
-                          <i className="fas fa-bed mr-2 text-blue-700"></i>
+                          <i className="fas fa-bed mr-2 text-green-700"></i>
                           <span>{property.bedrooms} Beds</span>
                         </div>
                         <div className="flex items-center">
-                          <i className="fas fa-bath mr-2 text-blue-700"></i>
+                          <i className="fas fa-bath mr-2 text-pink-700"></i>
                           <span>{property.bathrooms} Baths</span>
                         </div>
                         <div className="flex items-center">
-                          <i className="fas fa-ruler-combined mr-2 text-blue-700"></i>
+                          <i className="fas fa-ruler-combined mr-2 text-green-700"></i>
                           <span>{property.area} {property.area_unit}</span>
                         </div>
                       </div>

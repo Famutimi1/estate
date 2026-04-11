@@ -364,20 +364,20 @@ const AddPropertyPage: React.FC = () => {
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="title">Property Title <span className="text-red-500">*</span></label>
                 <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter property title" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter property title" required />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="price">Price <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <span className="absolute left-3 top-3 text-gray-500">₦</span>
                   <input type="text" id="price" name="price" value={formData.price} onChange={handleInputChange}
-                    className="w-full p-3 pl-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter price" required />
+                    className="w-full p-3 pl-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter price" required />
                 </div>
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="property_status">Status <span className="text-red-500">*</span></label>
                 <select id="property_status" name="property_status" value={formData.property_status} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
                   <option value="">Select status</option>
                   <option value="sale">For Sale</option>
                   <option value="rent">For Rent</option>
@@ -386,7 +386,7 @@ const AddPropertyPage: React.FC = () => {
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="property_type">Property Type <span className="text-red-500">*</span></label>
                 <select id="property_type" name="property_type" value={formData.property_type} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
                   <option value="">Select type</option>
                   <option value="house">House</option>
                   <option value="apartment">Apartment</option>
@@ -398,7 +398,7 @@ const AddPropertyPage: React.FC = () => {
               <div className="md:col-span-2">
                 <label className="block text-gray-700 mb-2" htmlFor="description">Description <span className="text-red-500">*</span></label>
                 <textarea id="description" name="description" value={formData.description} onChange={handleInputChange} rows={5}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter property description" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter property description" required />
               </div>
             </div>
           </div>
@@ -410,22 +410,22 @@ const AddPropertyPage: React.FC = () => {
               <div className="md:col-span-2">
                 <label className="block text-gray-700 mb-2" htmlFor="address">Address <span className="text-red-500">*</span></label>
                 <input type="text" id="address" name="address" value={formData.address} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter street address" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter street address" required />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="city">City <span className="text-red-500">*</span></label>
                 <input type="text" id="city" name="city" value={formData.city} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter city" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter city" required />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="state">State <span className="text-red-500">*</span></label>
                 <input type="text" id="state" name="state" value={formData.state} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter state" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter state" required />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="zipCode">ZIP Code <span className="text-red-500">*</span></label>
                 <input type="text" id="zipCode" name="zipCode" value={formData.zipCode} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter ZIP code" required />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter ZIP code" required />
               </div>
             </div>
           </div>
@@ -437,22 +437,22 @@ const AddPropertyPage: React.FC = () => {
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="bedrooms">Bedrooms</label>
                 <input type="number" id="bedrooms" name="bedrooms" value={formData.bedrooms} onChange={handleInputChange} min="0"
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Bedrooms" />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Bedrooms" />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="bathrooms">Bathrooms</label>
                 <input type="number" id="bathrooms" name="bathrooms" value={formData.bathrooms} onChange={handleInputChange} min="0" step="0.5"
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Bathrooms" />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Bathrooms" />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="area">Area (sq ft)</label>
                 <input type="number" id="area" name="area" value={formData.area} onChange={handleInputChange} min="0"
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Area" />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Area" />
               </div>
               <div>
                 <label className="block text-gray-700 mb-2" htmlFor="garageSpaces">Garage Spaces</label>
                 <input type="number" id="garageSpaces" name="garageSpaces" value={formData.garageSpaces} onChange={handleInputChange} min="0"
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Garage spaces" />
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Garage spaces" />
               </div>
             </div>
 
@@ -461,7 +461,7 @@ const AddPropertyPage: React.FC = () => {
               {Object.entries(formData.amenities).map(([key, checked]) => (
                 <div key={key} className="flex items-center">
                   <input type="checkbox" id={key} name={key} checked={checked} onChange={handleCheckboxChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" />
                   <label htmlFor={key} className="ml-2 text-gray-700 capitalize">
                     {key.replace(/([A-Z])/g, ' $1').trim()}
                   </label>
@@ -483,8 +483,8 @@ const AddPropertyPage: React.FC = () => {
               <i className="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">Drag & Drop or Click to Upload</h3>
               <p className="text-gray-500 mb-4">Upload high quality images (max 10 files)</p>
-              {isUploadingImages && <p className="text-sm text-blue-700 mb-2">Uploading images...</p>}
-              <button type="button" className="bg-blue-800 text-white px-6 py-2 font-semibold hover:bg-blue-900 transition-colors rounded-md"
+              {isUploadingImages && <p className="text-sm text-green-700 mb-2">Uploading images...</p>}
+              <button type="button" className="bg-green-800 text-white px-6 py-2 font-semibold hover:bg-green-900 transition-colors rounded-md"
                 onClick={() => fileInputRef.current?.click()} disabled={isUploadingImages}>
                 Browse Files
               </button>
