@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
 import { useSettings } from "@/contexts/SettingsContext";
+import { usePathname } from "next/navigation";
 import SocialMediaLinks from "@/components/SocialMediaLinks";
 import ContactInfo from "@/components/ContactInfo";
 import {
@@ -32,7 +33,22 @@ export default function PublicLayout({
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: currentUser, loading: authLoading } = useAuth();
   const { settings } = useSettings();
+  const pathname = usePathname();
   const displayName = currentUser?.name?.split(' ')[0] || 'User';
+
+  const navLink = (href: string, exact = false) => {
+    const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href + '/');
+    return isActive
+      ? 'py-1 px-4 md:px-6 bg-green-700 text-white text-sm flex items-center transition-colors duration-200'
+      : 'py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200';
+  };
+
+  const mobileNavLink = (href: string, exact = false) => {
+    const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href + '/');
+    return isActive
+      ? 'px-4 py-2 text-sm bg-green-700 text-white'
+      : 'px-4 py-2 text-gray-600 text-sm hover:bg-gray-100';
+  };
 
   // Fetch favorites count
   useEffect(() => {
@@ -102,21 +118,19 @@ export default function PublicLayout({
           </div>
         </div>
         <nav className="hidden md:flex flex-1">
-          <Link href="/" className="py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200">Home</Link>
-          <Link href="/about" className="py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200">About us</Link>
-          <Link href="/properties" className="py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200">Listings</Link>
-          {/* <Link href="/news" className="py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200">News</Link> */}
-          <Link href="/contact" className="py-1 px-4 md:px-6 bg-white text-gray-600 text-sm flex items-center hover:bg-gray-100 transition-colors duration-200">Contact</Link>
+          <Link href="/" className={navLink('/', true)}>Home</Link>
+          <Link href="/about" className={navLink('/about')}>About us</Link>
+          <Link href="/properties" className={navLink('/properties')}>Listings</Link>
+          <Link href="/contact" className={navLink('/contact')}>Contact</Link>
         </nav>
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden w-full bg-white shadow-lg rounded-b-lg absolute top-full left-0 z-50">
             <nav className="flex flex-col py-2">
-              <Link href="/" className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">Home</Link>
-              <Link href="/about" className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">About us</Link>
-              <Link href="/properties" className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">Listings</Link>
-              {/* <Link href="/news" className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">News</Link> */}
-              <Link href="/contact" className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">Contact</Link>
+              <Link href="/" className={mobileNavLink('/', true)}>Home</Link>
+              <Link href="/about" className={mobileNavLink('/about')}>About us</Link>
+              <Link href="/properties" className={mobileNavLink('/properties')}>Listings</Link>
+              <Link href="/contact" className={mobileNavLink('/contact')}>Contact</Link>
             </nav>
             {authLoading ? (
               <div className="flex flex-col p-4 space-y-2">

@@ -50,7 +50,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
           padding: 20px;
         }
         .header {
-          background: linear-gradient(135deg, #2563eb, #1e40af);
+          background: linear-gradient(135deg, #15803d, #166534);
           color: white;
           padding: 30px;
           text-align: center;
@@ -63,7 +63,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
         }
         .button {
           display: inline-block;
-          background: #2563eb;
+          background: #15803d;
           color: white;
           padding: 12px 30px;
           text-decoration: none;
@@ -72,7 +72,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
           margin: 20px 0;
         }
         .button:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .footer {
           text-align: center;
@@ -156,7 +156,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
           padding: 20px;
         }
         .header {
-          background: linear-gradient(135deg, #2563eb, #1e40af);
+          background: linear-gradient(135deg, #15803d, #166534);
           color: white;
           padding: 30px;
           text-align: center;
@@ -169,7 +169,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
         }
         .button {
           display: inline-block;
-          background: #2563eb;
+          background: #15803d;
           color: white;
           padding: 12px 30px;
           text-decoration: none;
@@ -178,7 +178,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
           margin: 20px 0;
         }
         .button:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .footer {
           text-align: center;
@@ -189,7 +189,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
         .welcome-icon {
           width: 80px;
           height: 80px;
-          background: #2563eb;
+          background: #15803d;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -197,14 +197,14 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
           margin: 0 auto 20px;
         }
         .feature-list {
-          background: #e0f2fe;
-          border-left: 4px solid #2563eb;
+          background: #dcfce7;
+          border-left: 4px solid #15803d;
           padding: 20px;
           margin: 20px 0;
           border-radius: 6px;
         }
         .feature-list h3 {
-          color: #1e40af;
+          color: #166534;
           margin-top: 0;
         }
         .feature-list ul {
@@ -377,7 +377,7 @@ function generateRegistrationNotificationHTML(data: {
           font-size: 12px;
           font-weight: bold;
           color: white;
-          background: ${data.role === 'admin' ? '#dc2626' : data.role === 'agent' ? '#2563eb' : '#10b981'};
+          background: ${data.role === 'admin' ? '#dc2626' : data.role === 'agent' ? '#15803d' : '#16a34a'};
         }
         .action-buttons {
           display: flex;
@@ -393,10 +393,10 @@ function generateRegistrationNotificationHTML(data: {
           transition: background-color 0.3s;
         }
         .btn-primary {
-          background: #2563eb;
+          background: #15803d;
         }
         .btn-primary:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .btn-secondary {
           background: #6b7280;
@@ -427,12 +427,12 @@ function generateRegistrationNotificationHTML(data: {
           
           <div class="info-label">Email:</div>
           <div class="info-value">
-            <a href="mailto:${data.email}" style="color: #2563eb;">${data.email}</a>
+            <a href="mailto:${data.email}" style="color: #15803d;">${data.email}</a>
           </div>
           
           <div class="info-label">Phone:</div>
           <div class="info-value">
-            ${data.phone ? `<a href="tel:${data.phone}" style="color: #2563eb;">${data.phone}</a>` : 'Not provided'}
+            ${data.phone ? `<a href="tel:${data.phone}" style="color: #15803d;">${data.phone}</a>` : 'Not provided'}
           </div>
           
           <div class="info-label">Account Type:</div>
@@ -447,6 +447,7 @@ function generateRegistrationNotificationHTML(data: {
         <div class="action-buttons">
           <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/users" class="btn btn-primary">View User</a>
           <a href="mailto:${data.email}" class="btn btn-secondary">Contact User</a>
+
         </div>
         
         <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px; padding: 15px; margin: 20px 0;">
@@ -492,7 +493,7 @@ function generateContactNotificationHTML(data: {
           padding: 20px;
         }
         .header {
-          background: linear-gradient(135deg, #2563eb, #1e40af);
+          background: linear-gradient(135deg, #15803d, #166534);
           color: white;
           padding: 30px;
           text-align: center;
@@ -520,8 +521,8 @@ function generateContactNotificationHTML(data: {
           color: #4b5563;
         }
         .message-box {
-          background: #e0f2fe;
-          border-left: 4px solid #2563eb;
+          background: #dcfce7;
+          border-left: 4px solid #15803d;
           padding: 20px;
           margin: 20px 0;
           border-radius: 6px;
@@ -540,10 +541,10 @@ function generateContactNotificationHTML(data: {
           transition: background-color 0.3s;
         }
         .btn-primary {
-          background: #2563eb;
+          background: #15803d;
         }
         .btn-primary:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .btn-secondary {
           background: #6b7280;
@@ -574,12 +575,12 @@ function generateContactNotificationHTML(data: {
           
           <div class="info-label">Email:</div>
           <div class="info-value">
-            <a href="mailto:${data.email}" style="color: #2563eb;">${data.email}</a>
+            <a href="mailto:${data.email}" style="color: #15803d;">${data.email}</a>
           </div>
           
           <div class="info-label">Phone:</div>
           <div class="info-value">
-            ${data.phone ? `<a href="tel:${data.phone}" style="color: #2563eb;">${data.phone}</a>` : 'Not provided'}
+            ${data.phone ? `<a href="tel:${data.phone}" style="color: #15803d;">${data.phone}</a>` : 'Not provided'}
           </div>
           
           <div class="info-label">Subject:</div>
@@ -680,7 +681,7 @@ function generateScheduleNotificationHTML(data: {
           font-size: 12px;
           font-weight: bold;
           color: white;
-          background: ${data.viewerType === 'buyer' ? '#10b981' : data.viewerType === 'renter' ? '#2563eb' : '#f59e0b'};
+          background: ${data.viewerType === 'buyer' ? '#15803d' : data.viewerType === 'renter' ? '#16a34a' : '#f59e0b'};
         }
         .message-box {
           background: #fef3c7;
@@ -703,10 +704,10 @@ function generateScheduleNotificationHTML(data: {
           transition: background-color 0.3s;
         }
         .btn-primary {
-          background: #2563eb;
+          background: #15803d;
         }
         .btn-primary:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .btn-secondary {
           background: #6b7280;
@@ -715,10 +716,10 @@ function generateScheduleNotificationHTML(data: {
           background: #4b5563;
         }
         .btn-success {
-          background: #10b981;
+          background: #16a34a;
         }
         .btn-success:hover {
-          background: #059669;
+          background: #15803d;
         }
         .footer {
           text-align: center;
@@ -743,12 +744,12 @@ function generateScheduleNotificationHTML(data: {
           
           <div class="info-label">Email:</div>
           <div class="info-value">
-            <a href="mailto:${data.email}" style="color: #2563eb;">${data.email}</a>
+            <a href="mailto:${data.email}" style="color: #15803d;">${data.email}</a>
           </div>
           
           <div class="info-label">Phone:</div>
           <div class="info-value">
-            <a href="tel:${data.phone}" style="color: #2563eb;">${data.phone}</a>
+            <a href="tel:${data.phone}" style="color: #15803d;">${data.phone}</a>
           </div>
           
           <div class="info-label">Viewer Type:</div>
@@ -759,7 +760,7 @@ function generateScheduleNotificationHTML(data: {
           <div class="info-label">Property:</div>
           <div class="info-value">
             ${data.propertyTitle ? `
-              <a href="${process.env.NEXT_PUBLIC_APP_URL}/properties/${data.propertyId}" style="color: #2563eb;">
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/properties/${data.propertyId}" style="color: #15803d;">
                 ${data.propertyTitle}
               </a>
             ` : 'General Inquiry'}
@@ -839,7 +840,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
         }
         .button {
           display: inline-block;
-          background: #2563eb;
+          background: #15803d;
           color: white;
           padding: 12px 30px;
           text-decoration: none;
@@ -848,7 +849,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
           margin: 20px 0;
         }
         .button:hover {
-          background: #1e40af;
+          background: #166534;
         }
         .footer {
           text-align: center;
