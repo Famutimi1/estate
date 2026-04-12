@@ -192,7 +192,7 @@ const AdminDashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
@@ -202,13 +202,13 @@ const AdminDashboard: React.FC = () => {
   }
 
   const summaryCards = [
-    { label: 'Total Users', value: stats.totalUsers, icon: 'fa-users', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+    { label: 'Total Users', value: stats.totalUsers, icon: 'fa-users', bg: 'bg-green-100', iconColor: 'text-green-600' },
     { label: 'Total Properties', value: stats.totalProperties, icon: 'fa-building', bg: 'bg-green-100', iconColor: 'text-green-600' },
     { label: 'For Sale', value: stats.propertiesForSale, icon: 'fa-tag', bg: 'bg-orange-100', iconColor: 'text-orange-600' },
     { label: 'For Rent', value: stats.propertiesForRent, icon: 'fa-key', bg: 'bg-purple-100', iconColor: 'text-purple-600' },
     { label: 'Published', value: stats.publishedProperties, icon: 'fa-check-circle', bg: 'bg-emerald-100', iconColor: 'text-emerald-600' },
     { label: 'Drafts', value: stats.draftProperties, icon: 'fa-file-alt', bg: 'bg-yellow-100', iconColor: 'text-yellow-600' },
-    { label: 'Favorites', value: stats.totalFavorites, icon: 'fa-heart', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+    { label: 'Favorites', value: stats.totalFavorites, icon: 'fa-heart', bg: 'bg-pink-100', iconColor: 'text-pink-600' },
   ];
 
   const formatMonthLabel = (monthStr: string) => {
@@ -270,16 +270,16 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
-          <Link href="/admin/add-property" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+          <Link href="/admin/add-property" className="bg-green-500 text-white px-5 py-2.5 rounded-md hover:bg-green-600 transition-colors font-medium border border-green-500">
             <i className="fas fa-plus mr-2 text-white"></i>Add Property
           </Link>
-          <Link href="/admin/properties" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+          <Link href="/admin/properties" className="bg-pink-500 text-white px-5 py-2.5 rounded-md hover:bg-pink-600 transition-colors font-medium border border-pink-500">
             <i className="fas fa-building mr-2 text-white"></i>View Properties
           </Link>
-          <Link href="/admin/users" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+          <Link href="/admin/users" className="bg-green-500 text-white px-5 py-2.5 rounded-md hover:bg-green-600 transition-colors font-medium border border-green-500">
             <i className="fas fa-users mr-2 text-white"></i>Manage Users
           </Link>
-          <Link href="/admin/settings" className="bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 transition-colors font-medium border border-blue-500">
+          <Link href="/admin/settings" className="bg-pink-500 text-white px-5 py-2.5 rounded-md hover:bg-pink-600 transition-colors font-medium border border-pink-500">
             <i className="fas fa-cog mr-2 text-white"></i>Settings
           </Link>
         </div>
@@ -290,7 +290,7 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Recent Properties</h2>
-            <Link href="/admin/properties" className="text-sm text-blue-600 hover:underline">View All</Link>
+            <Link href="/admin/properties" className="text-sm text-green-600 hover:underline">View All</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -309,7 +309,7 @@ const AdminDashboard: React.FC = () => {
                     <td className="py-3 px-2 text-gray-600">₦{p.price.toLocaleString()}</td>
                     <td className="py-3 px-2">
                       <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                        p.propertyStatus === 'ForSale' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                        p.propertyStatus === 'ForSale' ? 'bg-green-100 text-green-700' : 'bg-pink-100 text-pink-700'
                       }`}>
                         {p.propertyStatus === 'ForSale' ? 'For Sale' : 'For Rent'}
                       </span>
@@ -329,7 +329,7 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Recent Users</h2>
-            <Link href="/admin/users" className="text-sm text-blue-600 hover:underline">View All</Link>
+            <Link href="/admin/users" className="text-sm text-green-600 hover:underline">View All</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -371,8 +371,8 @@ const AdminDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mt-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Property Overview</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <p className="text-3xl font-bold text-blue-700">{stats.propertiesForSale}</p>
+          <div className="text-center p-4 bg-green-50 rounded-lg">
+            <p className="text-3xl font-bold text-green-700">{stats.propertiesForSale}</p>
             <p className="text-sm text-gray-600 mt-1">For Sale</p>
           </div>
           <div className="text-center p-4 bg-purple-50 rounded-lg">

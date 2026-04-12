@@ -67,7 +67,7 @@ export default function FavoritesPage() {
           <p>{error}</p>
           <button 
             onClick={fetchFavorites}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
             Try Again
           </button>
@@ -96,7 +96,7 @@ export default function FavoritesPage() {
           <p className="text-gray-500 mb-6">Start exploring and save properties you love!</p>
           <Link
             href="/"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700"
           >
             Browse Properties
           </Link>
@@ -119,7 +119,7 @@ export default function FavoritesPage() {
                     className="object-cover rounded-l-lg"
                   />
                   <div className={`absolute top-4 left-4 ${
-                    (property.propertyStatus || property.status) === 'For Sale' ? 'bg-blue-700' : 'bg-blue-500'
+                    (property.propertyStatus || property.status) === 'For Sale' ? 'bg-green-700' : 'bg-pink-500'
                   } text-white px-3 py-1 text-sm font-semibold rounded`}>
                     {property.propertyStatus || property.status}
                   </div>
@@ -142,19 +142,19 @@ export default function FavoritesPage() {
                       {/* Property Features */}
                       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                         <div className="flex items-center">
-                          <svg className="w-4 h-4 mr-1 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                           </svg>
                           {property.bedrooms} Beds
                         </div>
                         <div className="flex items-center">
-                          <svg className="w-4 h-4 mr-1 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 mr-1 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
                           </svg>
                           {property.bathrooms} Baths
                         </div>
                         <div className="flex items-center">
-                          <svg className="w-4 h-4 mr-1 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                           </svg>
                           {property.area} {property.area_unit}
@@ -164,11 +164,11 @@ export default function FavoritesPage() {
                     
                     <div className="text-right">
                       <p className={`text-lg font-bold ${
-                        (property.property_status || property.status) === 'For Sale' ? 'text-blue-700' : 'text-blue-500'
+                        (property.property_status || property.status) === 'For Sale' ? 'text-green-700' : 'text-pink-500'
                       }`}>
                         {formatPrice(property.price, property.property_status || property.status)}
                       </p>
-                      <button className="mt-2 rounded-sm border border-blue-600 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors">
+                      <button className="mt-2 rounded-sm border border-green-600 px-4 py-2 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors">
                         View Details
                       </button>
                     </div>

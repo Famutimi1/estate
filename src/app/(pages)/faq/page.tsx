@@ -185,8 +185,8 @@ const FAQPage: React.FC = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-            <FontAwesomeIcon icon={faQuestionCircle} className="text-3xl text-blue-600" />
+          <div className="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <FontAwesomeIcon icon={faQuestionCircle} className="text-3xl text-green-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -204,7 +204,7 @@ const FAQPage: React.FC = () => {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-4 py-2 rounded-full font-medium transition-colors ${
                   selectedCategory === category.id
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-green-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -227,7 +227,7 @@ const FAQPage: React.FC = () => {
                   {faq.icon && (
                     <FontAwesomeIcon 
                       icon={faq.icon} 
-                      className="text-blue-600 mr-4 text-lg" 
+                      className="text-green-600 mr-4 text-lg" 
                     />
                   )}
                   <h3 className="text-lg font-semibold text-gray-800">{faq.question}</h3>
@@ -250,23 +250,23 @@ const FAQPage: React.FC = () => {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-blue-600 text-white rounded-lg p-8 mt-12">
+        <div className="bg-gradient-to-r from-green-600 to-pink-600 text-white rounded-lg p-8 mt-12">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Still Have Questions?</h2>
-            <p className="text-blue-100 mb-6">
+            <p className="text-green-100 mb-6">
               Can't find the answer you're looking for? Our support team is here to help!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href={`mailto:${settings?.contactEmail || 'support@myhome.ng'}`}
-                className="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors"
+                className="bg-white text-green-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors"
               >
                 <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                 Email Support
               </a>
               <a 
                 href={`tel:${settings?.contactPhone || '+2348000000000'}`}
-                className="bg-blue-700 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-800 transition-colors"
+                className="bg-pink-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-pink-700 transition-colors"
               >
                 <FontAwesomeIcon icon={faPhone} className="mr-2" />
                 Call Us
@@ -278,19 +278,19 @@ const FAQPage: React.FC = () => {
         {/* Quick Stats */}
         <div className="grid md:grid-cols-4 gap-6 mt-12">
           <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">1000+</div>
+            <div className="text-3xl font-bold text-green-600 mb-2">1000+</div>
             <div className="text-gray-600">Properties Listed</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
+            <div className="text-3xl font-bold text-pink-600 mb-2">500+</div>
             <div className="text-gray-600">Happy Clients</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
+            <div className="text-3xl font-bold text-green-600 mb-2">24/7</div>
             <div className="text-gray-600">Support Available</div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">18</div>
+            <div className="text-3xl font-bold text-pink-600 mb-2">18</div>
             <div className="text-gray-600">FAQ Questions</div>
           </div>
         </div>

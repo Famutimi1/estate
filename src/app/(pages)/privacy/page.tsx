@@ -13,8 +13,8 @@ const PrivacyPage: React.FC = () => {
       <div className="container mx-auto px-6 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-            <FontAwesomeIcon icon={faShieldAlt} className="text-3xl text-blue-600" />
+          <div className="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <FontAwesomeIcon icon={faShieldAlt} className="text-3xl text-green-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Privacy Policy</h1>
           <p className="text-lg text-gray-600">
@@ -42,7 +42,7 @@ const PrivacyPage: React.FC = () => {
           
           <div className="mb-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faUserShield} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faUserShield} className="mr-2 text-green-600" />
               Personal Information
             </h3>
             <ul className="list-disc list-inside text-gray-600 space-y-2">
@@ -55,7 +55,7 @@ const PrivacyPage: React.FC = () => {
 
           <div className="mb-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faDatabase} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faDatabase} className="mr-2 text-pink-600" />
               Usage Information
             </h3>
             <ul className="list-disc list-inside text-gray-600 space-y-2">
@@ -68,7 +68,7 @@ const PrivacyPage: React.FC = () => {
 
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faLock} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faLock} className="mr-2 text-green-600" />
               Property Information
             </h3>
             <ul className="list-disc list-inside text-gray-600 space-y-2">

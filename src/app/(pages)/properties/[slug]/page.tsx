@@ -216,7 +216,7 @@ const PropertyDetail = () => {
         return (
             <div className="container max-w-screen px-6 py-8">
                 <div className="flex justify-center items-center h-96">
-                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-600"></div>
                 </div>
             </div>
         );
@@ -229,7 +229,7 @@ const PropertyDetail = () => {
                     <h2 className="text-2xl font-bold text-red-500 mb-4">{error || 'Property not found'}</h2>
                     <button
                         onClick={onBack}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
                         Go Back
                     </button>
@@ -241,7 +241,7 @@ const PropertyDetail = () => {
         <div className="container bg-[#f9fafc] max-w-screen px-6 py-8">
             {/* Breadcrumb */}
             <div className="flex items-center text-sm text-gray-600 mb-8">
-                <button onClick={onBack} className="hover:text-blue-600 cursor-pointer">
+                <button onClick={onBack} className="hover:text-green-600 cursor-pointer">
                     <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                     Home
                 </button>
@@ -253,12 +253,12 @@ const PropertyDetail = () => {
                 <div>
                     <h1 className="text-4xl font-bold text-gray-800 mb-2">{property.title}</h1>
                     <p className="text-gray-600 flex items-center">
-                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-blue-600" />
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-green-600" />
                         {property.address}
                     </p>
                 </div>
                 <div className="text-right">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">#{property.price.toLocaleString()}</div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">#{property.price.toLocaleString()}</div>
                     <div className="text-gray-600">#{Math.round(property.price / property.area).toLocaleString()} / {property.area_unit}</div>
                 </div>
             </div>
@@ -316,8 +316,8 @@ const PropertyDetail = () => {
                         key={tab}
                         onClick={() => setActiveTab(tab as 'overview' | 'map' | 'video')}
                         className={`px-6 py-3 font-semibold capitalize whitespace-nowrap !rounded-button cursor-pointer ${activeTab === tab
-                            ? 'text-blue-600 border-b-2 border-blue-600'
-                            : 'text-gray-600 hover:text-blue-600'
+                            ? 'text-green-600 border-b-2 border-green-600'
+                            : 'text-gray-600 hover:text-green-600'
                             }`}
                     >
                         {tab}
@@ -336,28 +336,28 @@ const PropertyDetail = () => {
                             </p>
                             <div className="grid grid-cols-2 gap-6 mb-8">
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faBed} className="text-2xl text-blue-600 mr-4" />
+                                    <FontAwesomeIcon icon={faBed} className="text-2xl text-green-600 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Bedrooms</div>
                                         <div className="text-xl font-semibold">{property.bedrooms}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faBath} className="text-2xl text-blue-600 mr-4" />
+                                    <FontAwesomeIcon icon={faBath} className="text-2xl text-pink-600 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Bathrooms</div>
                                         <div className="text-xl font-semibold">{property.bathrooms}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faRulerCombined} className="text-2xl text-blue-600 mr-4" />
+                                    <FontAwesomeIcon icon={faRulerCombined} className="text-2xl text-green-600 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Area</div>
                                         <div className="text-xl font-semibold">{property.area.toLocaleString()} {property.area_unit}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faCar} className="text-2xl text-blue-600 mr-4" />
+                                    <FontAwesomeIcon icon={faCar} className="text-2xl text-pink-600 mr-4" />
                                     <div>
                                         <div className="text-gray-600">Garage</div>
                                         <div className="text-xl font-semibold">{0} Cars</div>
@@ -367,35 +367,35 @@ const PropertyDetail = () => {
                             <h3 className="text-xl font-bold text-gray-800 mb-4">Additional Features</h3>
                             <ul className="grid grid-cols-2 gap-4 text-gray-600">
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Infinity Pool
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Smart Home System
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Wine Cellar
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Home Theater
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Gym
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Spa Bathroom
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Outdoor Kitchen
                                 </li>
                                 <li className="flex items-center">
-                                    <FontAwesomeIcon icon={faCheck} className="text-blue-600 mr-2" />
+                                    <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
                                     Private Beach Access
                                 </li>
                             </ul>
@@ -451,7 +451,7 @@ const PropertyDetail = () => {
                                         download
                                         className="flex items-center p-4 border border-gray-200 rounded-sm hover:bg-gray-50 cursor-pointer"
                                     >
-                                        <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
+                                        <FontAwesomeIcon icon={faFileAlt} className="text-green-500 text-2xl mr-3" />
                                         <div>
                                             <div className="font-medium">Floor Plans</div>
                                             <div className="text-sm text-gray-500">Click to view/download</div>
@@ -459,7 +459,7 @@ const PropertyDetail = () => {
                                     </a>
                                 ) : (
                                     <div className="flex items-center p-4 border border-gray-200 rounded-sm opacity-50 cursor-not-allowed">
-                                        <FontAwesomeIcon icon={faFileAlt} className="text-blue-500 text-2xl mr-3" />
+                                        <FontAwesomeIcon icon={faFileAlt} className="text-green-500 text-2xl mr-3" />
                                         <div>
                                             <div className="font-medium">Floor Plans</div>
                                             <div className="text-sm text-gray-500">Not available</div>

@@ -62,7 +62,7 @@ const AdminPropertiesPage: React.FC = () => {
 
   const propertyTypeOptions: AdminSelectOption[] = [
     { value: '', label: 'All Types', badgeClassName: 'bg-gray-100 text-gray-700' },
-    { value: 'house', label: 'House', badgeClassName: 'bg-blue-50 text-blue-700' },
+    { value: 'house', label: 'House', badgeClassName: 'bg-green-50 text-green-700' },
     { value: 'apartment', label: 'Apartment', badgeClassName: 'bg-purple-50 text-purple-700' },
     { value: 'villa', label: 'Villa', badgeClassName: 'bg-green-50 text-green-700' },
     { value: 'commercial', label: 'Commercial Land', badgeClassName: 'bg-orange-50 text-orange-700' },
@@ -71,7 +71,7 @@ const AdminPropertiesPage: React.FC = () => {
 
   const listingOptions: AdminSelectOption[] = [
     { value: '', label: 'All Listings', badgeClassName: 'bg-gray-100 text-gray-700' },
-    { value: 'ForSale', label: 'For Sale', badgeClassName: 'bg-blue-50 text-blue-700' },
+    { value: 'ForSale', label: 'For Sale', badgeClassName: 'bg-green-50 text-green-700' },
     { value: 'ForRent', label: 'For Rent', badgeClassName: 'bg-purple-50 text-purple-700' },
   ];
 
@@ -95,7 +95,7 @@ const AdminPropertiesPage: React.FC = () => {
   ];
 
   const actionOptions: AdminSelectOption[] = [
-    { value: 'preview', label: 'Preview', iconClassName: 'fas fa-eye text-blue-600' },
+    { value: 'preview', label: 'Preview', iconClassName: 'fas fa-eye text-green-600' },
     { value: 'edit', label: 'Edit', iconClassName: 'fas fa-edit text-gray-500' },
     { value: 'delete', label: 'Delete', iconClassName: 'fas fa-trash text-red-600' },
   ];
@@ -226,7 +226,7 @@ const AdminPropertiesPage: React.FC = () => {
 
   const statCards = stats
     ? [
-        { label: 'Total Properties', value: stats.totalProperties, icon: 'fa-building', bg: 'bg-blue-100', iconColor: 'text-blue-600' },
+        { label: 'Total Properties', value: stats.totalProperties, icon: 'fa-building', bg: 'bg-green-100', iconColor: 'text-green-600' },
         { label: 'For Sale', value: stats.propertiesForSale, icon: 'fa-tag', bg: 'bg-green-100', iconColor: 'text-green-600' },
         { label: 'For Rent', value: stats.propertiesForRent, icon: 'fa-key', bg: 'bg-purple-100', iconColor: 'text-purple-600' },
         { label: 'Published', value: stats.publishedProperties, icon: 'fa-check-circle', bg: 'bg-emerald-100', iconColor: 'text-emerald-600' },
@@ -240,7 +240,7 @@ const AdminPropertiesPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-800">Properties</h1>
         <Link
           href="/admin/add-property"
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors font-medium"
+          className="bg-green-600 text-white px-5 py-2.5 rounded-md hover:bg-green-700 transition-colors font-medium"
         >
           <i className="fas fa-plus mr-2"></i>Add Property
         </Link>
@@ -272,7 +272,7 @@ const AdminPropertiesPage: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search by title, address, city..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -320,7 +320,7 @@ const AdminPropertiesPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
           </div>
         ) : (
           <>
@@ -367,7 +367,7 @@ const AdminPropertiesPage: React.FC = () => {
                       </td>
                       <td className="py-3 px-4">
                         <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                          prop.propertyStatus === 'ForSale' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                          prop.propertyStatus === 'ForSale' ? 'bg-green-100 text-green-700' : 'bg-pink-100 text-pink-700'
                         }`}>
                           {prop.propertyStatus === 'ForSale' ? 'For Sale' : 'For Rent'}
                         </span>
@@ -434,7 +434,7 @@ const AdminPropertiesPage: React.FC = () => {
                           onClick={() => setCurrentPage(p)}
                           className={`px-3 py-1 rounded border text-sm ${
                             currentPage === p
-                              ? 'bg-blue-700 text-white border-blue-700'
+                              ? 'bg-green-700 text-white border-green-700'
                               : 'border-gray-300 hover:bg-gray-50'
                           }`}
                         >
@@ -582,7 +582,7 @@ const AdminPropertiesPage: React.FC = () => {
                     {previewProperty.amenities.map((amenity, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700"
+                        className="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700"
                       >
                         {amenity}
                       </span>

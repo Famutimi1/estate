@@ -128,7 +128,7 @@ export default function ProfilePage() {
         </div>
         <Link
           href="/favorites"
-          className="px-4 py-2 rounded-sm bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 rounded-sm bg-pink-600 text-white text-sm font-medium hover:bg-pink-700 transition-colors"
         >
           View Favorites
         </Link>
@@ -148,7 +148,7 @@ export default function ProfilePage() {
               <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-200">
                 {isUploadingAvatar ? (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
                   </div>
                 ) : (
                   <img
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 className={`absolute bottom-0 right-0 text-white p-2 rounded-full transition-colors shadow-lg ${
                   isUploadingAvatar 
                     ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700'
+                    : 'bg-green-600 hover:bg-green-700'
                 }`}
                 title={isUploadingAvatar ? "Uploading..." : "Change profile picture"}
               >
@@ -208,7 +208,7 @@ export default function ProfilePage() {
                     phone: user?.phone || "",
                   });
                 }}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-green-600 hover:text-green-700 font-medium"
               >
                 Edit
               </button>
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                   minLength={2}
                   maxLength={255}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="+1234567890"
                   maxLength={50}
                 />
@@ -271,7 +271,7 @@ export default function ProfilePage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? "Saving..." : "Save Changes"}
                 </button>
@@ -323,7 +323,7 @@ export default function ProfilePage() {
                   id="currentPassword"
                   value={passwordData.currentPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                 />
               </div>
@@ -337,7 +337,7 @@ export default function ProfilePage() {
                   id="newPassword"
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                   minLength={6}
                 />
@@ -352,7 +352,7 @@ export default function ProfilePage() {
                   id="confirmPassword"
                   value={passwordData.confirmPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                   minLength={6}
                 />
@@ -365,7 +365,7 @@ export default function ProfilePage() {
                 <button
                   type="submit"
                   disabled={loading || passwordData.newPassword !== passwordData.confirmPassword}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-pink-600 text-white text-sm font-medium rounded-sm hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? "Changing..." : "Change Password"}
                 </button>

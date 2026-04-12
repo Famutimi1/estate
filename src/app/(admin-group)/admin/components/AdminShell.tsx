@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: 'fa-home' },
@@ -17,6 +18,7 @@ const navItems = [
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user: currentUser } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -40,45 +42,31 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         Desktop: always visible, toggles between w-20 (icons only) and w-64 (full)
       */}
       <div className={`bg-white shadow-lg z-30 transition-all duration-300 fixed h-full
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-64
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-50
         md:translate-x-0 ${desktopCollapsed ? 'md:w-20' : 'md:w-64'}
       `}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className={`flex items-center ${desktopCollapsed ? 'md:justify-center md:w-full' : ''}`}>
             <Link href="/">
-              {/* Full logo: always on mobile sidebar, on desktop when expanded */}
-              <div className={`flex items-center space-x-2 ${desktopCollapsed ? 'md:hidden' : ''}`}>
-                <Image
-                  src="/company_logo/company_logo.png"
-                  alt="Company Logo"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 object-contain"
-                />
-              </div>
-              {/* Short logo: only on desktop collapsed */}
-              <div className={`hidden ${desktopCollapsed ? 'md:inline' : ''}`}>
-                <Image
-                  src="/company_logo/company_logo.png"
-                  alt="Company Logo"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 object-contain"
-                />
-              </div>
+              <img
+                src="/company_logo/company_logo.png"
+                alt="Company Logo"
+                style={{ width: desktopCollapsed ? '24px' : '100px', height: '100px' }}
+                className="object-contain"
+              />
             </Link>
           </div>
           {/* Mobile: X close button */}
           <button
             onClick={() => setSidebarOpen(false)}
-            className="text-gray-500 hover:text-blue-600 cursor-pointer md:hidden"
+            className="text-gray-500 hover:text-green-700 cursor-pointer md:hidden"
           >
             <i className="fas fa-times"></i>
           </button>
           {/* Desktop: collapse/expand chevron */}
           <button
             onClick={() => setDesktopCollapsed(!desktopCollapsed)}
-            className="text-gray-500 hover:text-blue-600 cursor-pointer hidden md:block"
+            className="text-gray-500 hover:text-green-700 cursor-pointer hidden md:block"
           >
             <i className={`fas ${desktopCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
           </button>
@@ -97,8 +85,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center py-3 px-4 transition-colors cursor-pointer ${
                       isActive
-                        ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
-                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                        ? 'bg-green-50 text-green-700 border-l-4 border-green-700'
+                        : 'text-gray-600 hover:bg-green-50 hover:text-green-700'
                     }`}
                   >
                     <i className={`fas ${item.icon} text-lg w-8`}></i>
@@ -115,14 +103,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       {/* Main Content */}
       <div className={`flex-1 min-h-screen w-full transition-[padding] duration-300 ${desktopPaddingClass}`}>
         {/* Top Navigation */}
-        <div className="bg-blue-800 text-white shadow-md">
+        <div className="bg-green-800 text-white shadow-md sticky top-0 z-10">
           <div className="container mx-auto px-4 py-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 {/* Mobile hamburger toggle - always in DOM, hidden on md+ via CSS */}
                 <button
                   onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="text-white hover:text-blue-200 cursor-pointer md:hidden"
+                    className="text-white hover:text-green-200 cursor-pointer md:hidden"
                 >
                   <i className="fas fa-bars text-xl"></i>
                 </button>
@@ -130,9 +118,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="bg-blue-700 text-white placeholder-blue-300 border-none rounded-sm py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="bg-green-700 text-white placeholder-green-300 border-none rounded-sm py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
-                <i className="fas fa-search absolute left-3 top-3 text-blue-300"></i>
+                <i className="fas fa-search absolute left-3 top-3 text-green-300"></i>
                 </div>
               </div>
 
@@ -141,10 +129,10 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 <div className="relative">
                   <button
                     onClick={() => setShowNotifications(!showNotifications)}
-                    className="text-white hover:text-blue-200 cursor-pointer"
+                    className="text-white hover:text-green-200 cursor-pointer"
                   >
                     <i className="fas fa-bell text-xl"></i>
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                    <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                   </button>
 
                   {showNotifications && (
@@ -155,8 +143,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                       <div className="max-h-64 overflow-y-auto">
                         <a href="#" className="block p-4 border-b border-gray-100 hover:bg-gray-50">
                           <div className="flex items-start">
-                            <div className="flex-shrink-0 bg-blue-100 rounded-full p-2">
-                              <i className="fas fa-user-plus text-blue-600"></i>
+                            <div className="flex-shrink-0 bg-green-100 rounded-full p-2">
+                              <i className="fas fa-user-plus text-green-700"></i>
                             </div>
                             <div className="ml-3">
                               <p className="text-sm font-medium text-gray-800">New user registered</p>
@@ -177,7 +165,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         </a>
                       </div>
                       <div className="p-2 border-t border-gray-200 text-center">
-                        <a href="#" className="text-sm text-blue-600 hover:underline">View all notifications</a>
+                        <a href="#" className="text-sm text-green-700 hover:underline">View all notifications</a>
                       </div>
                     </div>
                   )}
@@ -190,13 +178,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     className="flex items-center space-x-2 cursor-pointer"
                   >
                     <Image
-                      src="https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish"
+                      src={currentUser?.avatar_url || 'https://readdy.ai/api/search-image?query=Professional%2520headshot%2520of%2520a%2520real%2520estate%2520agent%2520with%2520confident%2520smile%2520business%2520attire%2520neutral%2520background%2520high%2520quality%2520portrait%2520photography%2520with%2520soft%2520lighting%2520and%2520shallow%2520depth%2520of%2520field%2520professional%2520appearance&width=40&height=40&seq=1&orientation=squarish'}
                       alt="User"
                       width={40}
                       height={40}
                       className="w-8 h-8 rounded-full object-cover"
                     />
-                    <span className="hidden md:inline">Admin</span>
+                    <span className="hidden md:inline">{currentUser?.name?.split(' ')[0] || 'Admin'}</span>
                   </button>
 
                   {showUserMenu && (

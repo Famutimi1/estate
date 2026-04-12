@@ -13,8 +13,8 @@ const TermsPage: React.FC = () => {
       <div className="container mx-auto px-6 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-            <FontAwesomeIcon icon={faFileContract} className="text-3xl text-blue-600" />
+          <div className="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <FontAwesomeIcon icon={faFileContract} className="text-3xl text-green-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Terms of Service</h1>
           <p className="text-lg text-gray-600">
@@ -75,7 +75,7 @@ const TermsPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Platform Services</h2>
           <div className="mb-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faHome} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faHome} className="mr-2 text-green-600" />
               Property Listings
             </h3>
             <p className="text-gray-600 mb-2">
@@ -87,7 +87,7 @@ const TermsPage: React.FC = () => {
           </div>
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faHandshake} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faHandshake} className="mr-2 text-pink-600" />
               User Connections
             </h3>
             <p className="text-gray-600">
@@ -129,7 +129,7 @@ const TermsPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Property Transactions</h2>
           <div className="mb-6">
             <h3 className="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-              <FontAwesomeIcon icon={faBalanceScale} className="mr-2 text-blue-600" />
+              <FontAwesomeIcon icon={faBalanceScale} className="mr-2 text-green-600" />
               Independent Transactions
             </h3>
             <p className="text-gray-600 mb-4">

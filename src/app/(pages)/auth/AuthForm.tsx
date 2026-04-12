@@ -161,13 +161,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
         {/* Tab Navigation */}
         <div className="flex">
           <button
-            className={`w-1/2 py-4 text-center font-medium ${isLogin ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`w-1/2 py-4 text-center font-medium ${isLogin ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700'}`}
             onClick={() => router.push('/auth/login')}
           >
             Login
           </button>
           <button
-            className={`w-1/2 py-4 text-center font-medium ${!isLogin ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700'}`}
+            className={`w-1/2 py-4 text-center font-medium ${!isLogin ? 'bg-pink-700 text-white' : 'bg-gray-100 text-gray-700'}`}
             onClick={() => router.push('/auth/register')}
           >
             Register
@@ -195,7 +195,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="email"
                   type="email"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                 />
@@ -209,7 +209,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="password"
                   type="password"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                 />
@@ -220,7 +220,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   <input
                     id="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                     Remember me
@@ -231,7 +231,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   <button 
                     type="button"
                     onClick={() => setShowForgotPassword(true)}
-                    className="text-blue-700 hover:text-blue-500 focus:outline-none focus:underline"
+                    className="text-green-700 hover:text-green-500 focus:outline-none focus:underline"
                   >
                     Forgot your password?
                   </button>
@@ -241,7 +241,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full py-3 px-4 bg-green-700 hover:bg-green-800 text-white font-bold rounded-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 disabled:opacity-50"
               >
                 {loading ? 'Signing in...' : 'Sign in'}
               </button>
@@ -259,7 +259,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="name"
                   type="text"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={registerName}
                   onChange={(e) => setRegisterName(e.target.value)}
                 />
@@ -273,7 +273,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="register-email"
                   type="email"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={registerEmail}
                   onChange={(e) => setRegisterEmail(e.target.value)}
                 />
@@ -287,7 +287,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="register-password"
                   type="password"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={registerPassword}
                   onChange={(e) => setRegisterPassword(e.target.value)}
                 />
@@ -301,7 +301,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   id="confirm-password"
                   type="password"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={registerConfirmPassword}
                   onChange={(e) => setRegisterConfirmPassword(e.target.value)}
                 />
@@ -344,7 +344,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full py-3 px-4 bg-pink-700 hover:bg-pink-800 text-white font-bold rounded-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200 disabled:opacity-50"
               >
                 {loading ? 'Creating account...' : 'Create account'}
               </button>
@@ -354,11 +354,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           <div className="mt-6 text-center text-sm text-gray-600">
             <p>
               By continuing, you agree to our{' '}
-              <a href="#" className="text-blue-700 hover:text-blue-500">
+              <a href="#" className="text-green-700 hover:text-green-500">
                 Terms of Service
               </a>{' '}
               and{' '}
-              <a href="#" className="text-blue-700 hover:text-blue-500">
+              <a href="#" className="text-green-700 hover:text-green-500">
                 Privacy Policy
               </a>
             </p>
@@ -383,7 +383,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                       id="reset-email"
                       type="email"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={forgotPasswordEmail}
                       onChange={(e) => setForgotPasswordEmail(e.target.value)}
                       placeholder="Enter your email address"
@@ -411,7 +411,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                     <button
                       type="submit"
                       disabled={forgotPasswordLoading}
-                      className="px-4 py-2 bg-blue-700 text-white rounded-sm hover:bg-blue-800 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 bg-green-700 text-white rounded-sm hover:bg-green-800 transition-colors disabled:opacity-50"
                     >
                       {forgotPasswordLoading ? 'Sending...' : 'Send Reset Email'}
                     </button>
@@ -429,7 +429,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                   <div className="space-y-3">
                     {resendCountdown > 0 ? (
                       <div className="text-center text-gray-600 text-sm">
-                        Resend available in <span className="font-semibold text-blue-600">{resendCountdown}s</span>
+                        Resend available in <span className="font-semibold text-green-600">{resendCountdown}s</span>
                       </div>
                     ) : (
                       <button
@@ -440,7 +440,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                           handleForgotPassword({ preventDefault: () => {} } as React.FormEvent);
                         }}
                         disabled={forgotPasswordLoading}
-                        className="w-full px-4 py-2 bg-blue-700 text-white rounded-sm hover:bg-blue-800 transition-colors disabled:opacity-50"
+                        className="w-full px-4 py-2 bg-green-700 text-white rounded-sm hover:bg-green-800 transition-colors disabled:opacity-50"
                       >
                         {forgotPasswordLoading ? 'Sending...' : 'Resend Email'}
                       </button>
