@@ -633,7 +633,7 @@ const Home: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Our Office</h4>
-                    <p className="text-green-200 text-sm">123 Victoria Island, Lagos, Nigeria</p>
+                    <p className="text-green-200 text-sm">{settings?.address || '69/71 Olorunsogo, Abiola way, beside Mao petrol station, Abeokuta, Ogun State, Nigeria'}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -642,7 +642,7 @@ const Home: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Phone</h4>
-                    <p className="text-green-200 text-sm">+234 801 234 5678</p>
+                    <p className="text-green-200 text-sm">{settings?.contactPhone || '+234 9075875787'}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -651,7 +651,7 @@ const Home: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-1">Email</h4>
-                    <p className="text-green-200 text-sm">info@estate.com</p>
+                    <p className="text-green-200 text-sm">{settings?.contactEmail || 'Stangraceproperties24@gmail.com'}</p>
                   </div>
                 </div>
                 <div className="flex items-start">

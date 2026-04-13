@@ -24,7 +24,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const desktopPaddingClass = desktopCollapsed ? 'md:pl-20' : 'md:pl-64';
+  const desktopPaddingClass = desktopCollapsed ? 'md:pl-20' : 'md:pl-56';
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -42,8 +42,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         Desktop: always visible, toggles between w-20 (icons only) and w-64 (full)
       */}
       <div className={`bg-white shadow-lg z-30 transition-all duration-300 fixed h-full
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-50
-        md:translate-x-0 ${desktopCollapsed ? 'md:w-20' : 'md:w-64'}
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} w-56
+        md:translate-x-0 ${desktopCollapsed ? 'md:w-20' : 'md:w-56'}
       `}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className={`flex items-center ${desktopCollapsed ? 'md:justify-center md:w-full' : ''}`}>
