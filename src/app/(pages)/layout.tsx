@@ -31,6 +31,7 @@ export default function PublicLayout({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [favoritesCount, setFavoritesCount] = useState(0);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const { user: currentUser, loading: authLoading } = useAuth();
   const { settings } = useSettings();
   const pathname = usePathname();
@@ -74,6 +75,9 @@ export default function PublicLayout({
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setShowProfileMenu(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -94,7 +98,7 @@ export default function PublicLayout({
         </div>
       </div>
       {/* Navigation */}
-      <div className="relative flex flex-col md:flex-row justify-between items-center h-auto md:h-15 py-4 md:py-0 bg-white shadow-md sticky top-0 z-40">
+      <div className="relative flex flex-col md:flex-row justify-between items-center h-auto md:h-15 py-4 md:py-0 bg-white shadow-md sticky top-0 z-40" ref={mobileMenuRef}>
         <div className="w-full md:w-auto px-4  md:px-8 bg-white flex items-center justify-between  overflow-hidden">
           <Link href="/" className="flex items-center space-x-2 text-xl md:text-2xl font-bold hover:opacity-80 transition-opacity">
             <Image

@@ -256,15 +256,15 @@ const AdminUsersPage: React.FC = () => {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-48">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
           </div>
         ) : (
           <>
-            <div className="relative overflow-visible">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[700px]">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="text-left py-3 px-4 text-gray-600 font-semibold">Name</th>
