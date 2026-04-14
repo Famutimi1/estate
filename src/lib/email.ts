@@ -388,6 +388,8 @@ function generateRegistrationNotificationHTML(data: {
           padding: 10px 20px;
           border-radius: 6px;
           text-decoration: none;
+          text-decoration: underline;
+          text-underline-offset: 2px;
           color: white;
           font-weight: bold;
           transition: background-color 0.3s;
