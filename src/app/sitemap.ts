@@ -19,12 +19,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let propertyPages: MetadataRoute.Sitemap = [];
   try {
     const properties = await prisma.property.findMany({
-      select: { id: true, updatedAt: true },
+      select: { id: true, createdAt: true },
       where: { status: "publish" },
     });
     propertyPages = properties.map((p) => ({
       url: `${baseUrl}/properties/${p.id}`,
-      lastModified: p.updatedAt,
+      lastModified: p.createdAt,
       changeFrequency: "weekly" as const,
       priority: 0.8,
     }));

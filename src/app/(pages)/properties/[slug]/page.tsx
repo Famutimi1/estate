@@ -11,21 +11,20 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
-  type PropertyMeta = {
+  let property: {
     title: string;
     description: string | null;
     address: string;
     city: string | null;
     state: string | null;
-    price: number;
+    price: { toNumber: () => number } | number;
     propertyType: string;
     propertyStatus: string;
     bedrooms: number;
     bathrooms: number;
     images: string[];
     imageUrl: string | null;
-  };
-  let property: PropertyMeta | null = null;
+  } | null = null;
 
   try {
     property = await prisma.property.findUnique({
@@ -58,7 +57,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${property.title} — ${property.propertyType} in ${property.city ?? ""}, ${property.state ?? "Nigeria"}`;
   const statusLabel = property.propertyStatus === "for_sale" ? "For Sale" : "For Rent";
-  const description = `${statusLabel}: ${property.bedrooms}-bed, ${property.bathrooms}-bath ${property.propertyType} at ${property.address}. Price: NGN ${property.price.toLocaleString()}. ${(property.description ?? "").slice(0, 100)}`.trim();
+  const priceNum = typeof property.price === "object" ? property.price.toNumber() : property.price;
+  const description = `${statusLabel}: ${property.bedrooms}-bed, ${property.bathrooms}-bath ${property.propertyType} at ${property.address}. Price: NGN ${priceNum.toLocaleString()}. ${(property.description ?? "").slice(0, 100)}`.trim();
   const image = property.images?.[0] ?? property.imageUrl ?? "/company_logo/company_logo.png";
 
   return {
