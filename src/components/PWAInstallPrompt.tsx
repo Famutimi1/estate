@@ -17,6 +17,7 @@ export default function PWAInstallPrompt() {
   const [show, setShow] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [installing, setInstalling] = useState(false);
 
   useEffect(() => {
     // Don't show if already installed (standalone mode)
@@ -37,31 +38,39 @@ export default function PWAInstallPrompt() {
     const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(ios);
 
-    // Capture native install prompt if browser fires it
+    if (ios) {
+      // iOS can't use beforeinstallprompt — show banner with Safari instructions after delay
+      const timer = setTimeout(() => setShow(true), 3000);
+      return () => clearTimeout(timer);
+    }
+
+    // For Chrome/Edge/Android: only show banner when browser signals the app is installable
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setShow(true); // show immediately when we have the real install prompt
     };
     window.addEventListener("beforeinstallprompt", handler);
 
-    // Always show the banner after 3 seconds regardless
-    const timer = setTimeout(() => setShow(true), 3000);
-
     return () => {
       window.removeEventListener("beforeinstallprompt", handler);
-      clearTimeout(timer);
     };
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") {
-      setShow(false);
-      localStorage.removeItem(DISMISSED_KEY);
+    setInstalling(true);
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setShow(false);
+        localStorage.removeItem(DISMISSED_KEY);
+      }
+    } finally {
+      setDeferredPrompt(null);
+      setInstalling(false);
     }
-    setDeferredPrompt(null);
   };
 
   const handleDismiss = () => {
@@ -108,27 +117,9 @@ export default function PWAInstallPrompt() {
           </h3>
           <p className="text-gray-500 text-sm mb-4">
             {isIOS
-              ? "Get quick access to properties on your iPhone. Tap the share button below then 'Add to Home Screen'."
-              : "Install the Stan Grace app for faster access, offline browsing, and a better experience."}
+              ? "To install: tap the Share icon in Safari, then tap \"Add to Home Screen\"."
+              : "Get faster access, offline browsing, and a better experience."}
           </p>
-
-          {/* iOS instructions */}
-          {isIOS && (
-            <div className="bg-gray-50 rounded-xl p-3 mb-4 space-y-2">
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
-                <span>Tap the <strong>Share</strong> button <i className="fas fa-share-square text-blue-500"></i> at the bottom of Safari</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
-                <span>Scroll and tap <strong>"Add to Home Screen"</strong></span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
-                <span>Tap <strong>"Add"</strong> to confirm</span>
-              </div>
-            </div>
-          )}
 
           {/* Features */}
           <div className="flex items-center space-x-4 mb-4">
@@ -146,21 +137,16 @@ export default function PWAInstallPrompt() {
             </div>
           </div>
 
-          {/* Buttons */}
-          {!isIOS && deferredPrompt && (
+          {/* Install button — only shown on non-iOS where we have native prompt */}
+          {!isIOS && (
             <button
               onClick={handleInstall}
-              className="w-full bg-green-700 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-green-800 transition-colors mb-2"
+              disabled={installing}
+              className="w-full bg-green-700 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-green-800 transition-colors mb-2 cursor-pointer disabled:opacity-70"
             >
-              <i className="fas fa-download mr-2"></i>
-              Install App
+              <i className={`fas ${installing ? "fa-spinner fa-spin" : "fa-download"} mr-2`}></i>
+              {installing ? "Installing..." : "Install App"}
             </button>
-          )}
-          {!isIOS && !deferredPrompt && (
-            <div className="bg-gray-50 rounded-xl p-3 mb-2 text-sm text-gray-600">
-              <p className="font-medium text-gray-700 mb-1"><i className="fas fa-info-circle text-green-600 mr-1"></i> How to install:</p>
-              <p>In Chrome/Edge, click the <strong>⊕ install icon</strong> in the address bar, or open the browser menu → <strong>"Install App"</strong>.</p>
-            </div>
           )}
 
           <div className="flex items-center justify-between">
@@ -174,7 +160,7 @@ export default function PWAInstallPrompt() {
               onClick={handleNeverShow}
               className="text-gray-400 text-xs hover:text-gray-600 transition-colors py-1"
             >
-              Don't show again
+              Don&apos;t show again
             </button>
           </div>
         </div>
