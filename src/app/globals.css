@@ -20,6 +20,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Override pink palette with orange (#eb7713) to complement green */
+@theme {
+  --color-pink-50: #fff8f2;
+  --color-pink-100: #fde8cd;
+  --color-pink-200: #fbcf9d;
+  --color-pink-300: #f9af6c;
+  --color-pink-400: #f5913d;
+  --color-pink-500: #f28327;
+  --color-pink-600: #eb7713;
+  --color-pink-700: #c86310;
+  --color-pink-800: #a15010;
+  --color-pink-900: #7a3c0a;
+  --color-pink-950: #5a2b07;
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -51,10 +66,10 @@ a[class*="bg-"] {
 
 /* Ensure specific background colors work on links */
 a.bg-blue-700 { background-color: #1d4ed8 !important; }
-a.bg-pink-600 { background-color: #db2777 !important; }
+a.bg-pink-600 { background-color: #eb7713 !important; }
 a.bg-blue-500 { background-color: #3b82f6 !important; }
 a.bg-blue-400 { background-color: #60a5fa !important; }
-a.bg-pink-500 { background-color: #ec4899 !important; }
+a.bg-pink-500 { background-color: #f28327 !important; }
 a.bg-red-500 { background-color: #ef4444 !important; }
 a.bg-white { background-color: #ffffff !important; }
 a.bg-green-700 { background-color: #15803d !important; }
@@ -65,7 +80,7 @@ a.bg-green-500 { background-color: #22c55e !important; } /* WhatsApp fallback */
 
 /* And hover states */
 a.hover\:bg-blue-800:hover { background-color: #1e40af !important; }
-a.hover\:bg-pink-700:hover { background-color: #be185d !important; }
+a.hover\:bg-pink-700:hover { background-color: #c86310 !important; }
 a.hover\:bg-gray-100:hover { background-color: #f3f4f6 !important; }
 a.hover\:bg-green-50:hover { background-color: #f0fdf4 !important; }
 a.hover\:bg-green-700:hover { background-color: #15803d !important; } /* WhatsApp hover */
