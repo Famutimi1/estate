@@ -12,7 +12,7 @@ interface EmailOptions {
 export async function sendEmail({ to, subject, html, from }: EmailOptions) {
   try {
     const { data, error } = await resend.emails.send({
-      from: from || process.env.RESEND_FROM_EMAIL || 'noreply@myhome.ng',
+      from: from || process.env.RESEND_FROM_EMAIL || 'noreply@stangracepropertiesltd.ng',
       to: [to],
       subject,
       html,
@@ -270,7 +270,7 @@ export async function sendWelcomeEmail(email: string, userName: string, userRole
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
           <p>Nigeria's Premier Real Estate Platform</p>
-          <p>📧 Email: support@myhome.ng | 📞 Phone: +234 803 123 4567</p>
+          <p>📧 Email: support@stangracepropertiesltd.ng | 📞 Phone: +234 803 123 4567</p>
         </div>
       </div>
     </body>
@@ -289,7 +289,7 @@ export async function sendAdminNotificationEmail(
   data: any,
   adminEmail?: string
 ) {
-  const recipientEmail = adminEmail || process.env.ADMIN_EMAIL || 'admin@myhome.ng';
+  const recipientEmail = adminEmail || process.env.ADMIN_EMAIL || 'admin@stangracepropertiesltd.ng';
   
   let subject, html;
   
@@ -332,7 +332,7 @@ function generateRegistrationNotificationHTML(data: {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>New User Registration - myHOME Admin</title>
+      <title>New User Registration - Stan Grace Properties Admin</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -484,7 +484,7 @@ function generateContactNotificationHTML(data: {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>New Contact Message - myHOME Admin</title>
+      <title>New Contact Message - Stan Grace Properties Admin</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -638,7 +638,7 @@ function generateScheduleNotificationHTML(data: {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>New Viewing Scheduled - myHOME Admin</title>
+      <title>New Viewing Scheduled - Stan Grace Properties Admin</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -818,7 +818,7 @@ export async function sendPasswordResetSuccessEmail(email: string, userName?: st
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Password Reset Success - myHOME</title>
+      <title>Password Reset Success - Stan Grace Properties</title>
       <style>
         body {
           font-family: Arial, sans-serif;

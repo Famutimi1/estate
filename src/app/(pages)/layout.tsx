@@ -342,7 +342,7 @@ export default function PublicLayout({
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-white">
             <div className="flex justify-between items-center">
-              <p>&copy; {new Date().getFullYear()} myHOME. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} Stan Grace Properties LTD. All rights reserved.</p>
               <div className="flex space-x-4">
                 <Link href="/privacy" className="text-white hover:text-green-200 text-sm">Privacy Policy</Link>
                 <span className="text-white text-sm">•</span>

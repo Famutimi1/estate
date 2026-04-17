@@ -37,9 +37,9 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
     },
     {
       icon: faEnvelope,
-      value: settings?.contactEmail || 'info@myhome.ng',
+      value: settings?.contactEmail || 'info@stangracepropertiesltd.ng',
       label: 'Email',
-      href: `mailto:${settings?.contactEmail || 'info@myhome.ng'}`,
+      href: `mailto:${settings?.contactEmail || 'info@stangracepropertiesltd.ng'}`,
     },
   ];
 
