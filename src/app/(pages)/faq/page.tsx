@@ -22,8 +22,8 @@ const FAQPage: React.FC = () => {
     // General Questions
     {
       id: '1',
-      question: 'What is myHOME?',
-      answer: 'myHOME is Nigeria\'s premier real estate platform that connects buyers, sellers, renters, and real estate professionals. We provide a comprehensive platform for listing, searching, and transacting properties across Nigeria.',
+      question: 'What is Stan Grace Properties?',
+      answer: 'Stan Grace Properties is Nigeria\'s premier real estate platform that connects buyers, sellers, renters, and real estate professionals. We provide a comprehensive platform for listing, searching, and transacting properties across Nigeria.',
       category: 'general',
       icon: faHome
     },
@@ -36,7 +36,7 @@ const FAQPage: React.FC = () => {
     },
     {
       id: '3',
-      question: 'Is myHOME free to use?',
+      question: 'Is Stan Grace Properties free to use?',
       answer: 'Basic features like browsing properties and creating an account are free. However, we offer premium services such as featured property listings, advanced search filters, and professional consultations that may require payment.',
       category: 'general',
       icon: faMoneyBillWave
@@ -91,7 +91,7 @@ const FAQPage: React.FC = () => {
     // Listing Properties
     {
       id: '10',
-      question: 'How do I list my property on myHOME?',
+      question: 'How do I list my property on Stan Grace Properties?',
       answer: 'To list your property: 1) Create an account, 2) Click "Add Property" in your dashboard, 3) Fill in all property details including photos, price, and description, 4) Choose between free listing or premium features, 5) Submit for review. Your property will be live once approved.',
       category: 'listing',
       icon: faHome
@@ -114,7 +114,7 @@ const FAQPage: React.FC = () => {
     // Safety & Security
     {
       id: '13',
-      question: 'How does myHOME protect my personal information?',
+      question: 'How does Stan Grace Properties protect my personal information?',
       answer: 'We use industry-standard SSL encryption, secure servers, and strict data protection policies. Your personal information is never shared without your consent, and we comply with all applicable data protection regulations.',
       category: 'safety',
       icon: faShieldAlt
@@ -258,7 +258,7 @@ const FAQPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href={`mailto:${settings?.contactEmail || 'support@myhome.ng'}`}
+                href={`mailto:${settings?.contactEmail || 'support@stangracepropertiesltd.ng'}`}
                 className="bg-white text-green-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors"
               >
                 <FontAwesomeIcon icon={faEnvelope} className="mr-2" />

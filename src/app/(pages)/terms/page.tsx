@@ -133,7 +133,7 @@ const TermsPage: React.FC = () => {
               Independent Transactions
             </h3>
             <p className="text-gray-600 mb-4">
-              {settings?.siteName || 'myHOME'} is a platform for connecting parties, not a party to real estate transactions.
+              {settings?.siteName || 'Stan Grace Properties'} is a platform for connecting parties, not a party to real estate transactions.
             </p>
             <p className="text-gray-600">
               Users are responsible for conducting their own due diligence and seeking professional advice.
@@ -151,7 +151,7 @@ const TermsPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Fees and Payments</h2>
           <p className="text-gray-600 mb-4">
-            Some services on {settings?.siteName || 'myHOME'} may require payment:
+            Some services on {settings?.siteName || 'Stan Grace Properties'} may require payment:
           </p>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
             <li>Premium property listings</li>
@@ -168,7 +168,7 @@ const TermsPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Intellectual Property</h2>
           <p className="text-gray-600 mb-4">
-            The {settings?.siteName || 'myHOME'} platform and its content are protected by intellectual property laws.
+            The {settings?.siteName || 'Stan Grace Properties'} platform and its content are protected by intellectual property laws.
           </p>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
             <li>You retain ownership of content you post</li>
@@ -189,7 +189,7 @@ const TermsPage: React.FC = () => {
                   <strong>Important Notice:</strong>
                 </p>
                 <p className="text-gray-600">
-                  {settings?.siteName || 'myHOME'} shall not be liable for any direct, indirect, 
+                  {settings?.siteName || 'Stan Grace Properties'} shall not be liable for any direct, indirect, 
                   incidental, or consequential damages arising from your use of our platform.
                 </p>
               </div>
@@ -238,7 +238,7 @@ const TermsPage: React.FC = () => {
           <div className="bg-gray-50 rounded-lg p-6">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <strong>Email:</strong> {settings?.contactEmail || 'legal@myhome.ng'}
+                <strong>Email:</strong> {settings?.contactEmail || 'legal@stangracepropertiesltd.ng'}
               </div>
               <div>
                 <strong>Phone:</strong> {settings?.contactPhone || '+234 800 000 0000'}
@@ -247,7 +247,7 @@ const TermsPage: React.FC = () => {
                 <strong>Address:</strong> {settings?.address || 'Victoria Island, Lagos, Nigeria'}
               </div>
               <div>
-                <strong>Website:</strong> {typeof window !== 'undefined' ? window.location.origin : 'www.myhome.ng'}
+                <strong>Website:</strong> {typeof window !== 'undefined' ? window.location.origin : 'www.stangracepropertiesltd.ng'}
               </div>
             </div>
           </div>

@@ -166,7 +166,7 @@ const PrivacyPage: React.FC = () => {
           <div className="bg-gray-50 rounded-lg p-6">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <strong>Email:</strong> {settings?.contactEmail || 'privacy@myhome.ng'}
+                <strong>Email:</strong> {settings?.contactEmail || 'privacy@stangracepropertiesltd.ng'}
               </div>
               <div>
                 <strong>Phone:</strong> {settings?.contactPhone || '+234 800 000 0000'}
@@ -175,7 +175,7 @@ const PrivacyPage: React.FC = () => {
                 <strong>Address:</strong> {settings?.address || 'Victoria Island, Lagos, Nigeria'}
               </div>
               <div>
-                <strong>Website:</strong> {typeof window !== 'undefined' ? window.location.origin : 'www.myhome.ng'}
+                <strong>Website:</strong> {typeof window !== 'undefined' ? window.location.origin : 'www.stangracepropertiesltd.ng'}
               </div>
             </div>
           </div>
