@@ -85,12 +85,12 @@ const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
   const getIconClasses = () => {
     switch (variant) {
       case 'buttons':
-        return 'text-sm mr-2';
+        return 'text-lg mr-2';
       case 'footer':
-        return 'text-xs';
+        return 'text-base';
       case 'icons':
       default:
-        return 'text-white text-xs';
+        return 'text-white text-xl';
     }
   };
 
