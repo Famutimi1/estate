@@ -44,13 +44,19 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
   ];
 
   const renderContactItem = (item: typeof contactInfo[0]) => {
+    // Use a square with border and more visible background
+    const iconBg = variant === 'list'
+      ? 'bg-gradient-to-br from-sky-100 to-blue-200 text-blue-700 border-blue-300'
+      : 'bg-gradient-to-br from-orange-100 to-amber-200 text-orange-700 border-orange-300';
+    const iconSize = variant === 'list' ? 'w-9 h-9 text-lg' : 'w-9 h-9 text-lg';
+    const iconMargin = 'mr-3';
     const iconElement = showIcons && (
-      <FontAwesomeIcon 
-        icon={item.icon} 
-        className={`${
-          variant === 'list' ? 'mt-1 mr-3 text-blue-500' : 'mr-2'
-        } text-xs`} 
-      />
+      <span className={`flex items-center justify-center shrink-0 ${iconBg} ${iconSize} ${iconMargin} border-2 rounded-md shadow-sm`}>
+        <FontAwesomeIcon 
+          icon={item.icon} 
+          className="" 
+        />
+      </span>
     );
 
     const content = (
