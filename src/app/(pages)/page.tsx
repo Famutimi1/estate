@@ -128,12 +128,12 @@ const Home: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-[600px] overflow-hidden">
         <Image
-          src="https://readdy.ai/api/search-image?query=Luxurious%2520modern%2520suburban%2520house%2520exterior%2520at%2520sunset%2520with%2520warm%2520golden%2520light%252C%2520beautiful%2520architecture%2520with%2520gray%2520siding%2520and%2520stone%2520accents%252C%2520perfectly%2520manicured%2520lawn%252C%2520high-end%2520residential%2520neighborhood%252C%2520professional%2520real%2520estate%2520photography&width=1440&height=600&seq=1&orientation=landscape"
-          alt="Luxury Home"
+          src="/bg_house.jpeg" alt="Luxury Home"
           width={1440}
           height={600}
           className="w-full h-full object-cover object-top"
         />
+        {/* <div className="absolute inset-0 bg-black/40 z-0"></div> */}
         <div className="absolute inset-0 flex items-center z-10">
           <div className="-mt-115 bg-black bg-opacity-70 opacity-75 md:-mt-70 p-2 max-w-2xl md:ml-10 md:rounded-lg text-white backdrop-blur-sm">
             <div className="text-green-300 font-medium mb-4">
@@ -626,41 +626,41 @@ const Home: React.FC = () => {
             <div className="text-white">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Get In Touch With Us</h2>
               <p className="text-green-200 mb-8 text-lg">Have a question or need help finding the perfect property? Send us a message and our team will get back to you within 24 hours.</p>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-map-marker-alt text-white text-lg"></i>
+              <div className="space-y-4 mt-2">
+                <div className="flex items-center gap-4 bg-green-600/40 rounded-xl px-5 py-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-bolt text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-1">Our Office</h4>
-                    <p className="text-green-200 text-sm">{settings?.address || '69/71 Olorunsogo, Abiola way, beside Mao petrol station, Abeokuta, Ogun State, Nigeria'}</p>
+                    <p className="text-white font-semibold text-sm">Fast Response</p>
+                    <p className="text-green-200 text-xs">We reply to all inquiries within 24 hours</p>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-phone-alt text-white text-lg"></i>
+                <div className="flex items-center gap-4 bg-green-600/40 rounded-xl px-5 py-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-user-tie text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-1">Phone</h4>
-                    <p className="text-green-200 text-sm">{settings?.contactPhone || '+234 9075875787'}</p>
+                    <p className="text-white font-semibold text-sm">Expert Agents</p>
+                    <p className="text-green-200 text-xs">Dedicated professionals guide you every step</p>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-envelope text-white text-lg"></i>
+                <div className="flex items-center gap-4 bg-green-600/40 rounded-xl px-5 py-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-lock text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-1">Email</h4>
-                    <p className="text-green-200 text-sm">{settings?.contactEmail || 'Stangraceproperties24@gmail.com'}</p>
+                    <p className="text-white font-semibold text-sm">Confidential & Secure</p>
+                    <p className="text-green-200 text-xs">Your information is always safe with us</p>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-clock text-white text-lg"></i>
+                <div className="flex items-center gap-4 bg-green-600/40 rounded-xl px-5 py-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-handshake text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-1">Working Hours</h4>
-                    <p className="text-green-200 text-sm">Mon - Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 4:00 PM</p>
+                    <p className="text-white font-semibold text-sm">No-Obligation Consultation</p>
+                    <p className="text-green-200 text-xs">Free advice with zero pressure to commit</p>
                   </div>
                 </div>
               </div>
