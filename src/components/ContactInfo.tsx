@@ -44,19 +44,33 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
   ];
 
   const renderContactItem = (item: typeof contactInfo[0]) => {
-    // Use a square with border and more visible background
-    const iconBg = variant === 'list'
-      ? 'bg-gradient-to-br from-sky-100 to-blue-200 text-blue-700 border-blue-300'
+    // Use a plain inline icon in the top bar, boxed icons elsewhere.
+    const isInline = variant === 'inline';
+    const iconBg = isInline
+      ? 'text-green-200'
+      : variant === 'list'
+      ? 'bg-gradient-to-br from-orange-100 to-orange-200 text-orange-700 border-orange-300'
       : 'bg-gradient-to-br from-orange-100 to-amber-200 text-orange-700 border-orange-300';
-    const iconSize = variant === 'list' ? 'w-9 h-9 text-lg' : 'w-9 h-9 text-lg';
-    const iconMargin = 'mr-3';
+    const iconSize = isInline
+      ? 'text-xs'
+      : variant === 'list'
+        ? 'w-9 h-9 text-lg'
+        : 'w-9 h-9 text-lg';
+    const iconMargin = isInline ? 'mr-2' : 'mr-3';
     const iconElement = showIcons && (
-      <span className={`flex items-center justify-center shrink-0 ${iconBg} ${iconSize} ${iconMargin} border-2 rounded-md shadow-sm`}>
-        <FontAwesomeIcon 
-          icon={item.icon} 
-          className="" 
+      isInline ? (
+        <FontAwesomeIcon
+          icon={item.icon}
+          className={`shrink-0 ${iconBg} ${iconSize} ${iconMargin}`}
         />
-      </span>
+      ) : (
+        <span className={`flex items-center justify-center shrink-0 ${iconBg} ${iconSize} ${iconMargin} border-2 rounded-md shadow-sm`}>
+          <FontAwesomeIcon 
+            icon={item.icon} 
+            className="" 
+          />
+        </span>
+      )
     );
 
     const content = (
